@@ -199,6 +199,5 @@ Les contributions sont les bienvenues :
 # ⭐ Remerciements
 
 Merci d’utiliser SecureGen — un module conçu pour être **simple**, **sécurisé**, et **agréable à utiliser**.
-```
 
 ---
