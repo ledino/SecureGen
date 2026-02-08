@@ -1,6 +1,5 @@
 # 📄 **README.md — COMPLET**
 
-```markdown
 <p align="center">
   <img src="assets/logo.png" width="120" alt="SecureGen Logo"/>
 </p>
@@ -20,7 +19,7 @@
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="MIT License"/>
   </a>
 </p>
-```
+
 ---
 
 # 🔐 SecureGen
