@@ -1,7 +1,7 @@
 # 📄 **README.md — COMPLET**
 
 <p align="center">
-  <img src="assets/Logo_10.png" width="120" alt="SecureGen Logo"/>
+  <img src="assets/Logo_10.png" width="180" alt="SecureGen Logo"/>
 </p>
 
 <p align="center">
