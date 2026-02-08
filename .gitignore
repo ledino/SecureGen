@@ -1,0 +1,60 @@
+# ============================
+#   SecureGen — .gitignore
+# ============================
+
+# --- PowerShell ---
+*.psd1
+*.psm1
+*.ps1xml
+*.pssc
+*.psrc
+
+# --- Logs ---
+*.log
+*.err
+*.out
+
+# --- Archives ---
+*.zip
+*.7z
+*.tar
+*.gz
+
+# --- OS Files ---
+Thumbs.db
+ehthumbs.db
+.DS_Store
+desktop.ini
+
+# --- VSCode ---
+.vscode/
+.history/
+*.code-workspace
+
+# --- JetBrains / Rider ---
+.idea/
+*.iml
+
+# --- Build / Temp ---
+bin/
+obj/
+temp/
+tmp/
+.cache/
+*.tmp
+
+# --- Node (si docs web un jour) ---
+node_modules/
+dist/
+build/
+
+# --- Python (rare mais utile) ---
+__pycache__/
+*.pyc
+
+# --- Misc ---
+*.bak
+*.old
+*.orig
+*.swp
+*.swo
