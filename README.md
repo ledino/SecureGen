@@ -20,7 +20,7 @@
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="MIT License"/>
   </a>
 </p>
-
+```
 ---
 
 # 🔐 SecureGen
