@@ -3,8 +3,7 @@
 # ============================
 
 # --- PowerShell ---
-*.psd1
-*.psm1
+# Garder les fichiers du module (.psd1 / .psm1)
 *.ps1xml
 *.pssc
 *.psrc
@@ -42,13 +41,14 @@ temp/
 tmp/
 .cache/
 *.tmp
+out/
 
 # --- Node (si docs web un jour) ---
 node_modules/
 dist/
 build/
 
-# --- Python (rare mais utile) ---
+# --- Python ---
 __pycache__/
 *.pyc
 

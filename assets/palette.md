@@ -1,6 +1,3 @@
-# 📄 **assets/palette.md — COMPLET**
-
-```markdown
 # 🎨 Palette officielle — SecureGen
 
 Cette palette définit l’identité visuelle du projet SecureGen.  
@@ -89,6 +86,5 @@ SecureGen adopte un style **cyber minimaliste**, basé sur :
 - une esthétique moderne et technique.
 
 Cette palette est la base de toute l’identité visuelle du projet.
-```
 
 ---

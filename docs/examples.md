@@ -1,6 +1,3 @@
-# 📄 **docs/examples.md — COMPLET**
-
-```markdown
 # 📘 Exemples d'utilisation — SecureGen
 
 Ce document présente des exemples pratiques et avancés pour exploiter pleinement les fonctionnalités du module **SecureGen**.
@@ -77,7 +74,7 @@ Get-PassPhrase -Copy -Silent
 Get-CryptoIndex -Max 100
 ```
 
-Cela renvoie un entier compris entre `0` et `99`, basé sur un générateur cryptographique.
+Renvoie un entier compris entre `0` et `99`, basé sur un générateur cryptographique sécurisé.
 
 ---
 
@@ -147,17 +144,22 @@ Write-Host "Votre passphrase : $phrase"
 
 ---
 
-# 📦 Notes
+# 🖥️ Notes de compatibilité
 
 - Tous les exemples fonctionnent sous **Windows**, **Linux**, et **macOS**.
-- Le clipboard utilise automatiquement la meilleure méthode disponible.
+- Le clipboard utilise automatiquement la meilleure méthode disponible :
+  - Windows : `Set-Clipboard`
+  - macOS : `pbcopy`
+  - Linux : `xclip` ou `xsel`
 - Le beep est encapsulé pour éviter les erreurs sur les systèmes qui ne le supportent pas.
+- SecureGen charge automatiquement la version adaptée :
+  - **Core.PS7.ps1** pour PowerShell 7+
+  - **Legacy.PS5.ps1** pour Windows PowerShell 5.1
 
 ---
 
 # 🎉 Merci d'utiliser SecureGen !
 
 N'hésitez pas à contribuer via GitHub : issues, PR, suggestions.
-```
 
 ---

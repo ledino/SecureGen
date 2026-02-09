@@ -4,17 +4,21 @@ Toutes les modifications notables du projet sont documentées ici.
 
 ---
 
-## 🔥 1.3.1 — 2026-02-08
+## 🔥 1.3.1 — 2026-02-09
 ### Améliorations majeures
-- Compatibilité **PowerShell 5.1 et 7+** entièrement validée
-- Gestion du **clipboard cross‑platform** :
-  - Windows : Set-Clipboard
-  - macOS : pbcopy
-  - Linux : xclip / xsel
-- Ajout de **warnings propres** lorsque le clipboard n’est pas disponible
-- Encapsulation du **beep** pour éviter les erreurs sur Linux/macOS
-- Nettoyage complet du code et harmonisation du style
-- Version totalement **PSGallery‑ready**
+- Nouvelle **architecture modulaire PS7/PS5** :
+  - `Core.PS7.ps1` (version moderne)
+  - `Legacy.PS5.ps1` (fallback Windows PowerShell)
+  - Chargement automatique via `SecureGen.psm1`
+- Ajout du **script d’installation intelligent** :
+  - Installe SecureGen dans PS5, PS7 ou les deux selon l’environnement
+- Mise à jour complète du **README** :
+  - Compatibilité détaillée
+  - Structure du dépôt
+  - Documentation enrichie
+- Refonte du **logo officiel** et intégration dans les assets
+- Nettoyage global du code et harmonisation du style
+- Module totalement **PSGallery‑ready**
 
 ---
 
