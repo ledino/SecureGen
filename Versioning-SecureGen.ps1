@@ -1,4 +1,4 @@
-﻿<#
+<#
     Versioning-SecureGen.ps1
     Script d’incrémentation automatique de version pour SecureGen
 #>

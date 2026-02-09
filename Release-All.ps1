@@ -70,7 +70,7 @@ if ($Publish) {
     Write-Host ""
 }
 else {
-    Write-Host "ℹ️ Publication PSGallery ignorée (utilisez -Publish pour activer)" -ForegroundColor DarkYellow
+    Write-Host "⚠️ Publication PSGallery ignorée (utilisez -Publish pour activer)" -ForegroundColor DarkYellow
 }
 
 # ---------------------------------------------------------------------------

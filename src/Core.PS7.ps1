@@ -134,7 +134,7 @@ function Get-PassWord {
     $Lower = "abcdefghijklmnopqrstuvwxyz"
     $Upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     $Digits = "0123456789"
-    $Sym   = "!@#$%^&*()-_=+[]{}:;,.?<>~€"
+    $Sym   = "!@#$%^&*()-_=+[]{}:;,.?<>~"
 
     $Pool = $Lower + $Upper + $Digits
     if ($Symbols) { $Pool += $Sym }

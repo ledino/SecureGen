@@ -14,7 +14,7 @@ Set-StrictMode -Version Latest
 #>
 
 # ---------------------------------------------------------------------------
-# Détection automatique PowerShell 7 / PowerShell 5
+# DÃ©tection automatique PowerShell 7 / PowerShell 5
 # ---------------------------------------------------------------------------
 
 if ($PSVersionTable.PSVersion.Major -ge 7) {

@@ -86,7 +86,7 @@ SecureGen/
 │   └── palette.md
 │
 ├── docs/
-│	├── advanced.md
+│  ├── advanced.md
 │	├── architecture.md 
 │	├── examples.md
 │	├── faq.md
@@ -94,8 +94,8 @@ SecureGen/
 │	├── security.md
 │	├── contrubuting.md
 │	├── index.md
-│   ├── release-process.md
-│   ├── versioning.md
+│  ├── release-process.md
+│  ├── versioning.md
 │	└── troubleshooting.md
 │	
 ├── Install-SecureGen.ps1

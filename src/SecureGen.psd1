@@ -1,4 +1,4 @@
-﻿@{
+@{
     # Module metadata
     RootModule        = 'SecureGen.psm1'
     ModuleVersion = '1.3.2'

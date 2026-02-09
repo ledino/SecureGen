@@ -239,17 +239,17 @@ SecureGen/
 │   └── palette.md
 │
 ├── docs/
-│	├── advanced.md
-│	├── architecture.md 
-│	├── examples.md
-│	├── faq.md
-│	├── installation.md
-│	├── security.md
-│	├── contrubuting.md
-│	├── index.md
+│	  ├── advanced.md
+│	  ├── architecture.md 
+│ 	├── examples.md
+│	  ├── faq.md
+│ 	├── installation.md
+│ 	├── security.md
+│	  ├── contrubuting.md
+│ 	├── index.md
 │   ├── release-process.md
 │   ├── versioning.md
-│	└── troubleshooting.md
+│ 	└── troubleshooting.md
 │	
 ├── Install-SecureGen.ps1
 ├── Publish-SecureGen.ps1
