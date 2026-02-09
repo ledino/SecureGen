@@ -236,6 +236,11 @@ SecureGen/
 ├── assets/
 │   ├── logo.png
 │   ├── banner.png
+│   ├── blanc_pur.png
+│   ├── bleu_clair.png
+│   ├── bleu_fonce.png
+│   ├── cyan_vibrant.png
+│   ├── gris_anthracite.png
 │   └── palette.md
 │
 ├── docs/
