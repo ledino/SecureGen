@@ -83,23 +83,30 @@ SecureGen/
 ├── assets/
 │   ├── logo.png
 │   ├── banner.png
+│   ├── blanc_pur.png
+│   ├── bleu_clair.png
+│   ├── bleu_fonce.png
+│   ├── cyan_vibrant.png
+│   ├── gris_anthracite.png
 │   └── palette.md
 │
 ├── docs/
-│  ├── advanced.md
-│	├── architecture.md 
-│	├── examples.md
-│	├── faq.md
-│	├── installation.md
-│	├── security.md
-│	├── contrubuting.md
-│	├── index.md
-│  ├── release-process.md
-│  ├── versioning.md
-│	└── troubleshooting.md
+│   ├── advanced.md
+│   ├── architecture.md 
+│   ├── examples.md
+│   ├── faq.md
+│   ├── installation.md
+│   ├── security.md
+│   ├── contrubuting.md
+│   ├── index.md
+│   ├── release-process.md
+│   ├── versioning.md
+│   └── troubleshooting.md
 │	
 ├── Install-SecureGen.ps1
 ├── Publish-SecureGen.ps1
+├── Versioning-SecureGen.ps1
+├── Release-All.ps1
 ├── build.ps1
 ├── CHANGELOG.md
 ├── README.md
