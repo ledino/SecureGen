@@ -1,13 +1,6 @@
-<#
+﻿<#
     Versioning-SecureGen.ps1
     Script d’incrémentation automatique de version pour SecureGen
-    Auteur : Saddek
-    Version : 1.0
-
-    Usage :
-        .\Versioning-SecureGen.ps1 -Patch
-        .\Versioning-SecureGen.ps1 -Minor
-        .\Versioning-SecureGen.ps1 -Major
 #>
 
 param(
@@ -58,7 +51,8 @@ Write-Host "➡️ Nouvelle version : $NewVersion" -ForegroundColor Green
 # ---------------------------------------------------------------------------
 
 $Content = Get-Content $ManifestPath -Raw
-$Updated = $Content -replace "ModuleVersion\s*=\s*'[^']+'", "ModuleVersion = '$NewVersion'"
+$Replacement = "ModuleVersion = '$NewVersion'"
+$Updated = $Content -replace "ModuleVersion\s*=\s*'[^']+'", $Replacement
 
 Set-Content -Path $ManifestPath -Value $Updated -Encoding UTF8
 
