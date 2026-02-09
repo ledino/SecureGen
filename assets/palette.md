@@ -7,9 +7,9 @@ Elle garantit une cohérence graphique dans le README, la documentation, les cap
 
 ## 🎯 Couleurs principales
 
-| Nom              | HEX        | Usage recommandé                          | Aperçu                           |
-|------------------|------------|-------------------------------------------|----------------------------------|
-| Bleu foncé       | #0A2A4F  | Logo, titres, texte principal             | ![.](assets/bleu_fonce.png)      | 
+| Nom              | HEX      | Usage recommandé                          | Aperçu                           |
+|------------------|----------|-------------------------------------------|----------------------------------|
+| Bleu foncé       | #0A2A4F  | Logo, titres, texte principal             | ![.](assets\bleu_fonce.png)      | 
 | Cyan vibrant     | #00BCD4  | Accents, icônes, éléments interactifs     | ![.](assets/cyan_vibrant.png)    |
 | Bleu clair       | #4FC3F7  | Hover, sous‑titres, badges                | ![.](assets/bleu_clair.png)      |
 | Gris anthracite  | #263238  | Fonds sombres, encarts techniques         | ![.](assets/gris_anthracite.png) |
