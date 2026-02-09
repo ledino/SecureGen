@@ -1,6 +1,27 @@
 # 📄 **README.md — Version mise à jour**
 
-# 🔐 SecureGen
+[![PowerShell Gallery](https://img.shields.io/powershellgallery/v/SecureGen.svg?style=for-the-badge&label=PSGallery)](https://www.powershellgallery.com/packages/SecureGen)
+[![Downloads](https://img.shields.io/powershellgallery/dt/SecureGen.svg?style=for-the-badge&label=Downloads)](https://www.powershellgallery.com/packages/SecureGen)
+![PowerShell](https://img.shields.io/badge/PowerShell-5.1%20%7C%207.x-blue?style=for-the-badge)
+[![CI](https://github.com/ledino/SecureGen/actions/workflows/build-test-publish.yml/badge.svg)](https://github.com/ledino/SecureGen/actions/workflows/build-test-publish.yml)
+
+## 📚 Sommaire
+
+- [🔐 SecureGen](#-securegen)
+- [🚀 Installation](#-installation)
+  - [📦 Depuis la PowerShell Gallery](#-depuis-la-powershell-gallery)
+  - [🛠️ Installation intelligente (PS5--ps7)](#️-installation-intelligente-ps5--ps7)
+- [🧩 Fonctions incluses](#-fonctions-incluses)
+- [📝 Exemples d'utilisation](#-exemples-dutilisation)
+  - [🔑 Générer un mot de passe](#-générer-un-mot-de-passe)
+  - [🧠 Générer une passphrase](#-générer-une-passphrase)
+- [🖥️ Compatibilité](#️-compatibilité)
+- [🧱 Architecture du module](#-architecture-du-module)
+- [🎨 Identité visuelle](#-identité-visuelle)
+- [📦 Structure du dépôt](#-structure-du-dépôt)
+- [📜 Licence](#-licence)
+- [🤝 Contributions](#-contributions)
+- [⭐ Remerciements](#-remerciements)
 
 <p align="center">
   <img src="assets/logo.png" width="140" alt="SecureGen Logo"/>
