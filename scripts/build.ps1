@@ -7,6 +7,8 @@
 
 $ErrorActionPreference = "Stop"
 
+Set-Location (Split-Path $PSScriptRoot -Parent)
+
 Write-Host "🔧 Build du module SecureGen..." -ForegroundColor Cyan
 
 # ---------------------------------------------------------------------------
@@ -75,6 +77,7 @@ Write-Host "📦 Packaging du module..." -ForegroundColor Yellow
 
 $Manifest = "./SecureGen/SecureGen.psd1"
 $ModuleVersion = (Import-PowerShellDataFile $Manifest).ModuleVersion
+Write-Host "📦 Version détectée : $ModuleVersion" -ForegroundColor Cyan
 
 $NupkgPath = "$OutputDir/SecureGen.$ModuleVersion.nupkg"
 
@@ -86,6 +89,13 @@ Publish-Module `
     -ErrorAction SilentlyContinue | Out-Null
 
 Write-Host "✔ Packaging terminé" -ForegroundColor Green
+
+# Vérification du package généré
+if (Test-Path $NupkgPath) {
+    Write-Host "📦 Package généré : $NupkgPath" -ForegroundColor Cyan
+} else {
+    Write-Warning "⚠ Le fichier .nupkg n'a pas été trouvé. Il sera généré lors de la publication réelle."
+}
 
 # ---------------------------------------------------------------------------
 # 6. Publication (optionnelle)
@@ -111,6 +121,10 @@ if ($Publish) {
         -Verbose
 
     Write-Host "🎉 Publication réussie !" -ForegroundColor Green
+
+    if (Test-Path $NupkgPath) {
+    Write-Host "📦 Package final disponible : $NupkgPath" -ForegroundColor Cyan
+    }
 }
 
 Write-Host ""

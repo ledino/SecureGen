@@ -56,24 +56,39 @@ git checkout -b fix/clipboard-linux
 
 ---
 
-## 3. Respecter la structure du module
+# 🧱 Structure du module
 
 Le module est organisé ainsi :
 
 ```
-src/
+SecureGen/
 │
-├── Core.PS7.ps1      # Version moderne (PS7+)
-├── Legacy.PS5.ps1    # Version fallback (PS5.1)
-├── SecureGen.psm1    # Charge automatiquement la bonne version
-└── SecureGen.psd1    # Manifest
+├── SecureGen/
+│   ├── Core.PS7.ps1
+│   ├── Legacy.PS5.ps1
+│   ├── SecureGen.psm1
+│   └── SecureGen.psd1
+│
+├── scripts/
+│   ├── build.ps1
+│   ├── Versioning-SecureGen.ps1
+│   ├── Install-SecureGen.ps1
+│   ├── Publish-SecureGen.ps1
+│   └── Release-All.ps1
+│
+├── assets/
+├── docs/
+└── .github/
 ```
 
 ### Règles importantes :
 
-- **Ne jamais mélanger** code PS7 et PS5 dans un même fichier.
-- Toute nouvelle fonctionnalité doit être ajoutée dans **les deux versions** si nécessaire.
-- Le fichier `SecureGen.psm1` ne doit contenir **aucune logique métier**.
+- **Ne jamais mélanger** code PS7 et PS5 dans un même fichier.  
+- Toute nouvelle fonctionnalité doit être ajoutée dans **Core.PS7.ps1** et **Legacy.PS5.ps1** si elle doit fonctionner partout.  
+- Le fichier `SecureGen.psm1` ne doit contenir **aucune logique métier** :  
+  - uniquement le loader PS7/PS5  
+  - l’export des fonctions  
+  - les alias (`sgp`, `sgw`)  
 
 ---
 
@@ -94,7 +109,7 @@ Describe "Get-PassWord" {
 Le script de build exécute automatiquement les tests :
 
 ```powershell
-.\build.ps1
+pwsh ./scripts/build.ps1
 ```
 
 ---
@@ -104,7 +119,7 @@ Le script de build exécute automatiquement les tests :
 Avant de soumettre une PR, exécutez :
 
 ```powershell
-.\build.ps1
+pwsh ./scripts/build.ps1
 ```
 
 Ce script :
@@ -123,7 +138,7 @@ La publication sur la PowerShell Gallery est réservée aux mainteneurs.
 Toutefois, vous pouvez tester la publication en local :
 
 ```powershell
-.\build.ps1 -Publish
+pwsh ./scripts/build.ps1 -Publish
 ```
 
 ⚠️ Nécessite une clé API PSGallery dans :
@@ -145,6 +160,7 @@ Merci de respecter :
 - pas de variables globales
 - pas de dépendances externes
 - pas de secrets en clair dans le code
+- API identiques entre PS5 et PS7
 
 ---
 
@@ -154,10 +170,10 @@ Pour proposer une idée :
 
 - Ouvrez une **Issue** sur GitHub
 - Décrivez clairement :
-  - le besoin
-  - le contexte
-  - l’usage prévu
-  - l’impact sur PS5/PS7
+  - le besoin  
+  - le contexte  
+  - l’usage prévu  
+  - l’impact sur PS5/PS7  
 
 ---
 
@@ -169,6 +185,7 @@ Toute contribution touchant :
 - la génération aléatoire  
 - la gestion du clipboard  
 - la copie automatique  
+- les paramètres sensibles  
 
 doit être examinée avec attention.
 
@@ -185,7 +202,7 @@ Les PR modifiant ces zones doivent inclure :
 1. Fork du dépôt  
 2. Création d’une branche  
 3. Développement + tests  
-4. Build local (`.\build.ps1`)  
+4. Build local (`pwsh ./scripts/build.ps1`)  
 5. Commit clair et structuré  
 6. Push vers votre fork  
 7. Ouverture d’une Pull Request  

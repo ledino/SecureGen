@@ -1,9 +1,10 @@
 # 📘 **docs/versioning.md — Versioning & gestion des versions**
 
-# 🧩 Versioning — SecureGen
+# 🧩 Versioning — SecureGen  
+*(Version synchronisée avec la structure actuelle du module)*
 
 Ce document décrit la stratégie de versioning utilisée par **SecureGen**, basée sur le standard **SemVer** (Semantic Versioning).  
-Il explique comment incrémenter les versions, comment maintenir la cohérence entre le code, le manifest et le changelog, et comment préparer une release propre.
+Il explique comment incrémenter les versions, maintenir la cohérence entre le code, le manifest et le changelog, et préparer une release propre.
 
 ---
 
@@ -17,15 +18,16 @@ MAJOR.MINOR.PATCH
 
 Exemples :
 
-- `1.3.1`
-- `2.0.0`
-- `1.4.0`
+- `1.3.1`  
+- `2.0.0`  
+- `1.4.0`  
 
 ---
 
 # 🧱 Règles de versioning
 
 ## ✔ MAJOR (X.0.0)
+
 Incrémenter lorsque :
 
 - un changement **incompatible** est introduit  
@@ -42,22 +44,24 @@ Exemples :
 ---
 
 ## ✔ MINOR (1.X.0)
+
 Incrémenter lorsque :
 
 - une **nouvelle fonctionnalité** est ajoutée  
 - une amélioration significative est introduite  
-- une option ou un paramètre est ajouté  
+- un paramètre est ajouté  
 - une optimisation importante est réalisée  
 
 Exemples :
 
-- ajout d’une nouvelle fonction (`Get-RandomKey`)  
-- ajout d’un paramètre `-Symbols`  
+- ajout d’un paramètre `-LettresParMot`  
+- ajout d’un alias (`sgw`, `sgp`)  
 - amélioration du clipboard Linux  
 
 ---
 
 ## ✔ PATCH (1.3.X)
+
 Incrémenter lorsque :
 
 - une **correction de bug** est effectuée  
@@ -78,7 +82,7 @@ Exemples :
 La version officielle du module se trouve dans :
 
 ```
-src/SecureGen.psd1
+SecureGen/SecureGen.psd1
 ```
 
 Champ à modifier :
@@ -102,7 +106,7 @@ Format recommandé :
 ```markdown
 ## 🚀 1.4.0 — 2026-03-01
 ### Nouveautés
-- Ajout de la fonction Get-RandomKey
+- Ajout du paramètre -LettresParMot
 
 ### Améliorations
 - Optimisation du clipboard Linux
@@ -117,17 +121,17 @@ Format recommandé :
 
 Avant de publier une nouvelle version :
 
-1. Mettre à jour `SecureGen.psd1`
-2. Mettre à jour `CHANGELOG.md`
+1. Mettre à jour `SecureGen.psd1`  
+2. Mettre à jour `CHANGELOG.md`  
 3. Exécuter le build :
 
 ```powershell
-.\build.ps1
+pwsh ./scripts/build.ps1
 ```
 
-4. Vérifier que le module fonctionne sous :
-   - PowerShell 5.1
-   - PowerShell 7+
+4. Vérifier que le module fonctionne sous :  
+   - PowerShell 5.1  
+   - PowerShell 7+  
 
 5. Vérifier que les tests passent (si présents)
 
@@ -138,13 +142,13 @@ Avant de publier une nouvelle version :
 La publication se fait via :
 
 ```powershell
-.\build.ps1 -Publish
+pwsh ./scripts/build.ps1 -Publish
 ```
 
 ou :
 
 ```powershell
-.\Publish-SecureGen.ps1
+pwsh ./scripts/Publish-SecureGen.ps1
 ```
 
 Nécessite :
@@ -155,24 +159,32 @@ $env:PSGALLERY_KEY = "votre_clé_api"
 
 ---
 
-# 🔄 Automatisation du versioning (optionnel)
+# 🔄 Automatisation du versioning
 
-Vous pouvez automatiser :
+Le script suivant gère déjà une partie du versioning :
 
-- l’incrémentation de version  
+```
+scripts/Versioning-SecureGen.ps1
+```
+
+Il permet :
+
+- l’incrémentation automatique SemVer  
+- la mise à jour du manifest  
 - la mise à jour du changelog  
-- la création de tags Git  
-- la publication PSGallery  
+- la création d’un tag Git (optionnel)  
 
-via un workflow GitHub Actions.
+Pour automatiser entièrement le pipeline, vous pouvez utiliser :
 
-Un fichier type :
+```
+scripts/Release-All.ps1
+```
+
+ou un workflow GitHub Actions :
 
 ```
 .github/workflows/release.yml
 ```
-
-peut être ajouté pour automatiser tout le pipeline.
 
 ---
 

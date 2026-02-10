@@ -1,4 +1,6 @@
-# 📄 **README.md — Version mise à jour**
+# 📄 **README.md**
+synchroniser `docs/index.md` avec ce README
+# 🔐 SecureGen
 
 [![PowerShell Gallery](https://img.shields.io/powershellgallery/v/SecureGen.svg?style=for-the-badge&label=PSGallery)](https://www.powershellgallery.com/packages/SecureGen)
 [![Downloads](https://img.shields.io/powershellgallery/dt/SecureGen.svg?style=for-the-badge&label=Downloads)](https://www.powershellgallery.com/packages/SecureGen)
@@ -10,7 +12,6 @@
 - [🔐 SecureGen](#-securegen)
 - [🚀 Installation](#-installation)
   - [📦 Depuis la PowerShell Gallery](#-depuis-la-powershell-gallery)
-  - [🛠️ Installation intelligente (PS5--ps7)](#️-installation-intelligente-ps5--ps7)
 - [🧩 Fonctions incluses](#-fonctions-incluses)
 - [📝 Exemples d'utilisation](#-exemples-dutilisation)
   - [🔑 Générer un mot de passe](#-générer-un-mot-de-passe)
@@ -20,34 +21,9 @@
 - [🎨 Identité visuelle](#-identité-visuelle)
 - [📦 Structure du dépôt](#-structure-du-dépôt)
 - [📜 Licence](#-licence)
-- [🤝 Contributions](#-contributions)
 - [⭐ Remerciements](#-remerciements)
 
-<p align="center">
-  <img src="assets/logo.png" width="140" alt="SecureGen Logo"/>
-</p>
-
-<p align="center">
-  <img src="assets/banner.png" alt="SecureGen Banner"/>
-</p>
-
-<p align="center">
-  <a href="https://www.powershellgallery.com/packages/SecureGen">
-    <img src="https://img.shields.io/powershellgallery/v/SecureGen.svg" alt="PSGallery Version"/>
-  </a>
-  <a href="https://www.powershellgallery.com/packages/SecureGen">
-    <img src="https://img.shields.io/powershellgallery/dt/SecureGen.svg" alt="Downloads"/>
-  </a>
-  <a href="LICENSE">
-    <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="MIT License"/>
-  </a>
-</p>
-
----
-
-# 🔐 SecureGen
-
-**SecureGen** est un module PowerShell moderne, ergonomique et cross‑platform permettant de générer :
+SecureGen est un module PowerShell moderne, ergonomique et cross‑platform permettant de générer :
 
 - des **mots de passe sécurisés**
 - des **passphrases robustes**
@@ -55,10 +31,16 @@
 
 Il est compatible **PowerShell 5.1** et **PowerShell 7+**, avec une architecture intelligente qui charge automatiquement :
 
-- une version **optimisée PS7** (`Core.PS7.ps1`)
-- une version **fallback PS5** (`Legacy.PS5.ps1`)
+- une version **optimisée PS7** (`Core.PS7.ps1`) utilisant  
+  **Get‑SecureRandom (conforme aux modules cryptographiques modernes, NIST SP 800‑90)**
+- une version **fallback PS5** (`Legacy.PS5.ps1`) utilisant  
+  **RandomNumberGenerator (.NET Framework, crypto sûr mais non conforme modules modernes)**
 
-Le module inclut également une gestion automatique du **clipboard** (Windows/macOS/Linux) et un **beep discret** pour confirmer la copie.
+Le module inclut également :
+
+- une gestion automatique du **clipboard** (Windows/macOS/Linux)
+- un **beep discret** pour signaler l’effacement automatique
+- des alias ergonomiques (`sgp`, `sgw`)
 
 ---
 
@@ -84,39 +66,23 @@ Import-Module SecureGen
 
 ---
 
-# 🛠️ Installation intelligente (PS5 + PS7)
-
-Le script d’installation fourni dans le dépôt installe automatiquement SecureGen dans :
-
-- **PowerShell 5.1** si présent  
-- **PowerShell 7+** si présent  
-- **les deux** si les deux environnements existent  
-
-Il détecte les chemins standards Microsoft et copie le module proprement.
-
-```powershell
-.\Install-SecureGen.ps1
-```
-
----
-
 # 🧩 Fonctions incluses
 
 | Fonction              | Description |
 |----------------------|-------------|
 | `Get-PassWord`       | Génère un mot de passe sécurisé |
-| `Get-PassPhrase`     | Génère une passphrase lisible et robuste |
+| `Get-PassPhrase`     | Génère une passphrase robuste et lisible |
 | `Get-CryptoIndex`    | Générateur cryptographique interne |
+| `Invoke-Beep`        | Feedback sonore cross-platform |
 | `Set-ClipboardSafe`  | Copie cross-platform avec fallback |
 | `Clear-ClipboardSafe`| Efface le clipboard de manière sûre |
-| `Invoke-Beep`        | Feedback sonore cross-platform |
 
-Aliases ergonomiques :
+Alias ergonomiques :
 
 | Alias | Fonction |
 |-------|----------|
-| `sgp` | `Get-PassPhrase` |
 | `sgw` | `Get-PassWord` |
+| `sgp` | `Get-PassPhrase` |
 
 ---
 
@@ -128,16 +94,16 @@ Aliases ergonomiques :
 Get-PassWord
 ```
 
-Avec symboles :
+Personnaliser les caractères spéciaux :
 
 ```powershell
-Get-PassWord -Symbols
+Get-PassWord -SpecialChars '!@#?%'
 ```
 
-Copier automatiquement :
+Désactiver les caractères spéciaux :
 
 ```powershell
-Get-PassWord -Copy
+Get-PassWord -UseSpecial:$false
 ```
 
 ---
@@ -151,13 +117,13 @@ Get-PassPhrase
 6 mots :
 
 ```powershell
-Get-PassPhrase -Words 6
+Get-PassPhrase -MotsParBloc 6
 ```
 
-Copier sans beep :
+Sans beep :
 
 ```powershell
-Get-PassPhrase -Copy -Silent
+Get-PassPhrase -Silent
 ```
 
 ---
@@ -166,8 +132,8 @@ Get-PassPhrase -Copy -Silent
 
 | Plateforme | Support |
 |------------|---------|
-| Windows PowerShell 5.1 | ✔ (fallback Legacy) |
-| PowerShell 7+ Windows | ✔ (version moderne) |
+| Windows PowerShell 5.1 | ✔ (Legacy, RNG .NET) |
+| PowerShell 7+ Windows | ✔ (Core, Get‑SecureRandom) |
 | PowerShell 7+ Linux | ✔ |
 | PowerShell 7+ macOS | ✔ |
 
@@ -183,22 +149,22 @@ Clipboard géré automatiquement via :
 
 SecureGen charge automatiquement la bonne version :
 
-```
+```text
 SecureGen/
 │
-├── Core.PS7.ps1      # Version moderne (RandomNumberGenerator)
-└── Legacy.PS5.ps1    # Version fallback (RNGCryptoServiceProvider)
+├── Core.PS7.ps1      # Version moderne (Get-SecureRandom, conforme modules cryptographiques modernes)
+└── Legacy.PS5.ps1    # Version fallback (RNG .NET Framework)
 ```
 
 Module principal :
 
-```
+```text
 SecureGen.psm1
 ```
 
 Manifest :
 
-```
+```text
 SecureGen.psd1
 ```
 
@@ -208,7 +174,7 @@ SecureGen.psd1
 
 La palette officielle SecureGen est disponible dans :
 
-```
+```text
 assets/palette.md
 ```
 
@@ -224,7 +190,7 @@ Elle inclut :
 
 # 📦 Structure du dépôt
 
-```
+```text
 SecureGen/
 │
 ├── SecureGen/
@@ -245,22 +211,27 @@ SecureGen/
 │
 ├── docs/
 │   ├── advanced.md
-│   ├── architecture.md 
+│   ├── architecture.md
 │   ├── examples.md
 │   ├── faq.md
 │   ├── installation.md
 │   ├── security.md
-│   ├── contrubuting.md
-│   ├── index.md
-│   ├── release-process.md
+│   ├── troubleshooting.md
 │   ├── versioning.md
-│   └── troubleshooting.md
-│	
-├── Install-SecureGen.ps1
-├── Publish-SecureGen.ps1
-├── Versioning-SecureGen.ps1
-├── Release-All.ps1
-├── build.ps1
+│   ├── release-process.md
+│   └── index.md
+│
+├── .github/
+│   └── workflows/
+│       └── build-test-publish.yml
+│
+├── scripts/
+│   ├── build.ps1
+│   ├── Versioning-SecureGen.ps1
+│   ├── Install-SecureGen.ps1
+│   ├── Publish-SecureGen.ps1
+│   └── Release-All.ps1
+│
 ├── CHANGELOG.md
 ├── README.md
 ├── LICENSE
@@ -275,18 +246,9 @@ SecureGen est distribué sous licence **MIT**.
 
 ---
 
-# 🤝 Contributions
-
-Les contributions sont les bienvenues :
-
-- Pull Requests  
-- Issues  
-- Suggestions d’amélioration  
-
----
-
 # ⭐ Remerciements
 
 Merci d’utiliser SecureGen — un module conçu pour être **simple**, **sécurisé**, et **agréable à utiliser**.
-
+```
 ---
+

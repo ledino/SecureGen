@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install PowerShell
+        uses: PowerShell/PowerShell-For-GitHub-Actions@v2
+
+      - name: Test module loads
+        run: pwsh -c "Import-Module ./SecureGen/SecureGen.psd1"

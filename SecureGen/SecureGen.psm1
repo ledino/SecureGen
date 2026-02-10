@@ -2,9 +2,9 @@ Set-StrictMode -Version Latest
 
 <#
     SecureGen.psm1
-    Version : 1.3.1
+    Version : 1.3.2
     Auteur  : Ledino
-    Date    : 2026-02-09
+    Date    : 2026-02-10
 
     Notes :
     - Chargement automatique PS7 / PS5

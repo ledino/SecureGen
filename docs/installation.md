@@ -1,4 +1,5 @@
-# 📘 Guide d’installation — SecureGen
+# 📘 Guide d’installation — SecureGen  
+*(Version synchronisée avec la structure actuelle du module)*
 
 Ce document explique comment installer le module **SecureGen** dans différents environnements :  
 Windows PowerShell 5.1, PowerShell 7+, Linux, macOS, et via le script d’installation intelligent fourni dans le dépôt.
@@ -33,8 +34,8 @@ SecureGen fonctionne automatiquement dans :
 
 | Environnement | Support |
 |---------------|---------|
-| Windows PowerShell 5.1 | ✔ (fallback Legacy) |
-| PowerShell 7+ Windows | ✔ (version moderne) |
+| Windows PowerShell 5.1 | ✔ (Legacy) |
+| PowerShell 7+ Windows | ✔ (Core) |
 | PowerShell 7+ Linux | ✔ |
 | PowerShell 7+ macOS | ✔ |
 
@@ -52,7 +53,7 @@ Aucune action n’est requise de la part de l’utilisateur.
 Le dépôt inclut un script d’installation avancé :
 
 ```
-Install-SecureGen.ps1
+scripts/Install-SecureGen.ps1
 ```
 
 Il détecte automatiquement :
@@ -64,7 +65,13 @@ Il détecte automatiquement :
 ## ▶️ Exécution
 
 ```powershell
-.\Install-SecureGen.ps1
+pwsh ./scripts/Install-SecureGen.ps1
+```
+
+ou sous Windows PowerShell :
+
+```powershell
+./scripts/Install-SecureGen.ps1
 ```
 
 ## 📦 Résultat
@@ -93,13 +100,13 @@ Copiez le module dans votre dossier Modules :
 ### ▶️ PowerShell 7+
 
 ```powershell
-Copy-Item -Path "./src" -Destination "$HOME/Documents/PowerShell/Modules/SecureGen" -Recurse
+Copy-Item -Path "./SecureGen" -Destination "$HOME/Documents/PowerShell/Modules/SecureGen" -Recurse -Force
 ```
 
 ### ▶️ Windows PowerShell 5.1
 
 ```powershell
-Copy-Item -Path "./src" -Destination "$HOME/Documents/WindowsPowerShell/Modules/SecureGen" -Recurse
+Copy-Item -Path "./SecureGen" -Destination "$HOME/Documents/WindowsPowerShell/Modules/SecureGen" -Recurse -Force
 ```
 
 ---
@@ -115,7 +122,7 @@ Vous devriez voir :
 ```
 ModuleType Version Name       ExportedCommands
 ---------- ------- ----       ----------------
-Script     1.3.1   SecureGen  Get-PassWord, Get-PassPhrase, ...
+Script     1.x.x   SecureGen  Get-PassWord, Get-PassPhrase, ...
 ```
 
 ---
@@ -125,7 +132,7 @@ Script     1.3.1   SecureGen  Get-PassWord, Get-PassPhrase, ...
 ### ❗ Le clipboard ne fonctionne pas
 
 - Windows : `Set-Clipboard` doit être disponible  
-- macOS : installez `pbcopy` (inclus par défaut)  
+- macOS : `pbcopy` est inclus par défaut  
 - Linux : installez `xclip` ou `xsel`  
 
 Exemple :
@@ -167,3 +174,4 @@ Pour les usages avancés :
 👉 `docs/advanced.md`
 
 ---
+

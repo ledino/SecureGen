@@ -3,6 +3,8 @@
     Script d’incrémentation automatique de version pour SecureGen
 #>
 
+Set-Location (Split-Path $PSScriptRoot -Parent)
+
 param(
     [switch]$Major,
     [switch]$Minor,

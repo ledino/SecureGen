@@ -7,6 +7,8 @@
 
 $ErrorActionPreference = "Stop"
 
+Set-Location (Split-Path $PSScriptRoot -Parent)
+
 <#
 Pour éviter l'erreur :
 ```

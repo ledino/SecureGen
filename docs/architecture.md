@@ -1,4 +1,5 @@
-# 🧱 Architecture interne — SecureGen
+# 🧱 Architecture interne — SecureGen  
+*(Version synchronisée avec la structure actuelle du module)*
 
 Ce document décrit en détail l’architecture interne du module **SecureGen**, son fonctionnement, ses choix techniques et sa structure modulaire.  
 Il est destiné aux développeurs, contributeurs et utilisateurs avancés souhaitant comprendre comment le module fonctionne en profondeur.
@@ -7,7 +8,7 @@ Il est destiné aux développeurs, contributeurs et utilisateurs avancés souhai
 
 # 🔐 Vision & philosophie
 
-SecureGen est conçu selon trois principes :
+SecureGen repose sur trois principes fondamentaux :
 
 1. **Sécurité moderne**  
    Utiliser les meilleures API cryptographiques disponibles selon la version de PowerShell.
@@ -16,56 +17,74 @@ SecureGen est conçu selon trois principes :
    Fonctionner aussi bien sous **PowerShell 7+** que sous **Windows PowerShell 5.1**.
 
 3. **Expérience utilisateur fluide**  
-   Clipboard cross‑platform, beep encapsulé, alias ergonomiques, code propre.
+   Clipboard cross‑platform, beep encapsulé, alias ergonomiques, code propre et maintenable.
 
 ---
 
 # 🧩 Architecture modulaire PS7 / PS5
 
-SecureGen utilise une architecture à deux implémentations :
+SecureGen utilise une architecture moderne basée sur **deux implémentations distinctes**, chacune optimisée pour sa version de PowerShell :
 
 ```
-src/
+SecureGen/
 │
-├── Core.PS7.ps1      # Version moderne (PowerShell 7+)
-└── Legacy.PS5.ps1    # Version fallback (PowerShell 5.1)
+├── Core.PS7.ps1      # Implémentation moderne (PowerShell 7+)
+└── Legacy.PS5.ps1    # Implémentation fallback (Windows PowerShell 5.1)
 ```
 
 ## ▶️ Core.PS7.ps1 (PowerShell 7+)
 
-Cette version utilise :
+Cette version est chargée automatiquement lorsque PowerShell 7 ou supérieur est détecté.  
+Elle utilise :
 
-- `RandomNumberGenerator.GetBytes()`  
-- `Get-SecureRandom` (si disponible)  
-- API .NET 6+  
-- Clipboard cross‑platform complet  
-- Code optimisé et plus performant  
+- `Get-SecureRandom` (si disponible)
+- `RandomNumberGenerator.GetBytes()` (.NET 6+)
+- un clipboard totalement cross‑platform
+- un code plus performant et plus lisible
+- une génération cryptographique conforme aux recommandations modernes
 
 ## ▶️ Legacy.PS5.ps1 (Windows PowerShell 5.1)
 
-Fallback basé sur :
+Fallback sécurisé pour les environnements plus anciens :
 
-- `RNGCryptoServiceProvider`  
-- Clipboard limité à Windows  
-- Compatibilité .NET Framework 4.8  
-- API plus ancienne mais toujours sécurisée  
+- `RNGCryptoServiceProvider` (API .NET Framework 4.8)
+- clipboard limité à Windows
+- compatibilité maximale avec PS5.1
+- même logique fonctionnelle, adaptée aux contraintes du Framework
 
 ---
 
-# 🔍 Détection automatique de la version PowerShell
+# 🔍 Détection automatique dans SecureGen.psm1
 
-Le fichier principal `SecureGen.psm1` charge automatiquement la bonne implémentation :
+Le fichier principal `SecureGen.psm1` agit comme un **loader intelligent**.  
+Il détecte la version de PowerShell et charge automatiquement la bonne implémentation :
 
 ```powershell
 if ($PSVersionTable.PSVersion.Major -ge 7) {
-    . "$PSScriptRoot/src/Core.PS7.ps1"
+    . "$PSScriptRoot/Core.PS7.ps1"
 }
 else {
-    . "$PSScriptRoot/src/Legacy.PS5.ps1"
+    . "$PSScriptRoot/Legacy.PS5.ps1"
 }
 ```
 
-Aucune action n’est requise de la part de l’utilisateur.
+Aucune action n’est requise de la part de l’utilisateur :  
+👉 **tout est automatique, transparent et optimisé.**
+
+---
+
+# 🧠 Rôle du loader (SecureGen.psm1)
+
+Le loader :
+
+- charge la bonne implémentation PS7/PS5  
+- expose les fonctions publiques du module  
+- applique les alias ergonomiques :  
+  - `sgw` → `Get-PassWord`  
+  - `sgp` → `Get-PassPhrase`  
+- garantit une API identique sur toutes les plateformes  
+- encapsule les différences techniques entre PS5 et PS7  
+- centralise la logique commune (clipboard, beep, helpers)
 
 ---
 
@@ -92,22 +111,27 @@ SecureGen/
 │
 ├── docs/
 │   ├── advanced.md
-│   ├── architecture.md 
+│   ├── architecture.md
 │   ├── examples.md
 │   ├── faq.md
 │   ├── installation.md
 │   ├── security.md
-│   ├── contrubuting.md
-│   ├── index.md
-│   ├── release-process.md
+│   ├── troubleshooting.md
 │   ├── versioning.md
-│   └── troubleshooting.md
-│	
-├── Install-SecureGen.ps1
-├── Publish-SecureGen.ps1
-├── Versioning-SecureGen.ps1
-├── Release-All.ps1
-├── build.ps1
+│   ├── release-process.md
+│   └── index.md
+│
+├── .github/
+│   └── workflows/
+│       └── build-test-publish.yml
+│
+├── scripts/
+│   ├── build.ps1
+│   ├── Versioning-SecureGen.ps1
+│   ├── Install-SecureGen.ps1
+│   ├── Publish-SecureGen.ps1
+│   └── Release-All.ps1
+│
 ├── CHANGELOG.md
 ├── README.md
 ├── LICENSE
@@ -178,12 +202,18 @@ Utilisé par :
 ## Get-PassWord
 - Génération caractère par caractère  
 - Pool configurable (minuscules, majuscules, chiffres, symboles)  
-- Option `-Copy` et `-Silent`  
+- Paramètres modernes :  
+  - `-SpecialChars`  
+  - `-UseSpecial`  
+  - `-Silent`  
 
 ## Get-PassPhrase
 - Liste de mots sélectionnés pour lisibilité + entropie  
 - Séparateur `-`  
-- Option `-Copy` et `-Silent`  
+- Paramètres modernes :  
+  - `-MotsParBloc`  
+  - `-LettresParMot`  
+  - `-Silent`  
 
 ## Aliases
 - `sgp` → `Get-PassPhrase`  
@@ -193,19 +223,22 @@ Utilisé par :
 
 # 🛠️ Scripts intégrés
 
-## Install-SecureGen.ps1
-- Détection PS5 / PS7  
-- Installation dans tous les environnements disponibles  
-
-## Publish-SecureGen.ps1
-- Publication PSGallery  
-- Vérification de la clé API  
-
 ## build.ps1
 - Nettoyage  
 - Packaging  
 - Tests Pester  
 - Publication optionnelle  
+
+## Versioning-SecureGen.ps1
+- Versioning SemVer automatique  
+- Mise à jour du manifest  
+
+## Publish-SecureGen.ps1
+- Publication PSGallery  
+- Vérification de la clé API  
+
+## Release-All.ps1
+- Pipeline complet : versioning + build + publication  
 
 ---
 

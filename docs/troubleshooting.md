@@ -10,28 +10,35 @@ Elle couvre PowerShell 5.1, PowerShell 7+, Windows, Linux et macOS.
 # ❗ Le module n’apparaît pas dans PowerShell
 
 ## Symptôme
+
 ```powershell
 Get-Module SecureGen -ListAvailable
 ```
+
 ne retourne rien.
 
 ## Causes possibles
-- Le module n’a pas été installé dans le bon dossier.
-- Le chemin `$env:PSModulePath` n’inclut pas le dossier Modules utilisateur.
-- Le script d’installation n’a pas été exécuté.
+
+- Le module n’a pas été installé dans le bon dossier.  
+- Le chemin `$env:PSModulePath` n’inclut pas le dossier Modules utilisateur.  
+- Le script d’installation n’a pas été exécuté.  
 
 ## Solutions
+
 ### 1. Vérifier les chemins
+
 ```powershell
 $env:PSModulePath -split ';'
 ```
 
 ### 2. Réinstaller avec le script intelligent
+
 ```powershell
-.\Install-SecureGen.ps1
+pwsh ./scripts/Install-SecureGen.ps1
 ```
 
 ### 3. Installer depuis PSGallery
+
 ```powershell
 Install-Module SecureGen -Scope CurrentUser
 ```
@@ -41,33 +48,38 @@ Install-Module SecureGen -Scope CurrentUser
 # ❗ Le clipboard ne fonctionne pas
 
 ## Symptôme
-- Rien n’est copié.
-- Un warning apparaît :  
-  *"Clipboard non disponible sur ce système"*
+
+- Rien n’est copié.  
+- Un warning apparaît : *"Clipboard non disponible sur ce système"*
 
 ## Causes possibles
-- Linux : `xclip` ou `xsel` non installés.
-- macOS : `pbcopy` absent (rare).
-- Windows : `Set-Clipboard` inaccessible (session distante, sandbox).
+
+- Linux : `xclip` ou `xsel` non installés.  
+- macOS : `pbcopy` absent (rare).  
+- Windows : `Set-Clipboard` inaccessible (session distante, sandbox).  
 
 ## Solutions
+
 ### Linux
-Installer un utilitaire :
 
 ```bash
 sudo apt install xclip
 ```
+
 ou :
+
 ```bash
 sudo apt install xsel
 ```
 
 ### macOS
+
 `pbcopy` est normalement présent.  
 Si absent, réinstaller les outils système.
 
 ### Windows
-Vérifier que `Set-Clipboard` fonctionne :
+
+Tester :
 
 ```powershell
 "test" | Set-Clipboard
@@ -78,21 +90,24 @@ Vérifier que `Set-Clipboard` fonctionne :
 # ❗ Le beep ne fonctionne pas
 
 ## Symptôme
+
 Aucun son n’est émis.
 
 ## Causes possibles
-- Terminal Linux sans support sonore.
-- macOS sans accès au système audio.
-- Environnement distant (SSH, VSCode Remote, Docker).
+
+- Terminal Linux sans support sonore.  
+- macOS sans accès au système audio.  
+- Environnement distant (SSH, VSCode Remote, Docker).  
 
 ## Solution
+
 Aucune action requise.  
 SecureGen **ignore automatiquement l’erreur** et continue normalement.
 
 Pour désactiver le beep :
 
 ```powershell
-- Silent
+Get-PassWord -Silent
 ```
 
 ---
@@ -100,31 +115,37 @@ Pour désactiver le beep :
 # ❗ Le module ne fonctionne pas sous PowerShell 5.1
 
 ## Symptôme
-- Erreurs liées à des API modernes.
-- Fonctions non reconnues.
+
+- Erreurs liées à des API modernes.  
+- Fonctions non reconnues.  
 
 ## Causes possibles
-- Mauvaise installation.
-- Version PS7 chargée par erreur.
-- Fichiers manquants dans `src/`.
+
+- Mauvaise installation.  
+- Version PS7 chargée par erreur.  
+- Structure incorrecte du module.  
 
 ## Solutions
+
 ### 1. Vérifier la version PowerShell
+
 ```powershell
 $PSVersionTable.PSVersion
 ```
 
 ### 2. Réinstaller le module
+
 ```powershell
-.\Install-SecureGen.ps1
+pwsh ./scripts/Install-SecureGen.ps1
 ```
 
 ### 3. Vérifier la présence des fichiers
+
 ```
-src/Core.PS7.ps1
-src/Legacy.PS5.ps1
-src/SecureGen.psm1
-src/SecureGen.psd1
+SecureGen/Core.PS7.ps1
+SecureGen/Legacy.PS5.ps1
+SecureGen/SecureGen.psm1
+SecureGen/SecureGen.psd1
 ```
 
 ---
@@ -132,23 +153,26 @@ src/SecureGen.psd1
 # ❗ Le module charge la mauvaise version (PS5/PS7)
 
 ## Symptôme
-- PS7 charge la version Legacy.
-- PS5 charge la version Core.
+
+- PS7 charge la version Legacy.  
+- PS5 charge la version Core.  
 
 ## Causes possibles
-- Fichiers déplacés.
-- Structure incorrecte.
-- Mauvais chemin d’installation.
+
+- Fichiers déplacés.  
+- Structure incorrecte.  
+- Mauvais chemin d’installation.  
 
 ## Solution
+
 Vérifier que `SecureGen.psm1` contient bien :
 
 ```powershell
 if ($PSVersionTable.PSVersion.Major -ge 7) {
-    . "$PSScriptRoot/src/Core.PS7.ps1"
+    . "$PSScriptRoot/Core.PS7.ps1"
 }
 else {
-    . "$PSScriptRoot/src/Legacy.PS5.ps1"
+    . "$PSScriptRoot/Legacy.PS5.ps1"
 }
 ```
 
@@ -157,24 +181,29 @@ else {
 # ❗ Erreur lors de la publication PSGallery
 
 ## Symptôme
-- Erreur `NuGetApiKey`
-- Erreur `Unauthorized`
-- Erreur `Repository not found`
+
+- Erreur `NuGetApiKey`  
+- Erreur `Unauthorized`  
+- Erreur `Repository not found`  
 
 ## Causes possibles
-- Clé API absente.
-- Clé API expirée.
-- Mauvais repository.
+
+- Clé API absente.  
+- Clé API expirée.  
+- Mauvais repository.  
 
 ## Solutions
+
 ### 1. Définir la clé API
+
 ```powershell
 $env:PSGALLERY_KEY = "votre_clé"
 ```
 
 ### 2. Publier
+
 ```powershell
-.\build.ps1 -Publish
+pwsh ./scripts/build.ps1 -Publish
 ```
 
 ---
@@ -182,16 +211,18 @@ $env:PSGALLERY_KEY = "votre_clé"
 # ❗ Le module ne se charge pas dans un script CI/CD
 
 ## Symptôme
+
 `Install-Module` échoue dans GitHub Actions ou Azure DevOps.
 
 ## Causes possibles
-- Pas de profil utilisateur.
-- Pas de dossier Modules.
-- Droits insuffisants.
+
+- Pas de profil utilisateur.  
+- Pas de dossier Modules.  
+- Droits insuffisants.  
 
 ## Solutions
+
 ### GitHub Actions
-Ajouter :
 
 ```yaml
 - name: Créer dossier Modules
@@ -199,7 +230,6 @@ Ajouter :
 ```
 
 ### Azure DevOps
-Utiliser :
 
 ```yaml
 Install-Module SecureGen -Force -Scope CurrentUser
@@ -210,23 +240,34 @@ Install-Module SecureGen -Force -Scope CurrentUser
 # ❗ Les mots de passe générés semblent “trop simples”
 
 ## Symptôme
-- Pas assez de symboles.
-- Pas assez de longueur.
+
+- Pas assez de symboles.  
+- Pas assez de longueur.  
 
 ## Solutions
-### Ajouter des symboles
+
+### Ajouter des symboles personnalisés
+
 ```powershell
-Get-PassWord -Symbols
+Get-PassWord -SpecialChars '!@#?%'
+```
+
+### Désactiver les symboles
+
+```powershell
+Get-PassWord -UseSpecial:$false
 ```
 
 ### Augmenter la longueur
+
 ```powershell
 Get-PassWord -Length 32
 ```
 
 ### Générer une passphrase plus robuste
+
 ```powershell
-Get-PassPhrase -Words 8
+Get-PassPhrase -MotsParBloc 7 -LettresParMot 5
 ```
 
 ---
@@ -234,6 +275,7 @@ Get-PassPhrase -Words 8
 # ❗ Le clipboard contient encore un ancien mot de passe
 
 ## Solution
+
 Effacer le presse‑papier :
 
 ```powershell
@@ -246,10 +288,10 @@ Clear-ClipboardSafe
 
 Consultez :
 
-- `docs/faq.md`
-- `docs/installation.md`
-- `docs/advanced.md`
-- `docs/architecture.md`
+- `docs/faq.md`  
+- `docs/installation.md`  
+- `docs/advanced.md`  
+- `docs/architecture.md`  
 
 Ou ouvrez une **Issue GitHub** pour obtenir de l’aide.
 

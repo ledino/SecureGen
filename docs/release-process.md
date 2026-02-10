@@ -31,13 +31,13 @@ Assurez-vous que :
 La version du module se trouve dans :
 
 ```
-src/SecureGen.psd1
+SecureGen/SecureGen.psd1
 ```
 
 Modifiez :
 
 ```powershell
-ModuleVersion = 'X.Y.Z'
+ModuleVersion = '1.3.2'
 ```
 
 ### Règles de versioning (SemVer)

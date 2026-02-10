@@ -7,6 +7,8 @@
 
 $ErrorActionPreference = "Stop"
 
+Set-Location (Split-Path $PSScriptRoot -Parent)
+
 Write-Host "🔐 Installation du module SecureGen..." -ForegroundColor Cyan
 
 # ---------------------------------------------------------------------------
@@ -81,4 +83,4 @@ if ($HasPS7) {
 }
 
 Write-Host ""
-Write-Host "Vous pouvez maintenant utiliser : Get-PassWord, Get-PassPhrase, sgw, sgp"
+Write-Host "Vous pouvez maintenant utiliser : Get-PassWord, Get-PassPhrase, spw, spp"

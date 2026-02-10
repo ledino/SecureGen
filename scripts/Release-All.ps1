@@ -1,7 +1,7 @@
 <#
     Release-All.ps1
     Pipeline complet de release pour SecureGen
-    Auteur : Saddek
+    Auteur : Ledino
     Version : 1.0
 
     Usage :
@@ -10,6 +10,8 @@
         .\Release-All.ps1 -Major
         .\Release-All.ps1 -Publish
 #>
+
+Set-Location (Split-Path $PSScriptRoot -Parent)
 
 param(
     [switch]$Major,

@@ -12,9 +12,9 @@ Cette page répond aux questions les plus fréquentes concernant l’installatio
 ## 👉 Qu’est‑ce que SecureGen ?
 SecureGen est un module PowerShell moderne permettant de générer :
 
-- des mots de passe sécurisés
-- des passphrases robustes
-- des clés aléatoires cryptographiquement sûres
+- des mots de passe sécurisés  
+- des passphrases robustes  
+- des clés aléatoires cryptographiquement sûres  
 
 Il fonctionne sous **PowerShell 5.1** et **PowerShell 7+**, sur Windows, Linux et macOS.
 
@@ -34,8 +34,8 @@ La version **Core.PS7.ps1** utilise les API cryptographiques modernes de .NET 6+
 Automatiquement.  
 Le fichier `SecureGen.psm1` détecte la version PowerShell et charge :
 
-- `Core.PS7.ps1` si PS7+
-- `Legacy.PS5.ps1` si PS5.1
+- `Core.PS7.ps1` si PS7+  
+- `Legacy.PS5.ps1` si PS5.1  
 
 Aucune action n’est requise.
 
@@ -59,7 +59,7 @@ Update-Module SecureGen
 Clonez le dépôt puis exécutez :
 
 ```powershell
-.\Install-SecureGen.ps1
+pwsh ./scripts/Install-SecureGen.ps1
 ```
 
 Le script détecte automatiquement PS5/PS7 et installe dans les bons chemins.
@@ -80,17 +80,22 @@ Get-PassWord
 Get-PassPhrase
 ```
 
-## 👉 Comment copier automatiquement un mot de passe ?
+## 👉 Comment personnaliser une passphrase ?
 
 ```powershell
-Get-PassWord -Copy
+Get-PassPhrase -LettresParMot 5 -MotsParBloc 7
 ```
 
 ## 👉 Comment désactiver le beep ?
 
 ```powershell
-Get-PassWord -Copy -Silent
+Get-PassWord -Silent
 ```
+
+## 👉 Quels sont les alias disponibles ?
+
+- `sgw` → `Get-PassWord`  
+- `sgp` → `Get-PassPhrase`  
 
 ---
 
@@ -99,8 +104,8 @@ Get-PassWord -Copy -Silent
 ## 👉 Le clipboard ne fonctionne pas sous Linux/macOS, pourquoi ?
 Vous devez installer un utilitaire :
 
-- Linux : `xclip` ou `xsel`
-- macOS : `pbcopy` (déjà installé par défaut)
+- Linux : `xclip` ou `xsel`  
+- macOS : `pbcopy` (déjà installé par défaut)  
 
 Exemple Linux :
 
@@ -130,8 +135,8 @@ Aucun secret n’est stocké, loggé ou envoyé.
 Oui.  
 SecureGen utilise :
 
-- PS7 : `RandomNumberGenerator.GetBytes()` + `Get-SecureRandom`
-- PS5 : `RNGCryptoServiceProvider`
+- PS7 : `RandomNumberGenerator.GetBytes()` + `Get-SecureRandom`  
+- PS5 : `RNGCryptoServiceProvider`  
 
 Toutes ces API sont cryptographiquement sûres.
 
@@ -142,7 +147,9 @@ Exemple GitHub Actions :
 ```yaml
 - name: Générer un secret
   shell: pwsh
-  run: echo "SECRET=$(Get-PassWord -Symbols)" >> $GITHUB_ENV
+  run: |
+    $pwd = Get-PassWord -SpecialChars '!@#?%' -Silent
+    echo "SECRET=$pwd" >> $GITHUB_ENV
 ```
 
 ---
@@ -159,7 +166,7 @@ Dans `docs/architecture.md`.
 Avec :
 
 ```powershell
-.\build.ps1
+pwsh ./scripts/build.ps1
 ```
 
 ---
@@ -196,3 +203,4 @@ Pour toute autre question :
 👉 GitHub — Issues & Discussions
 
 ---
+

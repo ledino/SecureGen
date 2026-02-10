@@ -1,19 +1,23 @@
-# 📘 **docs/index.md — Page d’accueil de la documentation**
+# 📘 **docs/index.md — Documentation officielle SecureGen**  
+*(Version synchronisée avec la structure actuelle du module)*
 
 # 🔐 SecureGen — Documentation officielle
 
 Bienvenue dans la documentation officielle de **SecureGen**, un module PowerShell moderne, sécurisé et cross‑platform conçu pour générer :
 
-- des **mots de passe sécurisés**
-- des **passphrases robustes**
+- des **mots de passe sécurisés**  
+- des **passphrases robustes**  
 - des **clés aléatoires cryptographiquement sûres**
 
 SecureGen fonctionne automatiquement sous :
 
-- **PowerShell 7+** (Windows, Linux, macOS)
+- **PowerShell 7+** (Windows, Linux, macOS)  
 - **Windows PowerShell 5.1**
 
-Grâce à une architecture intelligente, le module charge la version la plus adaptée à votre environnement.
+Grâce à une architecture intelligente, le module charge automatiquement la version la plus adaptée à votre environnement :
+
+- **Core.PS7.ps1** → version moderne utilisant `Get‑SecureRandom` ou `RandomNumberGenerator.GetBytes()`  
+- **Legacy.PS5.ps1** → version fallback utilisant `RNGCryptoServiceProvider` (.NET Framework)
 
 ---
 
@@ -41,13 +45,13 @@ Import-Module SecureGen
 
 # 🧩 Fonctionnalités principales
 
-- Génération de mots de passe sécurisés (`Get-PassWord`)
-- Génération de passphrases lisibles (`Get-PassPhrase`)
-- Générateur cryptographique interne (`Get-CryptoIndex`)
-- Clipboard cross‑platform (`Set-ClipboardSafe`)
-- Effacement du clipboard (`Clear-ClipboardSafe`)
-- Beep encapsulé (`Invoke-Beep`)
-- Aliases ergonomiques : `sgp`, `sgw`
+- Génération de mots de passe sécurisés (`Get-PassWord`)  
+- Génération de passphrases lisibles (`Get-PassPhrase`)  
+- Générateur cryptographique interne (`Get-CryptoIndex`)  
+- Clipboard cross‑platform (`Set-ClipboardSafe`)  
+- Effacement sécurisé du clipboard (`Clear-ClipboardSafe`)  
+- Beep encapsulé (`Invoke-Beep`)  
+- Aliases ergonomiques : **`sgw`**, **`sgp`**
 
 ---
 
@@ -56,7 +60,7 @@ Import-Module SecureGen
 SecureGen utilise une architecture modulaire :
 
 ```
-src/
+SecureGen/
 │
 ├── Core.PS7.ps1      # Version moderne (PowerShell 7+)
 └── Legacy.PS5.ps1    # Version fallback (PowerShell 5.1)
@@ -98,15 +102,21 @@ Réponses aux questions les plus fréquentes.
 Guide pour contribuer au projet : PR, style, tests, build.  
 👉 `contributing.md`
 
+### ▶️ Processus de release  
+Pipeline complet pour publier une version stable sur PSGallery.  
+👉 `release-process.md`
+
 ---
 
 # 🛠️ Scripts intégrés
 
-SecureGen inclut plusieurs scripts utiles :
+Les scripts d’automatisation se trouvent dans le dossier `scripts/` :
 
-- `Install-SecureGen.ps1` → installation intelligente PS5/PS7  
-- `Publish-SecureGen.ps1` → publication PSGallery  
 - `build.ps1` → build complet + tests + packaging  
+- `Versioning-SecureGen.ps1` → versioning SemVer automatique  
+- `Publish-SecureGen.ps1` → publication PSGallery  
+- `Install-SecureGen.ps1` → installation intelligente PS5/PS7  
+- `Release-All.ps1` → pipeline complet (versioning + build + publication)
 
 ---
 

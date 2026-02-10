@@ -1,4 +1,5 @@
-# 📘 Exemples d'utilisation — SecureGen
+# 📘 Exemples d'utilisation — SecureGen  
+*(Version synchronisée avec le README officiel)*
 
 Ce document présente des exemples pratiques et avancés pour exploiter pleinement les fonctionnalités du module **SecureGen**.
 
@@ -12,10 +13,16 @@ Ce document présente des exemples pratiques et avancés pour exploiter pleineme
 Get-PassWord
 ```
 
-## Mot de passe avec symboles
+## Mot de passe avec caractères spéciaux personnalisés
 
 ```powershell
-Get-PassWord -Symbols
+Get-PassWord -SpecialChars '!@#?%'
+```
+
+## Désactiver les caractères spéciaux
+
+```powershell
+Get-PassWord -UseSpecial:$false
 ```
 
 ## Mot de passe plus long (32 caractères)
@@ -24,16 +31,17 @@ Get-PassWord -Symbols
 Get-PassWord -Length 32
 ```
 
-## Copier automatiquement dans le presse‑papier
+Ou commande plus courte
 
 ```powershell
-Get-PassWord -Copy
+sgw 32
 ```
 
-## Copier sans beep
+
+## Générer un mot de passe silencieusement (sans beep)
 
 ```powershell
-Get-PassWord -Copy -Silent
+Get-PassWord -Silent
 ```
 
 ---
@@ -49,19 +57,32 @@ Get-PassPhrase
 ## Passphrase longue (6 mots)
 
 ```powershell
-Get-PassPhrase -Words 6
+Get-PassPhrase -MotsParBloc 6
 ```
 
-## Copier automatiquement
+## Passphrase structurée (exemple recommandé)
+
+Cet exemple est particulièrement utile pour obtenir une passphrase :
+
+- très lisible  
+- très régulière  
+- très robuste  
+- idéale pour un usage quotidien ou professionnel  
 
 ```powershell
-Get-PassPhrase -Copy
+Get-PassPhrase -LettresParMot 5 -MotsParBloc 7
 ```
 
-## Copier sans beep
+Commande courte :
 
 ```powershell
-Get-PassPhrase -Copy -Silent
+sgp 5 7
+```
+
+## Générer une passphrase silencieusement
+
+```powershell
+Get-PassPhrase -Silent
 ```
 
 ---
@@ -128,17 +149,17 @@ sgw
 
 # 🧪 Exemples combinés
 
-## Générer un mot de passe, le copier, et afficher un message
+## Générer un mot de passe, l’afficher, et continuer le script
 
 ```powershell
-$pwd = Get-PassWord -Symbols -Copy
-Write-Host "Mot de passe généré et copié : $pwd"
+$pwd = Get-PassWord -SpecialChars '!@#?%' -Silent
+Write-Host "Mot de passe généré : $pwd"
 ```
 
 ## Générer une passphrase longue et l’utiliser dans un script
 
 ```powershell
-$phrase = Get-PassPhrase -Words 8
+$phrase = Get-PassPhrase -LettresParMot 4 -MotsParBloc 5
 Write-Host "Votre passphrase : $phrase"
 ```
 
@@ -151,7 +172,6 @@ Write-Host "Votre passphrase : $phrase"
   - Windows : `Set-Clipboard`
   - macOS : `pbcopy`
   - Linux : `xclip` ou `xsel`
-- Le beep est encapsulé pour éviter les erreurs sur les systèmes qui ne le supportent pas.
 - SecureGen charge automatiquement la version adaptée :
   - **Core.PS7.ps1** pour PowerShell 7+
   - **Legacy.PS5.ps1** pour Windows PowerShell 5.1
@@ -163,3 +183,4 @@ Write-Host "Votre passphrase : $phrase"
 N'hésitez pas à contribuer via GitHub : issues, PR, suggestions.
 
 ---
+
