@@ -46,7 +46,7 @@ function Install-ToPath {
         New-Item -ItemType Directory -Path $TargetPath -Force | Out-Null
     }
 
-    Copy-Item -Path "./src/*" -Destination $TargetPath -Recurse -Force
+    Copy-Item -Path "./SecureGen/*" -Destination $TargetPath -Recurse -Force
 }
 
 # ---------------------------------------------------------------------------
@@ -83,4 +83,4 @@ if ($HasPS7) {
 }
 
 Write-Host ""
-Write-Host "Vous pouvez maintenant utiliser : Get-PassWord, Get-PassPhrase, spw, spp"
+Write-Host "Vous pouvez maintenant utiliser : Get-PassWord, Get-PassPhrase, sgw, sgp"
