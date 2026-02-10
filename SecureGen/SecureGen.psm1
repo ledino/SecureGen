@@ -19,11 +19,11 @@ Set-StrictMode -Version Latest
 
 if ($PSVersionTable.PSVersion.Major -ge 7) {
     # Version moderne (RandomNumberGenerator.GetBytes, Get-SecureRandom)
-    . "$PSScriptRoot/src/Core.PS7.ps1"
+    . "$PSScriptRoot/Core.PS7.ps1"
 }
 else {
     # Version fallback Windows PowerShell 5.1 (RNGCryptoServiceProvider)
-    . "$PSScriptRoot/src/Legacy.PS5.ps1"
+    . "$PSScriptRoot/Legacy.PS5.ps1"
 }
 
 # ---------------------------------------------------------------------------

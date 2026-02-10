@@ -184,7 +184,7 @@ Clipboard géré automatiquement via :
 SecureGen charge automatiquement la bonne version :
 
 ```
-src/
+SecureGen/
 │
 ├── Core.PS7.ps1      # Version moderne (RandomNumberGenerator)
 └── Legacy.PS5.ps1    # Version fallback (RNGCryptoServiceProvider)
@@ -227,7 +227,7 @@ Elle inclut :
 ```
 SecureGen/
 │
-├── src/
+├── SecureGen/
 │   ├── Core.PS7.ps1
 │   ├── Legacy.PS5.ps1
 │   ├── SecureGen.psm1

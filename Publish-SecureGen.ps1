@@ -7,6 +7,20 @@
 
 $ErrorActionPreference = "Stop"
 
+<#
+Pour éviter l'erreur :
+```
+La demande a été abandonnée : Impossible de créer un canal sécurisé SSL/TLS.
+```
+Qui survient parce que :
+
+- PowerShellGet v1 utilise **TLS 1.0/1.1 par défaut**  
+- PSGallery **refuse tout sauf TLS 1.2+**  
+- PowerShell 7 n’active pas toujours TLS 1.2 pour les commandes PowerShellGet v1
+La commande suivante est recommandée
+#>
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
 Write-Host "🚀 Publication du module SecureGen..." -ForegroundColor Cyan
 
 # ---------------------------------------------------------------------------
@@ -26,10 +40,10 @@ if (-not $env:PSGALLERY_KEY) {
 # ---------------------------------------------------------------------------
 
 $RequiredFiles = @(
-    "./src/SecureGen.psm1",
-    "./src/SecureGen.psd1",
-    "./src/Core.PS7.ps1",
-    "./src/Legacy.PS5.ps1"
+    "./SecureGen/SecureGen.psm1",
+    "./SecureGen/SecureGen.psd1",
+    "./SecureGen/Core.PS7.ps1",
+    "./SecureGen/Legacy.PS5.ps1"
 )
 
 foreach ($file in $RequiredFiles) {
@@ -45,7 +59,7 @@ Write-Host "✔ Structure valide" -ForegroundColor Green
 # 3. Lecture de la version du module
 # ---------------------------------------------------------------------------
 
-$Manifest = Import-PowerShellDataFile "./src/SecureGen.psd1"
+$Manifest = Import-PowerShellDataFile "./SecureGen/SecureGen.psd1"
 $Version = $Manifest.ModuleVersion
 
 Write-Host "📦 Version détectée : $Version" -ForegroundColor Cyan
@@ -62,7 +76,7 @@ if (Test-Path $Temp) {
 
 New-Item -ItemType Directory -Path $Temp | Out-Null
 
-Copy-Item -Path "./src/*" -Destination $Temp -Recurse -Force
+Copy-Item -Path "./SecureGen/*" -Destination $Temp -Recurse -Force
 
 Write-Host "📁 Dossier de publication prêt" -ForegroundColor Green
 

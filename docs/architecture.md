@@ -74,7 +74,7 @@ Aucune action n’est requise de la part de l’utilisateur.
 ```
 SecureGen/
 │
-├── src/
+├── SecureGen/
 │   ├── Core.PS7.ps1
 │   ├── Legacy.PS5.ps1
 │   ├── SecureGen.psm1

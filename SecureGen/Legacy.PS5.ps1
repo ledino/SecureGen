@@ -13,12 +13,12 @@ function Set-ClipboardSafe {
 
     if ($IsWindows) {
         try { Set-Clipboard -Value $Value } catch {
-            Write-Warning "Impossible d'accÃ©der au presse-papier Windows."
+            Write-Warning "Impossible d'accéder au presse-papier Windows."
         }
         return
     }
 
-    Write-Warning "Clipboard non supportÃ© nativement en PowerShell 5 hors Windows."
+    Write-Warning "Clipboard non supporté nativement en PowerShell 5 hors Windows."
 }
 
 function Clear-ClipboardSafe {

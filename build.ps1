@@ -1,7 +1,7 @@
 <#
     build.ps1
     Script de build complet pour SecureGen
-    Auteur : Saddek
+    Auteur : Ledino
     Version : 1.0
 #>
 
@@ -30,10 +30,10 @@ New-Item -ItemType Directory -Path $OutputDir | Out-Null
 Write-Host "📁 Vérification de la structure du module..." -ForegroundColor Yellow
 
 $RequiredFiles = @(
-    "./src/SecureGen.psm1",
-    "./src/SecureGen.psd1",
-    "./src/Core.PS7.ps1",
-    "./src/Legacy.PS5.ps1"
+    "./SecureGen/SecureGen.psm1",
+    "./SecureGen/SecureGen.psd1",
+    "./SecureGen/Core.PS7.ps1",
+    "./SecureGen/Legacy.PS5.ps1"
 )
 
 foreach ($file in $RequiredFiles) {
@@ -51,7 +51,7 @@ Write-Host "✔ Structure valide" -ForegroundColor Green
 
 Write-Host "📦 Préparation du module..." -ForegroundColor Yellow
 
-Copy-Item -Path "./src/*" -Destination "$OutputDir/SecureGen" -Recurse -Force
+Copy-Item -Path "./SecureGen/*" -Destination "$OutputDir/SecureGen" -Recurse -Force
 
 # ---------------------------------------------------------------------------
 # 4. Tests Pester (optionnel)
@@ -73,7 +73,7 @@ else {
 
 Write-Host "📦 Packaging du module..." -ForegroundColor Yellow
 
-$Manifest = "./src/SecureGen.psd1"
+$Manifest = "./SecureGen/SecureGen.psd1"
 $ModuleVersion = (Import-PowerShellDataFile $Manifest).ModuleVersion
 
 $NupkgPath = "$OutputDir/SecureGen.$ModuleVersion.nupkg"
