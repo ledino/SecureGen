@@ -6,30 +6,34 @@ on:
   pull_request:
     branches: [ "main" ]
   release:
-    types: [published]  # Trigger publish sur release
+    types: [published]
 
 jobs:
   test:
-    runs-on: ubuntu-latest  # pwsh préinstallé
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # Pour GitVersion si besoin
+        fetch-depth: 0
+
+    - name: Install PowerShell
+      uses: PowerShell/PowerShell-For-GitHub-Actions@v1
 
     - name: Lint & PSScriptAnalyzer
       shell: pwsh
       run: |
-        # Installe PSScriptAnalyzer
         Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
-        $results = Invoke-ScriptAnalyzer -Path ./SecureGen -Recurse -Severity Information
-        if ($results) { $results | ConvertTo-Json ; exit 1 }  # Fail si erreurs
+        $results = Invoke-ScriptAnalyzer -Path ./SecureGen -Recurse
+        if ($results) {
+          $results | Format-Table
+          exit 1
+        }
 
     - name: Test Module
       shell: pwsh
       run: |
         Import-Module ./SecureGen/SecureGen.psd1 -Force
-        # Vérifie exports
         Get-Module SecureGen | Select-Object ExportedCommands | ConvertTo-Json
         Write-Output "✅ Module SecureGen chargé !"
 
@@ -41,28 +45,21 @@ jobs:
           Invoke-Pester -Path ./tests -Output Detailed -PassThru | ConvertTo-Json
         }
 
-    - name: Lint & PSScriptAnalyzer
-      shell: pwsh
-      run: |
-        Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
-        $results = Invoke-ScriptAnalyzer -Path ./SecureGen -Recurse
-        if ($results) {
-          $results | Format-Table
-          exit 1
-        }
-        
   publish:
-    needs: test  # Exécute après tests OK
-    if: github.event_name == 'release' && github.event.action == 'published'  # Seulement sur release
+    needs: test
+    if: github.event_name == 'release' && github.event.action == 'published'
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
 
+    - name: Install PowerShell
+      uses: PowerShell/PowerShell-For-GitHub-Actions@v1
+
     - name: Publish to PowerShell Gallery
       shell: pwsh
       env:
-        PS_GALLERY_API_KEY: ${{ secrets.PSGALLERY_KEY }}  # Ajoute ta clé en Settings > Secrets
+        PS_GALLERY_API_KEY: ${{ secrets.PSGALLERY_KEY }}
       run: |
         $manifestPath = "./SecureGen/SecureGen.psd1"
-        Publish-Module -Path (Split-Path $manifestPath) -NuGetApiKey $env:PSGALLERY_KEY -Repository PSGallery
+        Publish-Module -Path (Split-Path $manifestPath) -NuGetApiKey $env:PS_GALLERY_API_KEY -Repository PSGallery
