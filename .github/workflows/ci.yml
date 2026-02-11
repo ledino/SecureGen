@@ -10,12 +10,12 @@ on:
     types: [published]
 
 jobs:
-
   tests:
     name: Tests ${{ matrix.label }}
     runs-on: ${{ matrix.os }}
 
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: windows-latest
@@ -33,6 +33,10 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+
+    - name: Trust PSGallery (non-interactive)
+      shell: ${{ matrix.shell }}
+      run: Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
 
     - name: Install PSScriptAnalyzer
       shell: ${{ matrix.shell }}
@@ -59,7 +63,7 @@ jobs:
       run: |
         if (Test-Path ./tests) {
           Install-Module Pester -Force -Scope CurrentUser
-          Invoke-Pester -Path ./tests -Output Detailed
+          Invoke-Pester -Path ./tests -Output Detailed -EnableExit
         } else {
           echo "Aucun test Pester trouvé"
         }
@@ -69,6 +73,8 @@ jobs:
     needs: tests
     if: github.event_name == 'release' && github.event.action == 'published'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
     - name: Checkout
@@ -111,8 +117,8 @@ jobs:
       run: |
         git config user.name "github-actions"
         git config user.email "github-actions@github.com"
-        git add SecureGen/SecureGen/SecureGen.psd1 CHANGELOG.md
-        git commit -m "Automated version bump to $VERSION + changelog update"
+        git add ./SecureGen/SecureGen.psd1 CHANGELOG.md
+        git commit -m "Automated version bump to $VERSION + changelog update" || echo "Rien à commiter"
         git push
 
     - name: Publish to PowerShell Gallery
@@ -120,5 +126,7 @@ jobs:
       env:
         PSGALLERY_KEY: ${{ secrets.PSGALLERY_KEY }}
       run: |
-        Publish-Module -Path ./SecureGen/SecureGen -NuGetApiKey $env:PSGALLERY_KEY -Repository PSGallery
+        Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+        Publish-Module -Path ./SecureGen -NuGetApiKey $env:PSGALLERY_KEY -Repository PSGallery
         echo "SecureGen publié sur PSGallery !"
+
