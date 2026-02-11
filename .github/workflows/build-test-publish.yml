@@ -60,5 +60,5 @@ jobs:
       env:
         PS_GALLERY_API_KEY: ${{ secrets.PSGALLERY_KEY }}
       run: |
-        Publish-Module -Path ./SecureGen -NuGetApiKey $env:PS_GALLERY_API_KEY -Repository PSGallery
+        Publish-Module -Path ./SecureGen -NuGetApiKey $env:PSGALLERY_KEY -Repository PSGallery
         echo "✅ SecureGen publié sur PSGallery !"
