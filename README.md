@@ -17,7 +17,7 @@
 
   <!-- CI -->
   <a href="https://github.com/ledino/SecureGen/actions/workflows/ci.yml">
-    <img src="https://github.com/ledino/SecureGen/actions/workflows/ci.yml/badge.svg?branch=main&style=for-the-badge" alt="CI Status"/>
+    <img src="https://github.com/ledino/SecureGen/actions/workflows/ci.yml/badge.svg?style=for-the-badge" alt="CI Status"/>
   </a>
 
   <!-- Release & Changelog -->
@@ -42,7 +42,6 @@
   <a href="https://vscode.dev/github/ledino/SecureGen">
     <img src="https://img.shields.io/badge/Open%20in-VS%20Code-23a8f2?style=for-the-badge&logo=visualstudiocode" alt="Open in VS Code"/>
   </a>
-
 </p>
 
 ---
