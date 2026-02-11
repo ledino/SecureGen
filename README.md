@@ -22,8 +22,9 @@
 
   <!-- Release & Changelog -->
   <a href="https://github.com/ledino/SecureGen/releases">
-    <img src="https://img.shields.io/github/v/release/ledino/SecureGen?style=for-the-badge&label=Latest%20Release" alt="Latest Release"/>
+    <img src="https://img.shields.io/github/v/release/ledino/SecureGen?style=for-the-badge&label=Latest%20Release&color=blue&logo=github" alt="Latest Release"/>
   </a>
+
   <a href="https://github.com/ledino/SecureGen/blob/main/CHANGELOG.md">
     <img src="https://img.shields.io/badge/Changelog-View-blue?style=for-the-badge" alt="Changelog"/>
   </a>
