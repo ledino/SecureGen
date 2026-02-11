@@ -13,6 +13,9 @@ jobs:
   tests:
     name: Tests ${{ matrix.label }}
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: pwsh
 
     strategy:
       fail-fast: false
@@ -23,11 +26,9 @@ jobs:
             label: "PS 5.1 Windows"
 
           - os: windows-latest
-            shell: pwsh
             label: "PS 7 Windows"
 
           - os: ubuntu-latest
-            shell: pwsh
             label: "PS 7 Linux"
 
     steps:
@@ -129,4 +130,3 @@ jobs:
         Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
         Publish-Module -Path ./SecureGen -NuGetApiKey $env:PSGALLERY_KEY -Repository PSGallery
         echo "SecureGen publié sur PSGallery !"
-
