@@ -1,11 +1,35 @@
 # 📄 **README.md**
-synchroniser `docs/index.md` avec ce README
+
 # 🔐 SecureGen
 
 [![PowerShell Gallery](https://img.shields.io/powershellgallery/v/SecureGen.svg?style=for-the-badge&label=PSGallery)](https://www.powershellgallery.com/packages/SecureGen)
 [![Downloads](https://img.shields.io/powershellgallery/dt/SecureGen.svg?style=for-the-badge&label=Downloads)](https://www.powershellgallery.com/packages/SecureGen)
 ![PowerShell](https://img.shields.io/badge/PowerShell-5.1%20%7C%207.x-blue?style=for-the-badge)
 [![CI](https://github.com/ledino/SecureGen/actions/workflows/build-test-publish.yml/badge.svg)](https://github.com/ledino/SecureGen/actions/workflows/build-test-publish.yml)
+
+---
+
+<p align="center">
+  <img src="assets/logo.png" width="140" alt="SecureGen Logo"/>
+</p>
+
+<p align="center">
+  <img src="assets/banner.png" alt="SecureGen Banner"/>
+</p>
+
+<p align="center">
+  <a href="https://www.powershellgallery.com/packages/SecureGen">
+    <img src="https://img.shields.io/powershellgallery/v/SecureGen.svg" alt="PSGallery Version"/>
+  </a>
+  <a href="https://www.powershellgallery.com/packages/SecureGen">
+    <img src="https://img.shields.io/powershellgallery/dt/SecureGen.svg" alt="Downloads"/>
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="MIT License"/>
+  </a>
+</p>
+
+---
 
 ## 📚 Sommaire
 
@@ -22,6 +46,8 @@ synchroniser `docs/index.md` avec ce README
 - [📦 Structure du dépôt](#-structure-du-dépôt)
 - [📜 Licence](#-licence)
 - [⭐ Remerciements](#-remerciements)
+
+---
 
 SecureGen est un module PowerShell moderne, ergonomique et cross‑platform permettant de générer :
 
