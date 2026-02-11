@@ -108,7 +108,7 @@ SecureGen/
 │   ├── cyan_vibrant.png
 │   ├── gris_anthracite.png
 │   ├── palette.md
-│   └── screenshots/               # Nouveaux GIFs & captures d’écran
+│   └── screenshots/               # GIFs & captures d’écran
 │       ├── password-demo.gif
 │       ├── passphrase-demo.gif
 │       ├── clipboard-demo.gif
@@ -120,22 +120,30 @@ SecureGen/
 │   ├── installation.md            # Guide d’installation complet
 │   ├── examples.md                # Exemples d’utilisation
 │   ├── advanced.md                # Guide avancé
-│   ├── architecture.md            # Architecture interne (PS5/PS7)
+│   ├── architecture.md            # Architecture interne
 │   ├── security.md                # Guide de sécurité (NIST / OWASP / ANSSI)
 │   ├── contributing.md            # Guide de contribution
 │   ├── troubleshooting.md         # Dépannage
 │   ├── versioning.md              # Versioning & SemVer
 │   ├── release-process.md         # Processus de release complet
 │   ├── faq.md                     # Questions fréquentes
-│   ├── benchmarks.md              # Benchmarks (nouveau)
-│   └── screenshots.md             # Screenshots & GIFs (nouveau)
+│   ├── benchmarks.md              # Benchmarks
+│   ├── screenshots.md             # Screenshots & GIFs
+│   ├── generate-help.md           # Guide PlatyPS (nouveau)
+│   └── cmdlets/                   # Documentation générée automatiquement (PlatyPS)
+│       ├── Get-PassWord.md
+│       ├── Get-PassPhrase.md
+│       ├── Get-CryptoIndex.md
+│       ├── Invoke-Beep.md
+│       └── SecureGen.md
 │
 ├── scripts/                       # Scripts internes & CI/CD
 │   ├── build.ps1                  # Build + tests + packaging
 │   ├── Versioning-SecureGen.ps1   # Gestion automatique de version
 │   ├── Install-SecureGen.ps1      # Installation locale
 │   ├── Publish-SecureGen.ps1      # Publication PSGallery
-│   └── Release-All.ps1            # Pipeline complet de release
+│   ├── Release-All.ps1            # Pipeline complet de release
+│   └── Generate-Help.ps1          # Génération automatique de la doc PlatyPS (nouveau)
 │
 ├── .github/
 │   └── workflows/
