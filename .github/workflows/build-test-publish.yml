@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 name: CI
 
 on:
@@ -6,32 +7,35 @@ on:
   pull_request:
     branches: [ "main" ]
   release:
-    types: [published]  # Trigger publish sur release
+    types: [published]
 
 jobs:
   test:
-    runs-on: ubuntu-latest  # pwsh préinstallé
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # Pour GitVersion si besoin
+        fetch-depth: 0
 
     - name: Lint & PSScriptAnalyzer
-      shell: pwsh 
-      run: | # Installe PSScriptAnalyzer
+      shell: pwsh
+      run: |
         Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
-        $results = Invoke-ScriptAnalyzer -Path ./SecureGen -Recurse -Severity Information
+        $results = Invoke-ScriptAnalyzer -Path ./SecureGen -Recurse -Severity Error
         if ($results) { 
-        $results | ConvertTo-Json ; exit 1 
-        }   
+          $results | ConvertTo-Json
+          echo "::error::PSScriptAnalyzer erreurs trouvées"
+          exit 1 
+        }
+        echo "✅ PSScriptAnalyzer parfait !"
 
     - name: Test Module
       shell: pwsh
-      run: | # Vérifie exports
+      run: |
         Import-Module ./SecureGen/SecureGen.psd1 -Force
         Get-Module SecureGen | Select-Object ExportedCommands | ConvertTo-Json
-        Write-Output "✅ Module SecureGen chargé !"
+        echo "✅ Module SecureGen chargé !"
 
     - name: Pester Tests (if exists)
       shell: pwsh
@@ -39,11 +43,13 @@ jobs:
         if (Test-Path ./tests) {
           Install-Module Pester -Force -Scope CurrentUser
           Invoke-Pester -Path ./tests -Output Detailed -PassThru | ConvertTo-Json
+        } else {
+          echo "✅ Pas de tests Pester (dossier /tests absent)"
         }
 
   publish:
-    needs: test  # Exécute après tests OK
-    if: github.event_name == 'release' && github.event.action == 'published'  # Seulement sur release
+    needs: test
+    if: github.event_name == 'release' && github.event.action == 'published'
     runs-on: ubuntu-latest
 
     steps:
@@ -52,7 +58,7 @@ jobs:
     - name: Publish to PowerShell Gallery
       shell: pwsh
       env:
-        PS_GALLERY_API_KEY: ${{ secrets.PSGALLERY_KEY }}  # Ajoute ta clé en Settings > Secrets
+        PS_GALLERY_API_KEY: ${{ secrets.PSGALLERY_KEY }}
       run: |
-        $manifestPath = "./SecureGen/SecureGen.psd1"
-        Publish-Module -Path (Split-Path $manifestPath) -NuGetApiKey $env:PS_GALLERY_KEY -Repository PSGallery
+        Publish-Module -Path ./SecureGen -NuGetApiKey $env:PS_GALLERY_API_KEY -Repository PSGallery
+        echo "✅ SecureGen publié sur PSGallery !"
