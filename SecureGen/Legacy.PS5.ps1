@@ -133,7 +133,7 @@ function Get-PassWord {
     )
 
     # --- Détection de la source d'aléa ---
-    $alea = "Crypto (RNG .NET, non conforme modules cryptographiques modernes)"
+    $alea = "RNG .NET : non conforme modules cryptographiques modernes, usage classique pas de problème"
 
     # --- Définition des catégories ---
     $Lower = 'abcdefghijklmnopqrstuvwxyz'

@@ -136,7 +136,7 @@ function Get-PassWord {
     )
 
     # --- Détection de la source d'aléa ---
-    $alea = "Crypto (Get-SecureRandom, conforme modules cryptographiques modernes)"
+    $alea = "Get-SecureRandom, conforme aux modules cryptos modernes (FIPS-compliant)"
 
     # --- Définition des catégories ---
     $Lower = 'abcdefghijklmnopqrstuvwxyz'
