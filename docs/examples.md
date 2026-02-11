@@ -178,6 +178,14 @@ Write-Host "Votre passphrase : $phrase"
 
 ---
 
+# 📚 Documentation associée
+
+- 📦 Installation : https://github.com/ledino/SecureGen/blob/main/docs/installation.md
+- 🧠 Guide avancé : https://github.com/ledino/SecureGen/blob/main/docs/advanced.md
+- 📜 README principal : https://github.com/ledino/SecureGen/blob/main/README.md
+
+---
+
 # 🎉 Merci d'utiliser SecureGen !
 
 N'hésitez pas à contribuer via GitHub : issues, PR, suggestions.

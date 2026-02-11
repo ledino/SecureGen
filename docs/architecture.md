@@ -93,13 +93,13 @@ Le loader :
 ```
 SecureGen/
 │
-├── SecureGen/
-│   ├── Core.PS7.ps1
-│   ├── Legacy.PS5.ps1
-│   ├── SecureGen.psm1
-│   └── SecureGen.psd1
+├── SecureGen/                     # Code source du module
+│   ├── Core.PS7.ps1               # Implémentation moderne (PowerShell 7+)
+│   ├── Legacy.PS5.ps1             # Implémentation fallback (Windows PowerShell 5.1)
+│   ├── SecureGen.psm1             # Loader intelligent PS5/PS7 + export des fonctions
+│   └── SecureGen.psd1             # Manifest du module
 │
-├── assets/
+├── assets/                        # Identité visuelle & médias
 │   ├── logo.png
 │   ├── banner.png
 │   ├── blanc_pur.png
@@ -107,34 +107,43 @@ SecureGen/
 │   ├── bleu_fonce.png
 │   ├── cyan_vibrant.png
 │   ├── gris_anthracite.png
-│   └── palette.md
+│   ├── palette.md
+│   └── screenshots/               # Nouveaux GIFs & captures d’écran
+│       ├── password-demo.gif
+│       ├── passphrase-demo.gif
+│       ├── clipboard-demo.gif
+│       ├── script-demo.png
+│       └── github-actions-demo.png
 │
-├── docs/
-│   ├── advanced.md
-│   ├── architecture.md
-│   ├── examples.md
-│   ├── faq.md
-│   ├── installation.md
-│   ├── security.md
-│   ├── troubleshooting.md
-│   ├── versioning.md
-│   ├── release-process.md
-│   └── index.md
+├── docs/                          # Documentation complète
+│   ├── index.md                   # Page d’accueil de la documentation
+│   ├── installation.md            # Guide d’installation complet
+│   ├── examples.md                # Exemples d’utilisation
+│   ├── advanced.md                # Guide avancé
+│   ├── architecture.md            # Architecture interne (PS5/PS7)
+│   ├── security.md                # Guide de sécurité (NIST / OWASP / ANSSI)
+│   ├── contributing.md            # Guide de contribution
+│   ├── troubleshooting.md         # Dépannage
+│   ├── versioning.md              # Versioning & SemVer
+│   ├── release-process.md         # Processus de release complet
+│   ├── faq.md                     # Questions fréquentes
+│   ├── benchmarks.md              # Benchmarks (nouveau)
+│   └── screenshots.md             # Screenshots & GIFs (nouveau)
+│
+├── scripts/                       # Scripts internes & CI/CD
+│   ├── build.ps1                  # Build + tests + packaging
+│   ├── Versioning-SecureGen.ps1   # Gestion automatique de version
+│   ├── Install-SecureGen.ps1      # Installation locale
+│   ├── Publish-SecureGen.ps1      # Publication PSGallery
+│   └── Release-All.ps1            # Pipeline complet de release
 │
 ├── .github/
 │   └── workflows/
-│       └── build-test-publish.yml
+│       └── ci.yml                 # Workflow CI/CD unique (tests + publish)
 │
-├── scripts/
-│   ├── build.ps1
-│   ├── Versioning-SecureGen.ps1
-│   ├── Install-SecureGen.ps1
-│   ├── Publish-SecureGen.ps1
-│   └── Release-All.ps1
-│
-├── CHANGELOG.md
-├── README.md
-├── LICENSE
+├── CHANGELOG.md                   # Changelog généré automatiquement
+├── README.md                      # Documentation principale
+├── LICENSE                        # Licence MIT
 └── .gitignore
 ```
 
@@ -252,6 +261,18 @@ Utilisé par :
 - Architecture prête pour CI/CD  
 
 ---
+
+# 📚 Documentations associées
+
+- 📦 Installation : [https://github.com/ledino/SecureGen/blob/main/docs/installation.md](https://github.com/ledino/SecureGen/blob/main/docs/installation.md)  
+- 📘 Exemples : `https://github.com/ledino/SecureGen/blob/main/docs/examples.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fexamples.md")  
+- 🧠 Guide avancé : `https://github.com/ledino/SecureGen/blob/main/docs/advanced.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fadvanced.md")  
+- 🧪 Versioning : `https://github.com/ledino/SecureGen/blob/main/docs/versioning.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fversioning.md")  
+- 🚀 Processus de release : `https://github.com/ledino/SecureGen/blob/main/docs/release-process.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Frelease-process.md")  
+- 📜 README principal : `https://github.com/ledino/SecureGen/blob/main/README.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2FREADME.md")  
+
+---
+
 
 # 🎉 Merci d'utiliser SecureGen !
 

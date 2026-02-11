@@ -1,8 +1,9 @@
-# 📘 Guide d’installation — SecureGen  
-*(Version synchronisée avec la structure actuelle du module)*
+# 📘 Guide d’installation — SecureGen
+*(Version synchronisée avec CI/CD, PSGallery et structure du module)*
 
-Ce document explique comment installer le module **SecureGen** dans différents environnements :  
-Windows PowerShell 5.1, PowerShell 7+, Linux, macOS, et via le script d’installation intelligent fourni dans le dépôt.
+![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/SecureGen.svg?style=for-the-badge)
+![Downloads](https://img.shields.io/powershellgallery/dt/SecureGen.svg?style=for-the-badge)
+![PowerShell](https://img.shields.io/badge/PowerShell-5.1%20%7C%207.x-blue?style=for-the-badge)
 
 ---
 
@@ -20,11 +21,19 @@ Mettre à jour :
 Update-Module SecureGen
 ```
 
-Importer explicitement (facultatif) :
+Importer explicitement (optionnel) :
 
 ```powershell
 Import-Module SecureGen
 ```
+
+---
+
+# 📦 Installation depuis GitHub Release
+
+Télécharger la dernière version :
+
+👉 `https://github.com/ledino/SecureGen/releases/latest` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Freleases%2Flatest")
 
 ---
 
@@ -34,21 +43,19 @@ SecureGen fonctionne automatiquement dans :
 
 | Environnement | Support |
 |---------------|---------|
-| Windows PowerShell 5.1 | ✔ (Legacy) |
-| PowerShell 7+ Windows | ✔ (Core) |
+| Windows PowerShell 5.1 | ✔ |
+| PowerShell 7+ Windows | ✔ |
 | PowerShell 7+ Linux | ✔ |
 | PowerShell 7+ macOS | ✔ |
 
-Le module charge automatiquement la bonne version :
+Le module charge automatiquement :
 
-- `Core.PS7.ps1` pour PowerShell 7+  
-- `Legacy.PS5.ps1` pour Windows PowerShell 5.1  
-
-Aucune action n’est requise de la part de l’utilisateur.
+- `Core.PS7.ps1` pour PowerShell 7+
+- `Legacy.PS5.ps1` pour Windows PowerShell 5.1
 
 ---
 
-# 🛠️ Installation via le script intelligent (recommandé pour les développeurs)
+# 🛠️ Installation via le script intelligent (développeurs)
 
 Le dépôt inclut un script d’installation avancé :
 
@@ -58,9 +65,9 @@ scripts/Install-SecureGen.ps1
 
 Il détecte automatiquement :
 
-- si PowerShell 5.1 est installé  
-- si PowerShell 7+ est installé  
-- et installe SecureGen dans **tous les environnements disponibles**
+- PowerShell 5.1  
+- PowerShell 7+  
+- et installe SecureGen dans tous les environnements disponibles
 
 ## ▶️ Exécution
 
@@ -68,21 +75,11 @@ Il détecte automatiquement :
 pwsh ./scripts/Install-SecureGen.ps1
 ```
 
-ou sous Windows PowerShell :
+ou :
 
 ```powershell
 ./scripts/Install-SecureGen.ps1
 ```
-
-## 📦 Résultat
-
-- Si PS5 est présent → installation dans  
-  `%USERPROFILE%\Documents\WindowsPowerShell\Modules\SecureGen`
-
-- Si PS7 est présent → installation dans  
-  `%USERPROFILE%\Documents\PowerShell\Modules\SecureGen`
-
-- Si les deux sont présents → installation dans les deux environnements
 
 ---
 
@@ -91,87 +88,69 @@ ou sous Windows PowerShell :
 Clonez le dépôt :
 
 ```powershell
-git clone https://github.com/<ton-user>/SecureGen
+git clone https://github.com/ledino/SecureGen
 cd SecureGen
 ```
-
-Copiez le module dans votre dossier Modules :
 
 ### ▶️ PowerShell 7+
 
 ```powershell
-Copy-Item -Path "./SecureGen" -Destination "$HOME/Documents/PowerShell/Modules/SecureGen" -Recurse -Force
+Copy-Item "./SecureGen" "$HOME/Documents/PowerShell/Modules/SecureGen" -Recurse -Force
 ```
 
 ### ▶️ Windows PowerShell 5.1
 
 ```powershell
-Copy-Item -Path "./SecureGen" -Destination "$HOME/Documents/WindowsPowerShell/Modules/SecureGen" -Recurse -Force
+Copy-Item "./SecureGen" "$HOME/Documents/WindowsPowerShell/Modules/SecureGen" -Recurse -Force
 ```
 
 ---
 
-# 🧪 Vérification de l’installation
+# 🧪 Vérification
 
 ```powershell
 Get-Module SecureGen -ListAvailable
-```
-
-Vous devriez voir :
-
-```
-ModuleType Version Name       ExportedCommands
----------- ------- ----       ----------------
-Script     1.x.x   SecureGen  Get-PassWord, Get-PassPhrase, ...
 ```
 
 ---
 
 # 🧰 Dépannage
 
-### ❗ Le clipboard ne fonctionne pas
+### ❗ Clipboard non fonctionnel
 
-- Windows : `Set-Clipboard` doit être disponible  
-- macOS : `pbcopy` est inclus par défaut  
-- Linux : installez `xclip` ou `xsel`  
-
-Exemple :
+- Windows : `Set-Clipboard`
+- macOS : `pbcopy`
+- Linux : installer `xclip` ou `xsel`
 
 ```bash
 sudo apt install xclip
 ```
 
-### ❗ Le module n’apparaît pas dans PS5 ou PS7
+### ❗ Module non détecté
 
-Vérifiez les chemins :
+Vérifiez :
 
 ```powershell
 $env:PSModulePath -split ';'
 ```
 
-Assurez-vous que :
+---
 
-- `%USERPROFILE%\Documents\WindowsPowerShell\Modules`
-- `%USERPROFILE%\Documents\PowerShell\Modules`
+# 📜 Changelog
 
-sont bien présents.
+👉 `https://github.com/ledino/SecureGen/blob/main/CHANGELOG.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2FCHANGELOG.md")
 
 ---
 
 # 🎉 Installation terminée !
 
-SecureGen est maintenant prêt à être utilisé :
+SecureGen est maintenant prêt :
 
 ```powershell
 Get-PassWord
 Get-PassPhrase
 ```
-
-Pour plus d’exemples :  
-👉 `docs/examples.md`
-
-Pour les usages avancés :  
-👉 `docs/advanced.md`
+```
 
 ---
 

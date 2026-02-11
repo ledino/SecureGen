@@ -1,0 +1,124 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: CI PowerShell Matrix
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  release:
+    types: [published]
+
+jobs:
+
+  tests:
+    name: Tests ${{ matrix.label }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            shell: powershell
+            label: "PS 5.1 Windows"
+
+          - os: windows-latest
+            shell: pwsh
+            label: "PS 7 Windows"
+
+          - os: ubuntu-latest
+            shell: pwsh
+            label: "PS 7 Linux"
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install PSScriptAnalyzer
+      shell: ${{ matrix.shell }}
+      run: Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
+
+    - name: Static Analysis (Lint)
+      shell: ${{ matrix.shell }}
+      run: |
+        $results = Invoke-ScriptAnalyzer -Path ./SecureGen -Recurse -Severity Error
+        if ($results) {
+          $results | ConvertTo-Json
+          exit 1
+        }
+        echo "✅ Analyse statique OK"
+
+    - name: Load Module
+      shell: ${{ matrix.shell }}
+      run: |
+        Import-Module ./SecureGen/SecureGen/SecureGen.psd1 -Force
+        echo "✅ Module chargé sous ${{ matrix.label }}"
+
+    - name: Run Pester Tests (if exists)
+      shell: ${{ matrix.shell }}
+      run: |
+        if (Test-Path ./tests) {
+          Install-Module Pester -Force -Scope CurrentUser
+          Invoke-Pester -Path ./tests -Output Detailed
+        } else {
+          echo "Aucun test Pester trouvé"
+        }
+
+  publish:
+    name: Publish to PowerShell Gallery
+    needs: tests
+    if: github.event_name == 'release' && github.event.action == 'published'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Extract version from tag
+      id: version
+      shell: pwsh
+      run: |
+        $tag = $env:GITHUB_REF_NAME
+        $version = $tag.TrimStart('v')
+        echo "VERSION=$version" >> $env:GITHUB_ENV
+        echo "Version détectée : $version"
+
+    - name: Update ModuleVersion in manifest
+      shell: pwsh
+      run: |
+        Update-ModuleManifest -Path ./SecureGen/SecureGen/SecureGen.psd1 -ModuleVersion $env:VERSION
+        echo "Manifeste mis à jour avec la version $env:VERSION"
+
+    - name: Install Ruby + Changelog Generator
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ruby-full
+        gem install github_changelog_generator
+
+    - name: Generate CHANGELOG.md
+      env:
+        CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        github_changelog_generator \
+          --user ledino \
+          --project SecureGen \
+          --token $CHANGELOG_GITHUB_TOKEN \
+          --exclude-labels "duplicate,question,invalid,wontfix"
+
+    - name: Commit & Push manifest + changelog
+      run: |
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+        git add SecureGen/SecureGen/SecureGen.psd1 CHANGELOG.md
+        git commit -m "Automated version bump to $VERSION + changelog update"
+        git push
+
+    - name: Publish to PowerShell Gallery
+      shell: pwsh
+      env:
+        PSGALLERY_KEY: ${{ secrets.PSGALLERY_KEY }}
+      run: |
+        Publish-Module -Path ./SecureGen/SecureGen -NuGetApiKey $env:PSGALLERY_KEY -Repository PSGallery
+        echo "✅ SecureGen publié sur PSGallery !"
