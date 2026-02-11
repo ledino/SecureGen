@@ -13,9 +13,6 @@ jobs:
   tests:
     name: Tests ${{ matrix.label }}
     runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        shell: pwsh
 
     strategy:
       fail-fast: false
@@ -26,9 +23,11 @@ jobs:
             label: "PS 5.1 Windows"
 
           - os: windows-latest
+            shell: pwsh
             label: "PS 7 Windows"
 
           - os: ubuntu-latest
+            shell: pwsh
             label: "PS 7 Linux"
 
     steps:
