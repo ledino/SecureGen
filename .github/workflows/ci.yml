@@ -1,54 +1,47 @@
-name: CI PowerShell Matrix
-
+name: CI
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
-  release:
-    types: [ published ]
+    branches: [main]
 
 jobs:
   test:
-    name: Tests ${{ matrix.label }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         include:
-        - os: windows-latest
-          shell: powershell
-          label: "PS 5.1 Windows"
-        - os: windows-latest
-          shell: pwsh
-          label: "PS 7 Windows"
-        - os: ubuntu-latest
-          shell: pwsh
-          label: "PS 7 Linux"
+          - os: windows-latest
+            shell: powershell
+          - os: windows-latest
+            shell: pwsh
+          - os: ubuntu-latest
+            shell: pwsh
     steps:
-    - uses: actions/checkout@v4
-
-    - name: PSScriptAnalyzer
-      shell: ${{ matrix.shell }}
-      run: |
-        Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
-        $results = Invoke-ScriptAnalyzer ./SecureGen -Recurse -Severity Error
-        if ($results) { $results | ConvertTo-Json; exit 1 }
-
-    - name: Test Module
-      shell: ${{ matrix.shell }}
-      run: |
-        Import-Module ./SecureGen/SecureGen.psd1 -Force
-        echo "✅ ${{ matrix.label }}"
+      - uses: actions/checkout@v4
+      - name: Lint
+        shell: ${{ matrix.shell }}
+        run: |
+          try {
+            Install-Module PSScriptAnalyzer -Force -Scope CurrentUser -ErrorAction Stop
+            $r = Invoke-ScriptAnalyzer ./SecureGen -Recurse -Severity Error
+            if ($r) { $r | ConvertTo-Json; exit 1 }
+          } catch { Write-Error $_; exit 1 }
+      - name: Test Module
+        shell: ${{ matrix.shell }}
+        run: |
+          Import-Module ./SecureGen/SecureGen.psd1 -Force
+          echo "✅ $(matrix.shell) OK"
 
   publish:
     needs: test
     if: github.event_name == 'release' && github.event.action == 'published'
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Publish PSGallery
-      shell: pwsh
-      env:
-        PS_GALLERY_API_KEY: ${{ secrets.PSGALLERY_KEY }}
-      run: |
-        Publish-Module ./SecureGen -NuGetApiKey $env:PS_GALLERY_API_KEY
+      - uses: actions/checkout@v4
+      - name: Publish
+        shell: pwsh
+        env:
+          PS_GALLERY_API_KEY: ${{ secrets.PSGALLERY_KEY }}
+        run: |
+          Publish-Module ./SecureGen -NuGetApiKey $env:PS_GALLERY_API_KEY
