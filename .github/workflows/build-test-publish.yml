@@ -1,20 +1,58 @@
-name: CI
+name: Build-Test-Publish
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  release:
+    types: [published]  # Trigger publish sur release
 
 jobs:
-  build:
+  test:
+    runs-on: ubuntu-latest  # pwsh préinstallé
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Pour GitVersion si besoin
+
+    - name: Lint & PSScriptAnalyzer
+      shell: pwsh
+      run: |
+        # Installe PSScriptAnalyzer
+        Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
+        $results = Invoke-ScriptAnalyzer -Path ./SecureGen -Recurse -Severity Information
+        if ($results) { $results | ConvertTo-Json ; exit 1 }  # Fail si erreurs
+
+    - name: Test Module
+      shell: pwsh
+      run: |
+        Import-Module ./SecureGen/SecureGen.psd1 -Force
+        # Vérifie exports
+        Get-Module SecureGen | Select-Object ExportedCommands | ConvertTo-Json
+        Write-Output "✅ Module SecureGen chargé !"
+
+    - name: Pester Tests (if exists)
+      shell: pwsh
+      run: |
+        if (Test-Path ./tests) {
+          Install-Module Pester -Force -Scope CurrentUser
+          Invoke-Pester -Path ./tests -Output Detailed -PassThru | ConvertTo-Json
+        }
+
+  publish:
+    needs: test  # Exécute après tests OK
+    if: github.event_name == 'release' && github.event.action == 'published'  # Seulement sur release
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Install PowerShell
-        uses: PowerShell/PowerShell-For-GitHub-Actions@v1
-
-      - name: Test module loads
-        run: pwsh -c "Import-Module ./SecureGen/SecureGen.psd1"
+    - name: Publish to PowerShell Gallery
+      shell: pwsh
+      env:
+        PS_GALLERY_API_KEY: ${{ secrets.PSGALLERY_API_KEY }}  # Ajoute ta clé en Settings > Secrets
+      run: |
+        $manifestPath = "./SecureGen/SecureGen.psd1"
+        Publish-Module -Path (Split-Path $manifestPath) -NuGetApiKey $env:PS_GALLERY_API_KEY -Repository PSGallery
