@@ -1,4 +1,4 @@
-name: Build-Test-Publish
+name: CI
 
 on:
   push:
@@ -6,33 +6,29 @@ on:
   pull_request:
     branches: [ "main" ]
   release:
-    types: [published]
+    types: [published]  # Trigger publish sur release
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # pwsh préinstallé
 
     steps:
     - uses: actions/checkout@v4
       with:
-        fetch-depth: 0
-
-    - name: Install PowerShell
-      uses: PowerShell/PowerShell-For-GitHub-Actions@v1
+        fetch-depth: 0  # Pour GitVersion si besoin
 
     - name: Lint & PSScriptAnalyzer
-      shell: pwsh
-      run: |
+      shell: pwsh 
+      run: | # Installe PSScriptAnalyzer
         Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
-        $results = Invoke-ScriptAnalyzer -Path ./SecureGen -Recurse
-        if ($results) {
-          $results | Format-Table
-          exit 1
-        }
+        $results = Invoke-ScriptAnalyzer -Path ./SecureGen -Recurse -Severity Information
+        if ($results) { 
+        $results | ConvertTo-Json ; exit 1 
+        }   
 
     - name: Test Module
       shell: pwsh
-      run: |
+      run: | # Vérifie exports
         Import-Module ./SecureGen/SecureGen.psd1 -Force
         Get-Module SecureGen | Select-Object ExportedCommands | ConvertTo-Json
         Write-Output "✅ Module SecureGen chargé !"
@@ -46,20 +42,17 @@ jobs:
         }
 
   publish:
-    needs: test
-    if: github.event_name == 'release' && github.event.action == 'published'
+    needs: test  # Exécute après tests OK
+    if: github.event_name == 'release' && github.event.action == 'published'  # Seulement sur release
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install PowerShell
-      uses: PowerShell/PowerShell-For-GitHub-Actions@v1
-
     - name: Publish to PowerShell Gallery
       shell: pwsh
       env:
-        PS_GALLERY_API_KEY: ${{ secrets.PSGALLERY_KEY }}
+        PS_GALLERY_API_KEY: ${{ secrets.PSGALLERY_KEY }}  # Ajoute ta clé en Settings > Secrets
       run: |
         $manifestPath = "./SecureGen/SecureGen.psd1"
-        Publish-Module -Path (Split-Path $manifestPath) -NuGetApiKey $env:PS_GALLERY_API_KEY -Repository PSGallery
+        Publish-Module -Path (Split-Path $manifestPath) -NuGetApiKey $env:PS_GALLERY_KEY -Repository PSGallery
