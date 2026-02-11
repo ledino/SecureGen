@@ -35,15 +35,15 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Trust PSGallery (non-interactive)
-      shell: ${{ matrix.shell }}
+      shell: pwsh
       run: Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
 
     - name: Install PSScriptAnalyzer
-      shell: ${{ matrix.shell }}
+      shell: pwsh
       run: Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
 
     - name: Static Analysis (Lint)
-      shell: ${{ matrix.shell }}
+      shell: pwsh
       run: |
         $results = Invoke-ScriptAnalyzer -Path ./SecureGen -Recurse -Severity Error
         if ($results) {
@@ -53,13 +53,13 @@ jobs:
         echo "Analyse statique OK"
 
     - name: Load Module
-      shell: ${{ matrix.shell }}
+      shell: pwsh
       run: |
         Import-Module ./SecureGen/SecureGen.psd1 -Force
-        echo "Module chargé sous ${{ matrix.label }}"
+        echo "Module chargé"
 
     - name: Run Pester Tests (if exists)
-      shell: ${{ matrix.shell }}
+      shell: pwsh
       run: |
         if (Test-Path ./tests) {
           Install-Module Pester -Force -Scope CurrentUser
