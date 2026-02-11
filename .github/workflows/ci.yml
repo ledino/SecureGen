@@ -51,7 +51,7 @@ jobs:
     - name: Load Module
       shell: ${{ matrix.shell }}
       run: |
-        Import-Module ./SecureGen/SecureGen/SecureGen.psd1 -Force
+        Import-Module ./SecureGen/SecureGen.psd1 -Force
         echo "Module chargé sous ${{ matrix.label }}"
 
     - name: Run Pester Tests (if exists)
@@ -88,7 +88,7 @@ jobs:
     - name: Update ModuleVersion in manifest
       shell: pwsh
       run: |
-        Update-ModuleManifest -Path ./SecureGen/SecureGen/SecureGen.psd1 -ModuleVersion $env:VERSION
+        Update-ModuleManifest -Path ./SecureGen/SecureGen.psd1 -ModuleVersion $env:VERSION
         echo "Manifeste mis à jour avec la version $env:VERSION"
 
     - name: Install Ruby + Changelog Generator
