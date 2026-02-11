@@ -41,6 +41,16 @@ jobs:
           Invoke-Pester -Path ./tests -Output Detailed -PassThru | ConvertTo-Json
         }
 
+    - name: Lint & PSScriptAnalyzer
+      shell: pwsh
+      run: |
+        Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
+        $results = Invoke-ScriptAnalyzer -Path ./SecureGen -Recurse
+        if ($results) {
+          $results | Format-Table
+          exit 1
+        }
+        
   publish:
     needs: test  # Exécute après tests OK
     if: github.event_name == 'release' && github.event.action == 'published'  # Seulement sur release
