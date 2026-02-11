@@ -52,7 +52,7 @@ jobs:
     - name: Publish to PowerShell Gallery
       shell: pwsh
       env:
-        PS_GALLERY_API_KEY: ${{ secrets.PSGALLERY_API_KEY }}  # Ajoute ta clé en Settings > Secrets
+        PS_GALLERY_API_KEY: ${{ secrets.PSGALLERY_KEY }}  # Ajoute ta clé en Settings > Secrets
       run: |
         $manifestPath = "./SecureGen/SecureGen.psd1"
-        Publish-Module -Path (Split-Path $manifestPath) -NuGetApiKey $env:PS_GALLERY_API_KEY -Repository PSGallery
+        Publish-Module -Path (Split-Path $manifestPath) -NuGetApiKey $env:PSGALLERY_KEY -Repository PSGallery
