@@ -46,9 +46,10 @@
 <p align="center">
   <img src="assets/banner.png" alt="SecureGen Banner"/>
 </p>
-<p align="center">
 
 ---
+
+<p align="center">
 
   <!-- Qualité & Maintenance -->
   <img src="https://img.shields.io/badge/Maintained-Yes-success?style=for-the-badge" alt="Maintained"/>
