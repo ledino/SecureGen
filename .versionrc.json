@@ -1,0 +1,17 @@
+{
+  "bumpFiles": [
+    {
+      "filename": "SecureGen/SecureGen.psd1",
+      "updater": ".version-updaters/psd1-updater.js"
+    }
+  ],
+  "types": [
+    { "type": "feat", "section": "✨ Features" },
+    { "type": "fix", "section": "🐛 Fixes" },
+    { "type": "docs", "section": "📚 Documentation" },
+    { "type": "refactor", "section": "🧹 Refactoring" },
+    { "type": "perf", "section": "⚡ Performance" },
+    { "type": "test", "section": "🧪 Tests" }
+  ],
+  "commitAll": true
+}
