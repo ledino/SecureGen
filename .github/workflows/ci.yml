@@ -38,14 +38,16 @@ jobs:
 
     - name: Install PSScriptAnalyzer
       shell: pwsh
-      run: Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
+      run: |
+        Install-Module PSScriptAnalyzer -Force -Scope CurrentUser -ErrorAction Stop
 
     - name: Static Analysis (Lint)
       shell: pwsh
       run: |
+        $ErrorActionPreference = 'Stop'
         $results = Invoke-ScriptAnalyzer -Path ./SecureGen -Recurse -Severity Error
         if ($results) {
-          $results | ConvertTo-Json
+          $results | Format-List | Out-String
           exit 1
         }
         echo "Analyse statique OK"
@@ -53,6 +55,7 @@ jobs:
     - name: Load Module
       shell: pwsh
       run: |
+        $ErrorActionPreference = 'Stop'
         Import-Module ./SecureGen/SecureGen.psd1 -Force
         echo "Module chargé"
 
@@ -60,7 +63,7 @@ jobs:
       shell: pwsh
       run: |
         if (Test-Path ./tests) {
-          Install-Module Pester -Force -Scope CurrentUser
+          Install-Module Pester -Force -Scope CurrentUser -ErrorAction Stop
           Invoke-Pester -Path ./tests -Output Detailed -EnableExit
         } else {
           echo "Aucun test Pester trouvé"
