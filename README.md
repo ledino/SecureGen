@@ -1,5 +1,3 @@
-# 📄 **README.md — Version mise à jour et prête pour la release 1.3.3**
-
 # 🔐 SecureGen
 
 <p align="center">
@@ -396,7 +394,7 @@ SecureGen/
 │       ├── script-demo.png
 │       └── github-actions-demo.png
 │
-├── docs/                          # Documentation complète
+├── docs/                          # Documentations complètes
 │   ├── index.md
 │   ├── installation.md
 │   ├── examples.md
