@@ -34,14 +34,13 @@ SecureGen/
 
 ## ▶️ Core.PS7.ps1 (PowerShell 7+)
 
-Cette version est chargée automatiquement lorsque PowerShell 7 ou supérieur est détecté.  
+Chargée automatiquement lorsque PowerShell 7 ou supérieur est détecté.  
 Elle utilise :
 
 - `Get-SecureRandom` (si disponible)
 - `RandomNumberGenerator.GetBytes()` (.NET 6+)
 - un clipboard totalement cross‑platform
-- un code plus performant et plus lisible
-- une génération cryptographique conforme aux recommandations modernes
+- une génération cryptographique moderne et performante
 
 ## ▶️ Legacy.PS5.ps1 (Windows PowerShell 5.1)
 
@@ -97,7 +96,7 @@ SecureGen/
 │   ├── Core.PS7.ps1               # Implémentation moderne (PowerShell 7+)
 │   ├── Legacy.PS5.ps1             # Implémentation fallback (Windows PowerShell 5.1)
 │   ├── SecureGen.psm1             # Loader intelligent PS5/PS7 + export des fonctions
-│   └── SecureGen.psd1             # Manifest du module (bumpé automatiquement)
+│   └── SecureGen.psd1             # Manifest du module (mis à jour automatiquement)
 │
 ├── assets/                        # Identité visuelle & médias
 │   ├── logo.png
@@ -110,7 +109,7 @@ SecureGen/
 │       ├── script-demo.png
 │       └── github-actions-demo.png
 │
-├── docs/                          # Documentation complète
+├── docs/                          # Documentations complètes
 │   ├── index.md
 │   ├── installation.md
 │   ├── examples.md
@@ -135,10 +134,9 @@ SecureGen/
 ├── scripts/                       # Scripts internes & outils dev
 │   ├── build.ps1
 │   ├── Install-SecureGen.ps1
-│   ├── Publish-SecureGen.ps1
 │   ├── Generate-Help.ps1
-│   ├── Versioning-SecureGen.ps1   # (legacy, remplacé par standard-version)
-│   └── Release-All.ps1            # (legacy, remplacé par GitHub Actions)
+│   ├── Publish-SecureGen.ps1      # (optionnel, publication manuelle)
+│   └── Versioning-SecureGen.ps1   # (legacy, remplacé par standard-version)
 │
 ├── .version-updaters/             # Updaters custom pour standard-version
 │   └── psd1-updater.js            # Mise à jour automatique du ModuleVersion
@@ -146,7 +144,7 @@ SecureGen/
 ├── .github/
 │   └── workflows/
 │       ├── ci.yml                 # CI multi-plateformes (tests + lint)
-│       └── release.yml            # Release automatisée (standard-version + PSGallery)
+│       └── publish.yml            # Publication automatique sur PSGallery (déclenchée par tag)
 │
 ├── package.json                   # Dépendances Node + version source de vérité
 ├── package-lock.json              # Verrouillage des dépendances
@@ -185,7 +183,7 @@ SecureGen gère automatiquement le presse‑papier selon la plateforme :
 | macOS | `pbcopy` |
 | Linux | `xclip` ou `xsel` |
 
-Fallback propre avec warnings si non disponible.
+Fallback propre avec message informatif si non disponible.
 
 ---
 
@@ -241,27 +239,6 @@ Utilisé par :
 
 ---
 
-# 🛠️ Scripts intégrés
-
-## build.ps1
-- Nettoyage  
-- Packaging  
-- Tests Pester  
-- Publication optionnelle  
-
-## Versioning-SecureGen.ps1
-- Versioning SemVer automatique  
-- Mise à jour du manifest  
-
-## Publish-SecureGen.ps1
-- Publication PSGallery  
-- Vérification de la clé API  
-
-## Release-All.ps1
-- Pipeline complet : versioning + build + publication  
-
----
-
 # 🧱 Philosophie de maintenance
 
 - Code clair et modulaire  
@@ -270,24 +247,27 @@ Utilisé par :
 - Compatibilité maximale  
 - Documentation complète  
 - Architecture prête pour CI/CD  
+- Versioning automatisé via standard-version  
+- Publication automatisée via GitHub Actions (tag → PSGallery)
 
 ---
 
 # 📚 Documentations associées
 
-- 📦 Installation : [https://github.com/ledino/SecureGen/blob/main/docs/installation.md](https://github.com/ledino/SecureGen/blob/main/docs/installation.md)  
-- 📘 Exemples : `https://github.com/ledino/SecureGen/blob/main/docs/examples.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fexamples.md")  
-- 🧠 Guide avancé : `https://github.com/ledino/SecureGen/blob/main/docs/advanced.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fadvanced.md")  
-- 🧪 Versioning : `https://github.com/ledino/SecureGen/blob/main/docs/versioning.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fversioning.md")  
-- 🚀 Processus de release : `https://github.com/ledino/SecureGen/blob/main/docs/release-process.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Frelease-process.md")  
-- 📜 README principal : `https://github.com/ledino/SecureGen/blob/main/README.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2FREADME.md")  
+- Installation : `docs/installation.md`  
+- Exemples : `docs/examples.md`  
+- Guide avancé : `docs/advanced.md`  
+- Versioning : `docs/versioning.md`  
+- Processus de release : `docs/release-process.md`  
+- README principal : `README.md`  
 
 ---
-
 
 # 🎉 Merci d'utiliser SecureGen !
 
 Pour contribuer :  
 👉 Issues & Pull Requests sur GitHub
+
+```
 
 ---

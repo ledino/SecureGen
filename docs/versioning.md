@@ -1,12 +1,13 @@
 # 🧩 Versioning — SecureGen  
-*(Version alignée avec le workflow moderne : standard-version + GitHub Actions)*
+*(Version alignée avec le workflow moderne : standard-version local + publication via tag)*
 
-SecureGen utilise un système de versioning entièrement automatisé basé sur :
+SecureGen utilise un système de versioning moderne basé sur :
 
 - **Semantic Versioning (SemVer)**
 - **Conventional Commits**
-- **standard-version**
-- **GitHub Actions (release automatisée)**
+- **standard-version** (exécuté en local)
+- **Git tags** (déclenchent la publication PSGallery)
+- **GitHub Actions** (publication automatique uniquement)
 
 Ce document explique comment les versions sont générées, comment le manifest est mis à jour automatiquement, et comment une release est produite.
 
@@ -31,31 +32,19 @@ Exemples :
 # 🧱 Règles SemVer
 
 ## ✔ MAJOR (X.0.0)
-Changements non rétro‑compatibles :
-
-- suppression d’un paramètre
-- modification d’un comportement par défaut
-- refonte interne cassant des scripts existants
+Changements non rétro‑compatibles.
 
 ## ✔ MINOR (1.X.0)
-Nouvelles fonctionnalités sans rupture :
-
-- ajout d’un paramètre
-- ajout d’un alias
-- amélioration significative
+Nouvelles fonctionnalités sans rupture.
 
 ## ✔ PATCH (1.3.X)
-Corrections et améliorations mineures :
-
-- bugfix
-- optimisation interne
-- correction de documentation
+Corrections et améliorations mineures.
 
 ---
 
 # ⚙️ Automatisation du versioning
 
-SecureGen utilise **standard-version** pour :
+SecureGen utilise **standard-version**, exécuté **localement**, pour :
 
 - lire les commits (Conventional Commits)
 - déterminer automatiquement le type de bump (major/minor/patch)
@@ -63,8 +52,8 @@ SecureGen utilise **standard-version** pour :
   - `package.json`
   - `SecureGen.psd1` (via un updater custom)
   - `CHANGELOG.md`
-- créer un commit
-- créer un tag Git
+- créer un commit `chore(release): X.Y.Z`
+- créer un tag `vX.Y.Z`
 
 Aucune modification manuelle n’est nécessaire.
 
@@ -90,7 +79,7 @@ dans :
 SecureGen/SecureGen.psd1
 ```
 
-C’est la source de vérité pour PowerShell Gallery.
+C’est la version utilisée par PowerShell Gallery.
 
 ---
 
@@ -104,7 +93,7 @@ Le type de commit détermine le bump :
 | `fix:`         | PATCH |
 | `perf:`        | PATCH |
 | `docs:`        | Aucun bump |
-| `refactor:`    | PATCH (si sans rupture) |
+| `refactor:`    | PATCH |
 | `BREAKING CHANGE:` | MAJOR |
 
 Exemples :
@@ -117,33 +106,33 @@ refactor: simplification du loader PS7
 
 ---
 
-# 🔄 Processus de release automatisée
+# 🔄 Processus de release (v1.4.0+)
 
-La release est gérée par :
+La release est désormais **simple, locale et maîtrisée** :
 
-```
-.github/workflows/release.yml
-```
+1. Vérifier que la CI est verte  
+2. Exécuter standard-version en local :  
+   ```powershell
+   npm run release -- --release-as X.Y.Z
+   ```
+3. Pousser la branche `main` :  
+   ```powershell
+   git push
+   ```
+4. Pousser le tag généré :  
+   ```powershell
+   git push origin vX.Y.Z
+   ```
+5. GitHub Actions détecte le tag et publie automatiquement sur PowerShell Gallery  
+6. Créer la Release GitHub (notes générées dans CHANGELOG.md)
 
-Étapes :
-
-1. Lancement manuel du workflow **Release SecureGen**
-2. standard-version :
-   - calcule la nouvelle version
-   - met à jour le manifest
-   - met à jour le changelog
-   - crée un commit
-   - crée un tag `vX.Y.Z`
-3. GitHub Actions pousse le commit + tag
-4. Le job `publish` publie automatiquement sur PowerShell Gallery
-
-Aucune intervention manuelle.
+Aucune exécution de standard-version dans GitHub Actions.
 
 ---
 
 # 📦 Où se trouve la version ?
 
-### ✔ Version Node (source de vérité pour standard-version)
+### ✔ Source de vérité standard-version
 ```
 package.json
 ```
@@ -162,13 +151,10 @@ CHANGELOG.md
 
 # 🧪 Vérifications avant release
 
-Avant de lancer le workflow :
-
-- CI doit être verte
-- README et docs doivent être à jour
-- commits doivent suivre Conventional Commits
-
-Aucune mise à jour manuelle du manifest ou du changelog.
+- CI verte  
+- README et docs à jour  
+- commits conformes à Conventional Commits  
+- pas de modifications manuelles du manifest ou du changelog  
 
 ---
 
@@ -178,7 +164,8 @@ Aucune mise à jour manuelle du manifest ou du changelog.
 - ❌ ne plus modifier `CHANGELOG.md` à la main  
 - ❌ ne plus utiliser `scripts/Versioning-SecureGen.ps1`  
 - ❌ ne plus utiliser `scripts/Release-All.ps1`  
-- ❌ ne plus créer de tag manuellement (sauf cas exceptionnel)
+- ❌ ne plus utiliser de workflow `release.yml`  
+- ❌ ne plus exécuter standard-version dans GitHub Actions  
 
 ---
 
@@ -192,16 +179,15 @@ Aucune mise à jour manuelle du manifest ou du changelog.
 
 ---
 
-# 🎉 Versioning moderne et maîtrisé
+# 🎉 Versioning moderne, simple et maîtrisé
 
-Grâce à standard-version + GitHub Actions, SecureGen bénéficie d’un pipeline :
+Grâce à standard-version exécuté localement + publication via tag, SecureGen bénéficie d’un pipeline :
 
-- propre  
+- simple  
+- fiable  
 - reproductible  
 - sans erreur humaine  
-- professionnel  
 - parfaitement aligné avec SemVer  
-
 ```
 
 ---

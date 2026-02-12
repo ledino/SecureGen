@@ -1,14 +1,14 @@
 # 🚀 Processus de release — SecureGen  
-*(Workflow moderne : standard-version + GitHub Actions)*
+*(Workflow moderne : standard-version local + publication via tag)*
 
 Ce document décrit le processus officiel pour générer et publier une nouvelle version de **SecureGen**.  
-Depuis la version 1.3.x, le processus est **entièrement automatisé** grâce à :
+Depuis la version 1.4.0, le processus est **simple, local et entièrement maîtrisé**, basé sur :
 
 - **Conventional Commits**
-- **standard-version**
+- **standard-version** (exécuté en local)
 - **un updater custom pour le manifest**
-- **GitHub Actions (release.yml)**
-- **publication automatique sur PowerShell Gallery**
+- **Git tags**
+- **GitHub Actions (publication automatique via publish.yml)**
 
 Aucune modification manuelle du manifest ou du changelog n’est nécessaire.
 
@@ -26,34 +26,26 @@ git status
 Vérifier que :
 
 - la branche `main` est propre
-- la CI est verte (workflow `ci.yml`)
-- la documentation est à jour (README, docs/*)
+- la CI (`ci.yml`) est verte
+- la documentation est à jour
 - les commits respectent **Conventional Commits**
 
 ---
 
-# 🧩 2. Lancement de la release automatisée
+# 🧩 2. Génération de la version (local)
 
-La release se déclenche via GitHub Actions :
+La version est générée **localement** via standard-version.
 
-1. Aller dans **Actions**
-2. Sélectionner **Release SecureGen**
-3. Cliquer sur **Run workflow**
+Exemple :
 
-Aucune version à saisir :  
-👉 standard-version calcule automatiquement MAJOR / MINOR / PATCH.
+```powershell
+npm run release -- --release-as 1.4.0
+```
 
----
-
-# ⚙️ 3. Ce que fait standard-version
-
-Lors du lancement, standard-version :
+Cette commande :
 
 1. Analyse les commits (Conventional Commits)
-2. Détermine le type de bump :
-   - `feat:` → MINOR
-   - `fix:` → PATCH
-   - `BREAKING CHANGE:` → MAJOR
+2. Détermine le bump (MAJOR / MINOR / PATCH)
 3. Met à jour automatiquement :
    - `package.json`
    - `SecureGen.psd1` (via `.version-updaters/psd1-updater.js`)
@@ -71,23 +63,25 @@ Aucune intervention humaine.
 
 ---
 
-# 🚀 4. Push automatique du commit + tag
+# 🚀 3. Push de la branche + tag
 
-Le workflow `release.yml` pousse automatiquement :
+Une fois la version générée :
 
-- le commit généré
-- le tag `vX.Y.Z`
+```powershell
+git push
+git push origin vX.Y.Z
+```
 
-Cela déclenche automatiquement le job **publish**.
+Le push du tag déclenche automatiquement le workflow `publish.yml`.
 
 ---
 
-# 📦 5. Publication automatique sur PowerShell Gallery
+# 📦 4. Publication automatique sur PowerShell Gallery
 
-Le job `publish` :
+Le workflow `publish.yml` :
 
 1. Récupère la version depuis le tag
-2. Charge la clé API PSGallery (secret GitHub : `PSGALLERY_KEY`)
+2. Charge la clé API PSGallery (`PSGALLERY_KEY`)
 3. Exécute :
 
 ```powershell
@@ -100,46 +94,41 @@ https://www.powershellgallery.com/packages/SecureGen
 
 ---
 
-# 🔍 6. Vérification post‑publication
+# 🔍 5. Vérification post‑publication
 
 Après quelques secondes :
 
 - vérifier la version sur PSGallery
 - vérifier le changelog généré
-- vérifier la release GitHub (automatique)
+- créer la Release GitHub (notes déjà prêtes dans `CHANGELOG.md`)
 
 ---
 
-# 🚫 7. Ce qu’il ne faut plus faire
+# 🚫 6. Ce qu’il ne faut plus faire
 
-Depuis l’automatisation :
+Depuis la v1.4.0 :
 
 - ❌ ne plus modifier `ModuleVersion` à la main  
 - ❌ ne plus modifier `CHANGELOG.md` à la main  
 - ❌ ne plus utiliser `scripts/Versioning-SecureGen.ps1`  
 - ❌ ne plus utiliser `scripts/Release-All.ps1`  
-- ❌ ne plus créer de tag manuellement  
-- ❌ ne plus publier via `Publish-SecureGen.ps1`  
+- ❌ ne plus utiliser de workflow `release.yml`  
+- ❌ ne plus exécuter standard-version dans GitHub Actions  
 
-Tout est automatisé.
+Le bump est **local**, la publication est **automatique via tag**.
 
 ---
 
-# 🧪 8. Dépannage
-
-### Le workflow refuse de committer  
-→ Vérifier que `release.yml` contient :
-
-```yaml
-git config user.name "github-actions"
-git config user.email "github-actions@github.com"
-```
+# 🧪 7. Dépannage
 
 ### Le manifest n’est pas mis à jour  
 → Vérifier `.version-updaters/psd1-updater.js`
 
 ### Le changelog ne se met pas à jour  
 → Vérifier `.versioningrc.json`
+
+### Le workflow publish échoue  
+→ Vérifier le secret GitHub `PSGALLERY_KEY`
 
 ---
 
@@ -149,21 +138,20 @@ git config user.email "github-actions@github.com"
 - `docs/contributing.md`
 - `.version-updaters/psd1-updater.js`
 - `.versioningrc.json`
-- `.github/workflows/release.yml`
+- `.github/workflows/publish.yml`
 - `CHANGELOG.md`
 
 ---
 
-# 🎉 Release automatisée réussie !
+# 🎉 Un processus de release simple, fiable et maîtrisé
 
-Grâce à ce pipeline moderne, SecureGen bénéficie d’un processus de release :
+Grâce à standard-version exécuté localement + publication via tag, SecureGen bénéficie d’un pipeline :
 
 - fiable  
 - reproductible  
 - sans erreur humaine  
 - professionnel  
 - parfaitement aligné avec SemVer  
-
 ```
 
 ---

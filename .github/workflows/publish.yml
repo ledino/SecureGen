@@ -1,0 +1,41 @@
+name: Publish SecureGen
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish to PowerShell Gallery
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Extract version from tag
+      id: version
+      shell: pwsh
+      run: |
+        $tag = $env:GITHUB_REF_NAME
+        $version = $tag.TrimStart('v')
+        echo "VERSION=$version" >> $env:GITHUB_ENV
+        echo "Version détectée : $version"
+
+    - name: Trust PSGallery
+      shell: pwsh
+      run: Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+
+    - name: Publish to PowerShell Gallery
+      shell: pwsh
+      env:
+        PSGALLERY_KEY: ${{ secrets.PSGALLERY_KEY }}
+      run: |
+        Publish-Module -Path ./SecureGen -NuGetApiKey $env:PSGALLERY_KEY -Repository PSGallery
+        echo "SecureGen publié sur PSGallery !"
