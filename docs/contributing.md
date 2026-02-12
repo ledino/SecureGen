@@ -1,242 +1,272 @@
-# 📘 **docs/contributing.md — Guide de contribution**
+# 🧱 Architecture interne — SecureGen  
+*(Version synchronisée avec la structure actuelle du module et le pipeline moderne)*
 
-# 🤝 Guide de contribution — SecureGen
-
-Merci de votre intérêt pour **SecureGen** !  
-Les contributions sont les bienvenues : corrections, améliorations, documentation, idées, tests, ou nouvelles fonctionnalités.
-
-Ce guide explique comment contribuer efficacement au projet.
+Ce document décrit en détail l’architecture interne du module **SecureGen**, son fonctionnement, ses choix techniques et sa structure modulaire.  
+Il est destiné aux développeurs, contributeurs et utilisateurs avancés souhaitant comprendre comment le module fonctionne en profondeur.
 
 ---
 
-# 🧱 Principes du projet
+# 🔐 Vision & philosophie
 
-SecureGen repose sur trois piliers :
+SecureGen repose sur trois principes fondamentaux :
 
-1. **Sécurité**  
-   Utilisation d’API cryptographiques modernes et fiables.
+1. **Sécurité moderne**  
+   Utiliser les meilleures API cryptographiques disponibles selon la version de PowerShell.
 
-2. **Compatibilité**  
-   Fonctionnement garanti sous PowerShell 5.1 et PowerShell 7+.
+2. **Compatibilité maximale**  
+   Fonctionner aussi bien sous **PowerShell 7+** que sous **Windows PowerShell 5.1**.
 
-3. **Simplicité**  
-   Code clair, modulaire, facile à maintenir.
-
-Toutes les contributions doivent respecter ces principes.
+3. **Expérience utilisateur fluide**  
+   Clipboard cross‑platform, beep encapsulé, alias ergonomiques, code propre et maintenable.
 
 ---
 
-# 🚀 Comment contribuer
+# 🧩 Architecture modulaire PS7 / PS5
 
-## 1. Fork du dépôt
-
-Sur GitHub :
-
-- Cliquez sur **Fork**
-- Clonez votre fork :
-
-```powershell
-git clone https://github.com/ledino/SecureGen
-cd SecureGen
-```
-
----
-
-## 2. Créer une branche
-
-```powershell
-git checkout -b feature/ma-nouvelle-fonction
-```
-
-Ou pour une correction :
-
-```powershell
-git checkout -b fix/clipboard-linux
-```
-
----
-
-# 🧱 Structure du module
-
-Le module est organisé ainsi :
+SecureGen utilise une architecture moderne basée sur **deux implémentations distinctes**, chacune optimisée pour sa version de PowerShell :
 
 ```
 SecureGen/
 │
-├── SecureGen/
-│   ├── Core.PS7.ps1
-│   ├── Legacy.PS5.ps1
-│   ├── SecureGen.psm1
-│   └── SecureGen.psd1
-│
-├── scripts/
-│   ├── build.ps1
-│   ├── Versioning-SecureGen.ps1
-│   ├── Install-SecureGen.ps1
-│   ├── Publish-SecureGen.ps1
-│   └── Release-All.ps1
-│
-├── assets/
-├── docs/
-└── .github/
+├── Core.PS7.ps1      # Implémentation moderne (PowerShell 7+)
+└── Legacy.PS5.ps1    # Implémentation fallback (Windows PowerShell 5.1)
 ```
 
-### Règles importantes :
+## ▶️ Core.PS7.ps1 (PowerShell 7+)
 
-- **Ne jamais mélanger** code PS7 et PS5 dans un même fichier.  
-- Toute nouvelle fonctionnalité doit être ajoutée dans **Core.PS7.ps1** et **Legacy.PS5.ps1** si elle doit fonctionner partout.  
-- Le fichier `SecureGen.psm1` ne doit contenir **aucune logique métier** :  
-  - uniquement le loader PS7/PS5  
-  - l’export des fonctions  
-  - les alias (`sgp`, `sgw`)  
+Chargée automatiquement lorsque PowerShell 7 ou supérieur est détecté.
+
+Caractéristiques :
+
+- `Get-SecureRandom` (si disponible)
+- `RandomNumberGenerator.GetBytes()` (.NET 6+)
+- clipboard totalement cross‑platform
+- code plus performant et plus lisible
+- génération cryptographique conforme aux recommandations modernes
+
+## ▶️ Legacy.PS5.ps1 (Windows PowerShell 5.1)
+
+Fallback sécurisé pour les environnements plus anciens :
+
+- `RNGCryptoServiceProvider` (API .NET Framework 4.8)
+- clipboard limité à Windows
+- compatibilité maximale avec PS5.1
+- même logique fonctionnelle, adaptée aux contraintes du Framework
 
 ---
 
-# 🧪 Tests
+# 🔍 Détection automatique dans SecureGen.psm1
 
-Un dossier `tests/` peut être ajouté pour les tests Pester.
-
-Exemple de test :
+Le fichier principal `SecureGen.psm1` agit comme un **loader intelligent**.  
+Il détecte la version de PowerShell et charge automatiquement la bonne implémentation :
 
 ```powershell
-Describe "Get-PassWord" {
-    It "Génère un mot de passe de la bonne longueur" {
-        (Get-PassWord -Length 24).Length | Should -Be 24
-    }
+if ($PSVersionTable.PSVersion.Major -ge 7) {
+    . "$PSScriptRoot/Core.PS7.ps1"
+}
+else {
+    . "$PSScriptRoot/Legacy.PS5.ps1"
 }
 ```
 
-Le script de build exécute automatiquement les tests :
+Aucune action n’est requise de la part de l’utilisateur :  
+👉 **tout est automatique, transparent et optimisé.**
 
-```powershell
-pwsh ./scripts/build.ps1
+---
+
+# 🧠 Rôle du loader (SecureGen.psm1)
+
+Le loader :
+
+- charge la bonne implémentation PS7/PS5  
+- expose les fonctions publiques du module  
+- applique les alias ergonomiques :  
+  - `sgw` → `Get-PassWord`  
+  - `sgp` → `Get-PassPhrase`  
+- garantit une API identique sur toutes les plateformes  
+- encapsule les différences techniques entre PS5 et PS7  
+- centralise la logique commune (clipboard, beep, helpers)
+
+---
+
+# 📦 Structure complète du module
+
+```
+SecureGen/
+│
+├── SecureGen/                     # Code source du module
+│   ├── Core.PS7.ps1               # Implémentation moderne (PowerShell 7+)
+│   ├── Legacy.PS5.ps1             # Implémentation fallback (Windows PowerShell 5.1)
+│   ├── SecureGen.psm1             # Loader intelligent PS5/PS7 + export des fonctions
+│   └── SecureGen.psd1             # Manifest du module (bumpé automatiquement)
+│
+├── assets/                        # Identité visuelle & médias
+│   ├── logo.png
+│   ├── banner.png
+│   ├── palette.md
+│   └── screenshots/
+│       ├── password-demo.gif
+│       ├── passphrase-demo.gif
+│       ├── clipboard-demo.gif
+│       ├── script-demo.png
+│       └── github-actions-demo.png
+│
+├── docs/                          # Documentation complète
+│   ├── index.md
+│   ├── installation.md
+│   ├── examples.md
+│   ├── advanced.md
+│   ├── architecture.md
+│   ├── security.md
+│   ├── contributing.md
+│   ├── troubleshooting.md
+│   ├── versioning.md
+│   ├── release-process.md
+│   ├── faq.md
+│   ├── benchmarks.md
+│   ├── screenshots.md
+│   ├── generate-help.md
+│   └── cmdlets/
+│       ├── Get-PassWord.md
+│       ├── Get-PassPhrase.md
+│       ├── Get-CryptoIndex.md
+│       ├── Invoke-Beep.md
+│       └── SecureGen.md
+│
+├── scripts/                       # Scripts internes & outils dev
+│   ├── build.ps1
+│   ├── Install-SecureGen.ps1
+│   ├── Publish-SecureGen.ps1
+│   ├── Generate-Help.ps1
+│   ├── Versioning-SecureGen.ps1   # (legacy, remplacé par standard-version)
+│   └── Release-All.ps1            # (legacy, remplacé par GitHub Actions)
+│
+├── .version-updaters/             # Updaters custom pour standard-version
+│   └── psd1-updater.js            # Mise à jour automatique du ModuleVersion
+│
+├── .github/
+│   └── workflows/
+│       ├── ci.yml                 # CI multi-plateformes (tests + lint)
+│       └── release.yml            # Release automatisée (standard-version + PSGallery)
+│
+├── package.json                   # Dépendances Node + version source de vérité
+├── package-lock.json              # Verrouillage des dépendances
+├── .versioningrc.json             # Configuration standard-version
+│
+├── CHANGELOG.md                   # Changelog généré automatiquement
+├── README.md                      # Documentation principale
+├── LICENSE                        # Licence MIT
+└── .gitignore
 ```
 
 ---
 
-# 🛠️ Build & validation
+# 🔐 Détails cryptographiques
 
-Avant de soumettre une PR, exécutez :
+## PowerShell 7+
+- `RandomNumberGenerator.GetBytes()`  
+- `Get-SecureRandom` (si disponible)  
+- entropie élevée  
+- API moderne, performante et cross‑platform  
+
+## PowerShell 5.1
+- `RNGCryptoServiceProvider`  
+- API .NET Framework  
+- fallback sécurisé mais moins moderne  
+
+---
+
+# 📋 Clipboard cross‑platform
+
+SecureGen gère automatiquement le presse‑papier selon la plateforme :
+
+| OS | Méthode |
+|----|---------|
+| Windows | `Set-Clipboard` |
+| macOS | `pbcopy` |
+| Linux | `xclip` ou `xsel` |
+
+Fallback propre avec warnings si non disponible.
+
+---
+
+# 🔔 Beep encapsulé
+
+Le beep est encapsulé pour éviter les erreurs :
+
+- Windows : OK  
+- Linux/macOS : silencieux si non supporté  
 
 ```powershell
-pwsh ./scripts/build.ps1
-```
-
-Ce script :
-
-- nettoie l’environnement  
-- vérifie la structure  
-- copie le module dans `out/`  
-- exécute les tests (si présents)  
-- prépare le packaging  
-
----
-
-# 📦 Publication
-
-La publication sur la PowerShell Gallery est réservée aux mainteneurs.  
-Toutefois, vous pouvez tester la publication en local :
-
-```powershell
-pwsh ./scripts/build.ps1 -Publish
-```
-
-⚠️ Nécessite une clé API PSGallery dans :
-
-```powershell
-$env:PSGALLERY_KEY
+Invoke-Beep
 ```
 
 ---
 
-# 🧹 Style & bonnes pratiques
+# 🧠 Générateur cryptographique interne
 
-Merci de respecter :
+La fonction `Get-CryptoIndex` est le cœur du module :
 
-- `Set-StrictMode -Version Latest`
-- indentation PowerShell standard (4 espaces)
-- noms de fonctions en **PascalCase**
-- noms de paramètres en **camelCase**
-- pas de variables globales
-- pas de dépendances externes
-- pas de secrets en clair dans le code
-- API identiques entre PS5 et PS7
+- PS7 : `Get-SecureRandom` ou `RandomNumberGenerator.GetBytes()`  
+- PS5 : `RNGCryptoServiceProvider`  
+- Retourne un index sécurisé entre `0` et `Max - 1`  
 
----
+Utilisé par :
 
-# 🧠 Discussions & idées
-
-Pour proposer une idée :
-
-- Ouvrez une **Issue** sur GitHub
-- Décrivez clairement :
-  - le besoin  
-  - le contexte  
-  - l’usage prévu  
-  - l’impact sur PS5/PS7  
+- `Get-PassWord`  
+- `Get-PassPhrase`  
 
 ---
 
-# 🔐 Sécurité
+# 🧰 Design des fonctions
 
-Toute contribution touchant :
+## Get-PassWord
+- Génération caractère par caractère  
+- Pool configurable (minuscules, majuscules, chiffres, symboles)  
+- Paramètres modernes :  
+  - `-SpecialChars`  
+  - `-UseSpecial`  
+  - `-Silent`  
 
-- la cryptographie  
-- la génération aléatoire  
-- la gestion du clipboard  
-- la copie automatique  
-- les paramètres sensibles  
+## Get-PassPhrase
+- Liste de mots sélectionnés pour lisibilité + entropie  
+- Séparateur `-`  
+- Paramètres modernes :  
+  - `-MotsParBloc`  
+  - `-LettresParMot`  
+  - `-Silent`  
 
-doit être examinée avec attention.
-
-Les PR modifiant ces zones doivent inclure :
-
-- une justification technique  
-- des tests  
-- une validation PS5 + PS7  
+## Aliases
+- `sgp` → `Get-PassPhrase`  
+- `sgw` → `Get-PassWord`  
 
 ---
 
-# 📝 Processus de Pull Request
+# 🧱 Philosophie de maintenance
 
-1. Fork du dépôt  
-2. Création d’une branche  
-3. Développement + tests  
-4. Build local (`pwsh ./scripts/build.ps1`)  
-5. Commit clair et structuré  
-6. Push vers votre fork  
-7. Ouverture d’une Pull Request  
-
-Merci d’inclure :
-
-- une description claire  
-- les motivations  
-- les impacts  
-- les tests éventuels  
+- Code clair et modulaire  
+- Pas de dépendances externes  
+- Pas de stockage de secrets  
+- Compatibilité maximale  
+- Documentation complète  
+- Architecture prête pour CI/CD  
 
 ---
 
 # 📚 Documentations associées
 
-- 📦 Installation : [https://github.com/ledino/SecureGen/blob/main/docs/installation.md](https://github.com/ledino/SecureGen/blob/main/docs/installation.md)  
-- 📘 Exemples : `https://github.com/ledino/SecureGen/blob/main/docs/examples.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fexamples.md")  
-- 🧠 Guide avancé : `https://github.com/ledino/SecureGen/blob/main/docs/advanced.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fadvanced.md")  
-- 🧱 Architecture : `https://github.com/ledino/SecureGen/blob/main/docs/architecture.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Farchitecture.md")  
-- 🧪 Versioning : `https://github.com/ledino/SecureGen/blob/main/docs/versioning.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fversioning.md")  
-- 🚀 Processus de release : `https://github.com/ledino/SecureGen/blob/main/docs/release-process.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Frelease-process.md")  
-- 🔐 Sécurité : `https://github.com/ledino/SecureGen/blob/main/docs/security.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fsecurity.md")  
-- 📜 README principal : `https://github.com/ledino/SecureGen/blob/main/README.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2FREADME.md")  
+- `docs/versioning.md`
+- `docs/release-process.md`
+- `docs/contributing.md`
+- `docs/security.md`
+- `README.md`
 
 ---
 
-# 🎉 Merci pour votre contribution !
+# 🎉 Merci d'utiliser SecureGen !
 
-SecureGen est un projet communautaire.  
-Chaque contribution — petite ou grande — aide à rendre le module plus robuste, plus simple et plus agréable à utiliser.
-
-Pour toute question :  
-👉 Issues GitHub  
-👉 Discussions  
-👉 Pull Requests
+Pour contribuer :  
+👉 Issues & Pull Requests sur GitHub
+```
 
 ---

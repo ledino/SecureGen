@@ -1,22 +1,20 @@
-# 📘 **docs/index.md — Documentation officielle SecureGen**  
-*(Version synchronisée avec la structure actuelle du module)*
-
-# 🔐 SecureGen — Documentation officielle
+# 🔐 SecureGen — Documentation officielle  
+*(Version alignée avec l’architecture moderne et le pipeline CI/CD)*
 
 Bienvenue dans la documentation officielle de **SecureGen**, un module PowerShell moderne, sécurisé et cross‑platform conçu pour générer :
 
-- des **mots de passe sécurisés**  
-- des **passphrases robustes**  
+- des **mots de passe sécurisés**
+- des **passphrases robustes**
 - des **clés aléatoires cryptographiquement sûres**
 
 SecureGen fonctionne automatiquement sous :
 
-- **PowerShell 7+** (Windows, Linux, macOS)  
+- **PowerShell 7+** (Windows, Linux, macOS)
 - **Windows PowerShell 5.1**
 
 Grâce à une architecture intelligente, le module charge automatiquement la version la plus adaptée à votre environnement :
 
-- **Core.PS7.ps1** → version moderne utilisant `Get‑SecureRandom` ou `RandomNumberGenerator.GetBytes()`  
+- **Core.PS7.ps1** → version moderne utilisant `Get‑SecureRandom` ou `RandomNumberGenerator.GetBytes()`
 - **Legacy.PS5.ps1** → version fallback utilisant `RNGCryptoServiceProvider` (.NET Framework)
 
 ---
@@ -45,12 +43,12 @@ Import-Module SecureGen
 
 # 🧩 Fonctionnalités principales
 
-- Génération de mots de passe sécurisés (`Get-PassWord`)  
-- Génération de passphrases lisibles (`Get-PassPhrase`)  
-- Générateur cryptographique interne (`Get-CryptoIndex`)  
-- Clipboard cross‑platform (`Set-ClipboardSafe`)  
-- Effacement sécurisé du clipboard (`Clear-ClipboardSafe`)  
-- Beep encapsulé (`Invoke-Beep`)  
+- Génération de mots de passe sécurisés (`Get-PassWord`)
+- Génération de passphrases lisibles (`Get-PassPhrase`)
+- Générateur cryptographique interne (`Get-CryptoIndex`)
+- Clipboard cross‑platform (`Set-ClipboardSafe`)
+- Effacement sécurisé du clipboard (`Clear-ClipboardSafe`)
+- Beep encapsulé (`Invoke-Beep`)
 - Aliases ergonomiques : **`sgw`**, **`sgp`**
 
 ---
@@ -67,6 +65,27 @@ SecureGen/
 ```
 
 Le fichier principal `SecureGen.psm1` détecte automatiquement la version PowerShell et charge la bonne implémentation.
+
+---
+
+# ⚙️ Automatisation du versioning & des releases
+
+SecureGen utilise un pipeline moderne basé sur :
+
+- **Conventional Commits**
+- **standard-version**
+- **un updater custom pour le manifest**
+- **GitHub Actions**
+
+Chaque release :
+
+- met à jour automatiquement `SecureGen.psd1`
+- génère le `CHANGELOG.md`
+- crée un commit `chore(release): X.Y.Z`
+- crée un tag `vX.Y.Z`
+- publie automatiquement sur PowerShell Gallery
+
+👉 Voir `release-process.md`
 
 ---
 
@@ -99,7 +118,7 @@ Réponses aux questions les plus fréquentes.
 👉 `faq.md`
 
 ### ▶️ Contribution  
-Guide pour contribuer au projet : PR, style, tests, build.  
+Guide pour contribuer au projet : PR, style, tests, build, CI.  
 👉 `contributing.md`
 
 ### ▶️ Processus de release  
@@ -110,13 +129,17 @@ Pipeline complet pour publier une version stable sur PSGallery.
 
 # 🛠️ Scripts intégrés
 
-Les scripts d’automatisation se trouvent dans le dossier `scripts/` :
+Les scripts internes se trouvent dans le dossier `scripts/` :
 
 - `build.ps1` → build complet + tests + packaging  
-- `Versioning-SecureGen.ps1` → versioning SemVer automatique  
-- `Publish-SecureGen.ps1` → publication PSGallery  
 - `Install-SecureGen.ps1` → installation intelligente PS5/PS7  
-- `Release-All.ps1` → pipeline complet (versioning + build + publication)
+- `Publish-SecureGen.ps1` → publication manuelle (mainteneurs uniquement)  
+- `Generate-Help.ps1` → génération automatique de la documentation PlatyPS  
+
+Scripts legacy (remplacés par standard-version + GitHub Actions) :
+
+- `Versioning-SecureGen.ps1`  
+- `Release-All.ps1`
 
 ---
 
@@ -124,13 +147,16 @@ Les scripts d’automatisation se trouvent dans le dossier `scripts/` :
 
 SecureGen est conçu pour être :
 
-- robuste  
-- maintenable  
-- compatible PS5/PS7  
-- prêt pour CI/CD  
+- robuste
+- maintenable
+- compatible PS5/PS7
+- prêt pour CI/CD
 
-Un dossier `tests/` peut être ajouté pour Pester.  
-Le script `build.ps1` les exécutera automatiquement.
+La CI (`ci.yml`) exécute automatiquement :
+
+- PSScriptAnalyzer
+- Import du module
+- Tests Pester (si présents)
 
 ---
 
@@ -165,15 +191,15 @@ Pull Requests, Issues, suggestions.
 
 # 📚 Documentations associées
 
-- 📦 Installation : [https://github.com/ledino/SecureGen/blob/main/docs/installation.md](https://github.com/ledino/SecureGen/blob/main/docs/installation.md)  
-- 📘 Exemples : `https://github.com/ledino/SecureGen/blob/main/docs/examples.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fexamples.md")  
-- 🧠 Guide avancé : `https://github.com/ledino/SecureGen/blob/main/docs/advanced.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fadvanced.md")  
-- 🧱 Architecture : `https://github.com/ledino/SecureGen/blob/main/docs/architecture.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Farchitecture.md")  
-- 🔐 Sécurité : `https://github.com/ledino/SecureGen/blob/main/docs/security.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fsecurity.md")  
-- 🧪 Versioning : `https://github.com/ledino/SecureGen/blob/main/docs/versioning.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fversioning.md")  
-- 🚀 Processus de release : `https://github.com/ledino/SecureGen/blob/main/docs/release-process.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Frelease-process.md")  
-- 🤝 Contribution : `https://github.com/ledino/SecureGen/blob/main/docs/contributing.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fcontributing.md")  
-- 📜 README principal : `https://github.com/ledino/SecureGen/blob/main/README.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2FREADME.md")  
+- `installation.md`
+- `examples.md`
+- `advanced.md`
+- `architecture.md`
+- `security.md`
+- `versioning.md`
+- `release-process.md`
+- `contributing.md`
+- `README.md`
 
 ---
 
@@ -181,5 +207,6 @@ Pull Requests, Issues, suggestions.
 
 Votre retour est précieux pour améliorer le module.  
 N’hésitez pas à ouvrir une issue ou proposer une PR sur GitHub.
+```
 
 ---

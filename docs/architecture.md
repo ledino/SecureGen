@@ -97,18 +97,13 @@ SecureGen/
 │   ├── Core.PS7.ps1               # Implémentation moderne (PowerShell 7+)
 │   ├── Legacy.PS5.ps1             # Implémentation fallback (Windows PowerShell 5.1)
 │   ├── SecureGen.psm1             # Loader intelligent PS5/PS7 + export des fonctions
-│   └── SecureGen.psd1             # Manifest du module
+│   └── SecureGen.psd1             # Manifest du module (bumpé automatiquement)
 │
 ├── assets/                        # Identité visuelle & médias
 │   ├── logo.png
 │   ├── banner.png
-│   ├── blanc_pur.png
-│   ├── bleu_clair.png
-│   ├── bleu_fonce.png
-│   ├── cyan_vibrant.png
-│   ├── gris_anthracite.png
 │   ├── palette.md
-│   └── screenshots/               # GIFs & captures d’écran
+│   └── screenshots/
 │       ├── password-demo.gif
 │       ├── passphrase-demo.gif
 │       ├── clipboard-demo.gif
@@ -116,38 +111,46 @@ SecureGen/
 │       └── github-actions-demo.png
 │
 ├── docs/                          # Documentation complète
-│   ├── index.md                   # Page d’accueil de la documentation
-│   ├── installation.md            # Guide d’installation complet
-│   ├── examples.md                # Exemples d’utilisation
-│   ├── advanced.md                # Guide avancé
-│   ├── architecture.md            # Architecture interne
-│   ├── security.md                # Guide de sécurité (NIST / OWASP / ANSSI)
-│   ├── contributing.md            # Guide de contribution
-│   ├── troubleshooting.md         # Dépannage
-│   ├── versioning.md              # Versioning & SemVer
-│   ├── release-process.md         # Processus de release complet
-│   ├── faq.md                     # Questions fréquentes
-│   ├── benchmarks.md              # Benchmarks
-│   ├── screenshots.md             # Screenshots & GIFs
-│   ├── generate-help.md           # Guide PlatyPS (nouveau)
-│   └── cmdlets/                   # Documentation générée automatiquement (PlatyPS)
+│   ├── index.md
+│   ├── installation.md
+│   ├── examples.md
+│   ├── advanced.md
+│   ├── architecture.md
+│   ├── security.md
+│   ├── contributing.md
+│   ├── troubleshooting.md
+│   ├── versioning.md
+│   ├── release-process.md
+│   ├── faq.md
+│   ├── benchmarks.md
+│   ├── screenshots.md
+│   ├── generate-help.md
+│   └── cmdlets/
 │       ├── Get-PassWord.md
 │       ├── Get-PassPhrase.md
 │       ├── Get-CryptoIndex.md
 │       ├── Invoke-Beep.md
 │       └── SecureGen.md
 │
-├── scripts/                       # Scripts internes & CI/CD
-│   ├── build.ps1                  # Build + tests + packaging
-│   ├── Versioning-SecureGen.ps1   # Gestion automatique de version
-│   ├── Install-SecureGen.ps1      # Installation locale
-│   ├── Publish-SecureGen.ps1      # Publication PSGallery
-│   ├── Release-All.ps1            # Pipeline complet de release
-│   └── Generate-Help.ps1          # Génération automatique de la doc PlatyPS (nouveau)
+├── scripts/                       # Scripts internes & outils dev
+│   ├── build.ps1
+│   ├── Install-SecureGen.ps1
+│   ├── Publish-SecureGen.ps1
+│   ├── Generate-Help.ps1
+│   ├── Versioning-SecureGen.ps1   # (legacy, remplacé par standard-version)
+│   └── Release-All.ps1            # (legacy, remplacé par GitHub Actions)
+│
+├── .version-updaters/             # Updaters custom pour standard-version
+│   └── psd1-updater.js            # Mise à jour automatique du ModuleVersion
 │
 ├── .github/
 │   └── workflows/
-│       └── ci.yml                 # Workflow CI/CD unique (tests + publish)
+│       ├── ci.yml                 # CI multi-plateformes (tests + lint)
+│       └── release.yml            # Release automatisée (standard-version + PSGallery)
+│
+├── package.json                   # Dépendances Node + version source de vérité
+├── package-lock.json              # Verrouillage des dépendances
+├── .versioningrc.json             # Configuration standard-version
 │
 ├── CHANGELOG.md                   # Changelog généré automatiquement
 ├── README.md                      # Documentation principale

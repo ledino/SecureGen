@@ -1,5 +1,5 @@
 # 📘 Guide avancé — SecureGen  
-*(Version synchronisée avec la structure actuelle du module)*
+*(Aligné avec l’architecture moderne et le pipeline CI/CD)*
 
 Ce document couvre les usages avancés, l’architecture interne, les bonnes pratiques de sécurité et les intégrations possibles du module **SecureGen** dans des environnements professionnels.
 
@@ -9,7 +9,7 @@ Ce document couvre les usages avancés, l’architecture interne, les bonnes pra
 
 SecureGen utilise une architecture modulaire permettant une compatibilité maximale entre :
 
-- **PowerShell 7+** (Windows, Linux, macOS)  
+- **PowerShell 7+** (Windows, Linux, macOS)
 - **Windows PowerShell 5.1**
 
 Le module charge automatiquement la bonne implémentation :
@@ -41,7 +41,7 @@ Aucune action n’est requise : tout est automatique.
 ## PowerShell 7+
 SecureGen utilise :
 
-- `RandomNumberGenerator.GetBytes()`  
+- `RandomNumberGenerator.GetBytes()`
 - `Get-SecureRandom` (si disponible)
 
 Ces API sont basées sur **.NET 6+**, offrant un niveau de sécurité moderne, robuste et cross‑platform.
@@ -162,11 +162,11 @@ function New-UserAccount {
 
 # 🛡️ Bonnes pratiques de sécurité
 
-- Ne stockez jamais un mot de passe généré en clair dans un fichier non chiffré.  
-- Utilisez `ConvertTo-SecureString` pour manipuler les secrets.  
-- Préférez les passphrases pour les clés API ou tokens.  
-- Activez le mode `-Silent` dans les scripts automatisés.  
-- Sur Linux/macOS, installez `xclip` ou `xsel` pour une compatibilité clipboard optimale.  
+- Ne stockez jamais un mot de passe généré en clair dans un fichier non chiffré.
+- Utilisez `ConvertTo-SecureString` pour manipuler les secrets.
+- Préférez les passphrases pour les clés API ou tokens.
+- Activez le mode `-Silent` dans les scripts automatisés.
+- Sur Linux/macOS, installez `xclip` ou `xsel` pour une compatibilité clipboard optimale.
 
 ---
 
@@ -192,10 +192,11 @@ Describe "SecureGen" {
 
 Le script `scripts/build.ps1` permet :
 
-- nettoyage  
-- validation de la structure  
-- packaging  
-- tests Pester  
+- nettoyage
+- validation de la structure
+- packaging
+- tests Pester
+- génération de la documentation PlatyPS
 - publication PSGallery (optionnelle)
 
 Exécution simple :
@@ -214,12 +215,12 @@ pwsh ./scripts/build.ps1 -Publish
 
 # 📚 Documentations associées
 
-- 📦 Installation : [https://github.com/ledino/SecureGen/blob/main/docs/installation.md](https://github.com/ledino/SecureGen/blob/main/docs/installation.md)  
-- 📘 Exemples : `https://github.com/ledino/SecureGen/blob/main/docs/examples.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fexamples.md")  
-- 🧱 Architecture : `https://github.com/ledino/SecureGen/blob/main/docs/architecture.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Farchitecture.md")  
-- 🧪 Versioning : `https://github.com/ledino/SecureGen/blob/main/docs/versioning.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fversioning.md")  
-- 🚀 Processus de release : `https://github.com/ledino/SecureGen/blob/main/docs/release-process.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Frelease-process.md")  
-- 📜 README principal : `https://github.com/ledino/SecureGen/blob/main/README.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2FREADME.md")  
+- `installation.md`
+- `examples.md`
+- `architecture.md`
+- `versioning.md`
+- `release-process.md`
+- `README.md`
 
 ---
 

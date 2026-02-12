@@ -1,9 +1,8 @@
-# 📘 **docs/faq.md — Foire Aux Questions (FAQ)**
-
-# ❓ FAQ — SecureGen
+# ❓ FAQ — SecureGen  
+*(Alignée avec l’architecture moderne et le pipeline CI/CD)*
 
 Bienvenue dans la FAQ officielle de **SecureGen**.  
-Cette page répond aux questions les plus fréquentes concernant l’installation, l’utilisation, la compatibilité et la sécurité du module.
+Cette page répond aux questions les plus fréquentes concernant l’installation, l’utilisation, la compatibilité, la sécurité et le développement du module.
 
 ---
 
@@ -18,6 +17,10 @@ SecureGen est un module PowerShell moderne permettant de générer :
 
 Il fonctionne sous **PowerShell 5.1** et **PowerShell 7+**, sur Windows, Linux et macOS.
 
+## 👉 SecureGen est‑il open‑source ?
+Oui.  
+Le code source est disponible sur GitHub.
+
 ---
 
 # 🧩 Compatibilité
@@ -27,7 +30,7 @@ Oui.
 SecureGen inclut une version **Legacy** spécialement conçue pour Windows PowerShell 5.1.
 
 ## 👉 SecureGen fonctionne‑t‑il sous PowerShell 7 ?
-Oui, et c’est même la version recommandée.  
+Oui, et c’est la version recommandée.  
 La version **Core.PS7.ps1** utilise les API cryptographiques modernes de .NET 6+.
 
 ## 👉 Comment SecureGen choisit‑il la bonne version ?
@@ -115,7 +118,7 @@ sudo apt install xclip
 
 ## 👉 Le clipboard est‑il sécurisé ?
 Non.  
-Le presse‑papier n’est **jamais** un espace sécurisé, quel que soit le système.
+Le presse‑papier n’est **jamais** un espace sécurisé.
 
 Effacez‑le après usage :
 
@@ -157,10 +160,12 @@ Exemple GitHub Actions :
 # 🛠️ Développement
 
 ## 👉 Comment contribuer ?
-Pull Requests et Issues sont les bienvenues.
+Pull Requests et Issues sont les bienvenues.  
+Voir : `docs/contributing.md`
 
 ## 👉 Où se trouve la structure du module ?
-Dans `docs/architecture.md`.
+Dans :  
+`docs/architecture.md`
 
 ## 👉 Comment builder le module ?
 Avec :
@@ -169,13 +174,40 @@ Avec :
 pwsh ./scripts/build.ps1
 ```
 
+## 👉 Comment générer la documentation des cmdlets ?
+Avec :
+
+```powershell
+pwsh ./scripts/Generate-Help.ps1
+```
+
 ---
 
-# 🧪 Tests
+# 🔄 Versioning & Release
 
-## 👉 SecureGen inclut‑il des tests ?
-Un dossier `tests/` peut être ajouté pour Pester.  
-Le script `build.ps1` les exécutera automatiquement.
+## 👉 Comment fonctionne le versioning ?
+SecureGen utilise :
+
+- **Conventional Commits**
+- **standard-version**
+- un **updater custom** pour le manifest
+- un **CHANGELOG.md** généré automatiquement
+
+Voir : `docs/versioning.md`
+
+## 👉 Comment fonctionne la release automatisée ?
+Via GitHub Actions :
+
+- bump automatique  
+- changelog automatique  
+- commit + tag  
+- publication PSGallery  
+
+Voir : `docs/release-process.md`
+
+## 👉 Dois‑je modifier `ModuleVersion` à la main ?
+Non.  
+C’est géré automatiquement par standard‑version.
 
 ---
 
@@ -189,24 +221,31 @@ $env:PSModulePath -split ';'
 ```
 
 ## ❗ Le beep ne fonctionne pas
-C’est normal sur certains environnements Linux/macOS.  
-SecureGen ignore l’erreur automatiquement.
+Normal dans certains environnements Linux/macOS.
 
 ## ❗ Le clipboard ne copie rien
 Installez `xclip` ou `xsel` sous Linux.
+
+## ❗ Le workflow release échoue
+Vérifiez :
+
+- le secret `PSGALLERY_KEY`
+- l’identité GitHub Actions
+- la configuration `.versioningrc.json`
 
 ---
 
 # 📚 Documentations associées
 
-- 📦 Installation : [https://github.com/ledino/SecureGen/blob/main/docs/installation.md](https://github.com/ledino/SecureGen/blob/main/docs/installation.md)  
-- 📘 Exemples : `https://github.com/ledino/SecureGen/blob/main/docs/examples.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fexamples.md")  
-- 🧠 Guide avancé : `https://github.com/ledino/SecureGen/blob/main/docs/advanced.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fadvanced.md")  
-- 🧱 Architecture : `https://github.com/ledino/SecureGen/blob/main/docs/architecture.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Farchitecture.md")  
-- 🧪 Versioning : `https://github.com/ledino/SecureGen/blob/main/docs/versioning.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fversioning.md")  
-- 🚀 Processus de release : `https://github.com/ledino/SecureGen/blob/main/docs/release-process.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Frelease-process.md")  
-- 🔐 Sécurité : `https://github.com/ledino/SecureGen/blob/main/docs/security.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fsecurity.md")  
-- 📜 README principal : `https://github.com/ledino/SecureGen/blob/main/README.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2FREADME.md")  
+- `installation.md`
+- `examples.md`
+- `advanced.md`
+- `architecture.md`
+- `security.md`
+- `versioning.md`
+- `release-process.md`
+- `contributing.md`
+- `README.md`
 
 ---
 
@@ -214,6 +253,6 @@ Installez `xclip` ou `xsel` sous Linux.
 
 Pour toute autre question :  
 👉 GitHub — Issues & Discussions
+```
 
 ---
-

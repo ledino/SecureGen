@@ -1,16 +1,20 @@
-# 📘 **docs/versioning.md — Versioning & gestion des versions**
-
 # 🧩 Versioning — SecureGen  
-*(Version synchronisée avec la structure actuelle du module)*
+*(Version alignée avec le workflow moderne : standard-version + GitHub Actions)*
 
-Ce document décrit la stratégie de versioning utilisée par **SecureGen**, basée sur le standard **SemVer** (Semantic Versioning).  
-Il explique comment incrémenter les versions, maintenir la cohérence entre le code, le manifest et le changelog, et préparer une release propre.
+SecureGen utilise un système de versioning entièrement automatisé basé sur :
+
+- **Semantic Versioning (SemVer)**
+- **Conventional Commits**
+- **standard-version**
+- **GitHub Actions (release automatisée)**
+
+Ce document explique comment les versions sont générées, comment le manifest est mis à jour automatiquement, et comment une release est produite.
 
 ---
 
 # 🔢 Semantic Versioning (SemVer)
 
-SecureGen utilise le format :
+SecureGen suit le format :
 
 ```
 MAJOR.MINOR.PATCH
@@ -18,210 +22,186 @@ MAJOR.MINOR.PATCH
 
 Exemples :
 
-- `1.3.1`  
-- `2.0.0`  
-- `1.4.0`  
+- `1.3.3`
+- `1.4.0`
+- `2.0.0`
 
 ---
 
-# 🧱 Règles de versioning
+# 🧱 Règles SemVer
 
 ## ✔ MAJOR (X.0.0)
+Changements non rétro‑compatibles :
 
-Incrémenter lorsque :
-
-- un changement **incompatible** est introduit  
-- une fonctionnalité existante est modifiée de manière **non rétro‑compatible**  
-- l’architecture interne change profondément  
-- un comportement par défaut est modifié  
-
-Exemples :
-
-- refonte complète du module  
-- changement du format de sortie  
-- suppression d’une fonction publique  
-
----
+- suppression d’un paramètre
+- modification d’un comportement par défaut
+- refonte interne cassant des scripts existants
 
 ## ✔ MINOR (1.X.0)
+Nouvelles fonctionnalités sans rupture :
 
-Incrémenter lorsque :
-
-- une **nouvelle fonctionnalité** est ajoutée  
-- une amélioration significative est introduite  
-- un paramètre est ajouté  
-- une optimisation importante est réalisée  
-
-Exemples :
-
-- ajout d’un paramètre `-LettresParMot`  
-- ajout d’un alias (`sgw`, `sgp`)  
-- amélioration du clipboard Linux  
-
----
+- ajout d’un paramètre
+- ajout d’un alias
+- amélioration significative
 
 ## ✔ PATCH (1.3.X)
+Corrections et améliorations mineures :
 
-Incrémenter lorsque :
-
-- une **correction de bug** est effectuée  
-- une amélioration mineure est apportée  
-- une optimisation interne sans impact utilisateur est réalisée  
-- une correction de documentation est faite  
-
-Exemples :
-
-- correction d’un bug dans `Get-CryptoIndex`  
-- amélioration du beep sur macOS  
-- correction d’un warning  
+- bugfix
+- optimisation interne
+- correction de documentation
 
 ---
 
-# 🧾 Où définir la version ?
+# ⚙️ Automatisation du versioning
 
-La version officielle du module se trouve dans :
+SecureGen utilise **standard-version** pour :
+
+- lire les commits (Conventional Commits)
+- déterminer automatiquement le type de bump (major/minor/patch)
+- mettre à jour :
+  - `package.json`
+  - `SecureGen.psd1` (via un updater custom)
+  - `CHANGELOG.md`
+- créer un commit
+- créer un tag Git
+
+Aucune modification manuelle n’est nécessaire.
+
+---
+
+# 🧩 Updater custom pour le manifest
+
+Le fichier :
 
 ```
-SecureGen/SecureGen.psd1
+.version-updaters/psd1-updater.js
 ```
 
-Champ à modifier :
+met automatiquement à jour :
 
 ```powershell
 ModuleVersion = 'X.Y.Z'
 ```
 
----
-
-# 📝 Mise à jour du CHANGELOG
-
-Chaque version doit être documentée dans :
+dans :
 
 ```
-CHANGELOG.md
+SecureGen/SecureGen.psd1
 ```
 
-Format recommandé :
-
-```markdown
-## 🚀 1.4.0 — 2026-03-01
-### Nouveautés
-- Ajout du paramètre -LettresParMot
-
-### Améliorations
-- Optimisation du clipboard Linux
-
-### Corrections
-- Correction d’un bug dans Get-CryptoIndex
-```
+C’est la source de vérité pour PowerShell Gallery.
 
 ---
 
-# 🧪 Vérification avant release
+# 🧪 Conventional Commits
 
-Avant de publier une nouvelle version :
+Le type de commit détermine le bump :
 
-1. Mettre à jour `SecureGen.psd1`  
-2. Mettre à jour `CHANGELOG.md`  
-3. Exécuter le build :
+| Type de commit | Effet |
+|----------------|-------|
+| `feat:`        | MINOR |
+| `fix:`         | PATCH |
+| `perf:`        | PATCH |
+| `docs:`        | Aucun bump |
+| `refactor:`    | PATCH (si sans rupture) |
+| `BREAKING CHANGE:` | MAJOR |
 
-```powershell
-pwsh ./scripts/build.ps1
+Exemples :
+
 ```
-
-4. Vérifier que le module fonctionne sous :  
-   - PowerShell 5.1  
-   - PowerShell 7+  
-
-5. Vérifier que les tests passent (si présents)
-
----
-
-# 🚀 Publication
-
-La publication se fait via :
-
-```powershell
-pwsh ./scripts/build.ps1 -Publish
-```
-
-ou :
-
-```powershell
-pwsh ./scripts/Publish-SecureGen.ps1
-```
-
-Nécessite :
-
-```powershell
-$env:PSGALLERY_KEY = "votre_clé_api"
+feat: ajout du paramètre -Silent
+fix: correction du clipboard sous Linux
+refactor: simplification du loader PS7
 ```
 
 ---
 
-# 🔄 Automatisation du versioning
+# 🔄 Processus de release automatisée
 
-Le script suivant gère déjà une partie du versioning :
-
-```
-scripts/Versioning-SecureGen.ps1
-```
-
-Il permet :
-
-- l’incrémentation automatique SemVer  
-- la mise à jour du manifest  
-- la mise à jour du changelog  
-- la création d’un tag Git (optionnel)  
-
-Pour automatiser entièrement le pipeline, vous pouvez utiliser :
-
-```
-scripts/Release-All.ps1
-```
-
-ou un workflow GitHub Actions :
+La release est gérée par :
 
 ```
 .github/workflows/release.yml
 ```
 
----
+Étapes :
 
-# 🧱 Bonnes pratiques
+1. Lancement manuel du workflow **Release SecureGen**
+2. standard-version :
+   - calcule la nouvelle version
+   - met à jour le manifest
+   - met à jour le changelog
+   - crée un commit
+   - crée un tag `vX.Y.Z`
+3. GitHub Actions pousse le commit + tag
+4. Le job `publish` publie automatiquement sur PowerShell Gallery
 
-- Toujours incrémenter la version **avant** la publication  
-- Toujours mettre à jour le changelog  
-- Toujours tester PS5 + PS7  
-- Toujours tagger la version Git (`vX.Y.Z`)  
-- Ne jamais réutiliser un numéro de version déjà publié  
-- Ne jamais modifier une version déjà publiée sur PSGallery  
-
----
-
-# 📚 Documentations associées
-
-- 📦 Installation : [https://github.com/ledino/SecureGen/blob/main/docs/installation.md](https://github.com/ledino/SecureGen/blob/main/docs/installation.md)  
-- 📘 Exemples : `https://github.com/ledino/SecureGen/blob/main/docs/examples.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fexamples.md")  
-- 🧠 Guide avancé : `https://github.com/ledino/SecureGen/blob/main/docs/advanced.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fadvanced.md")  
-- 🧱 Architecture : `https://github.com/ledino/SecureGen/blob/main/docs/architecture.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Farchitecture.md")  
-- 🚀 Processus de release : `https://github.com/ledino/SecureGen/blob/main/docs/release-process.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Frelease-process.md")  
-- 📜 README principal : `https://github.com/ledino/SecureGen/blob/main/README.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2FREADME.md")  
+Aucune intervention manuelle.
 
 ---
 
-# 🎉 Versioning maîtrisé !
+# 📦 Où se trouve la version ?
 
-Grâce à ce processus, SecureGen reste :
+### ✔ Version Node (source de vérité pour standard-version)
+```
+package.json
+```
+
+### ✔ Version PowerShell (mise à jour automatiquement)
+```
+SecureGen/SecureGen.psd1
+```
+
+### ✔ Historique des versions
+```
+CHANGELOG.md
+```
+
+---
+
+# 🧪 Vérifications avant release
+
+Avant de lancer le workflow :
+
+- CI doit être verte
+- README et docs doivent être à jour
+- commits doivent suivre Conventional Commits
+
+Aucune mise à jour manuelle du manifest ou du changelog.
+
+---
+
+# 🚫 Ce qu’il ne faut plus faire
+
+- ❌ ne plus modifier `ModuleVersion` à la main  
+- ❌ ne plus modifier `CHANGELOG.md` à la main  
+- ❌ ne plus utiliser `scripts/Versioning-SecureGen.ps1`  
+- ❌ ne plus utiliser `scripts/Release-All.ps1`  
+- ❌ ne plus créer de tag manuellement (sauf cas exceptionnel)
+
+---
+
+# 📚 Documents associés
+
+- `docs/release-process.md`
+- `docs/contributing.md`
+- `CHANGELOG.md`
+- `.versioningrc.json`
+- `.version-updaters/psd1-updater.js`
+
+---
+
+# 🎉 Versioning moderne et maîtrisé
+
+Grâce à standard-version + GitHub Actions, SecureGen bénéficie d’un pipeline :
 
 - propre  
-- cohérent  
-- facile à maintenir  
+- reproductible  
+- sans erreur humaine  
 - professionnel  
-- prêt pour CI/CD  
+- parfaitement aligné avec SemVer  
 
-Pour plus d’informations :  
-👉 `docs/release-process.md`  
-👉 `CHANGELOG.md`
+```
 
 ---

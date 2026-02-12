@@ -1,4 +1,5 @@
-# 📘 Génération automatique de la documentation — PlatyPS
+# 📘 Génération automatique de la documentation — PlatyPS  
+*(Aligné avec l’architecture moderne et le pipeline CI/CD)*
 
 SecureGen utilise **PlatyPS** pour générer automatiquement la documentation des commandes PowerShell du module.  
 Ce système garantit une documentation toujours synchronisée avec le code, propre, standardisée et facile à maintenir.
@@ -86,9 +87,9 @@ Test-MarkdownHelp -Path ./docs/cmdlets
 
 ---
 
-# 🛠️ Script automatisé (optionnel)
+# 🛠️ Script automatisé (recommandé)
 
-Vous pouvez créer un script dédié :
+Le script dédié se trouve dans :
 
 ```
 scripts/Generate-Help.ps1
@@ -125,11 +126,17 @@ Vous pouvez ajouter un job dans `ci.yml` pour vérifier que la documentation est
     Test-MarkdownHelp -Path ./docs/cmdlets
 ```
 
+Cela garantit que :
+
+- les cmdlets sont documentées  
+- les paramètres sont synchronisés  
+- aucune documentation n’est manquante  
+
 ---
 
 # 📁 Structure recommandée
 
-```Powershell
+```
 docs/
 │
 ├── cmdlets/
@@ -141,6 +148,23 @@ docs/
 │
 ├── generate-help.md
 └── ...
+```
+
+---
+
+# 🎉 Documentation toujours à jour
+
+Grâce à PlatyPS, SecureGen bénéficie d’une documentation :
+
+- propre  
+- standardisée  
+- facile à maintenir  
+- synchronisée avec le code  
+- compatible CI/CD  
+
+Pour toute suggestion d’amélioration :  
+👉 Issues GitHub  
+👉 Pull Requests
 ```
 
 ---

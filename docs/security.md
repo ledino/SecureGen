@@ -1,4 +1,5 @@
 # 🔐 Guide de sécurité — SecureGen  
+*(Aligné avec l’architecture moderne et les recommandations NIST / OWASP / ANSSI)*
 
 Ce document présente les principes de sécurité utilisés par **SecureGen**, ainsi que les bonnes pratiques recommandées pour intégrer le module dans des environnements professionnels.
 
@@ -15,6 +16,8 @@ SecureGen repose sur une architecture modulaire permettant d’utiliser la meill
 
 Le module sélectionne automatiquement la version la plus sécurisée disponible via `SecureGen.psm1`.
 
+Aucune implémentation maison de RNG n’est utilisée.
+
 ---
 
 # 📘 Conformité aux recommandations NIST (SP 800‑63B)
@@ -22,39 +25,36 @@ Le module sélectionne automatiquement la version la plus sécurisée disponible
 SecureGen suit les recommandations modernes du **NIST SP 800‑63B – Digital Identity Guidelines**, notamment :
 
 ## ✔ Préférer la longueur à la complexité artificielle  
-Le NIST recommande d’abandonner les règles obsolètes du type :  
-- “au moins une majuscule”  
-- “au moins un chiffre”  
+Le NIST recommande d’abandonner les règles obsolètes du type :
+
+- “au moins une majuscule”
+- “au moins un chiffre”
 - “au moins un symbole”
 
-Au profit de **mots de passe plus longs et plus faciles à retenir**, ou de **passphrases**.
+Au profit de **mots de passe plus longs** ou de **passphrases**.
 
 SecureGen applique cette approche via :
 
-- `Get-PassPhrase` (passphrases longues, lisibles, entropie élevée)  
-- paramètres configurables : `-MotsParBloc`, `-LettresParMot`  
+- `Get-PassPhrase`
+- paramètres configurables : `-MotsParBloc`, `-LettresParMot`
 
 ## ✔ Génération aléatoire cryptographiquement sûre  
-Le NIST exige l’utilisation de générateurs aléatoires cryptographiquement sûrs.  
 SecureGen utilise :
 
-- PS7+ : `RandomNumberGenerator.GetBytes()` + `Get‑SecureRandom`  
+- PS7+ : `RandomNumberGenerator.GetBytes()` + `Get‑SecureRandom`
 - PS5.1 : `RNGCryptoServiceProvider`
 
 ## ✔ Pas de restrictions inutiles  
-Le NIST déconseille d’imposer des règles de composition trop strictes.  
 SecureGen laisse l’utilisateur choisir :
 
-- la longueur (`-Length`)  
-- les symboles (`-SpecialChars`)  
-- l’usage ou non des caractères spéciaux (`-UseSpecial`)  
+- la longueur (`-Length`)
+- les symboles (`-SpecialChars`)
+- l’usage ou non des caractères spéciaux (`-UseSpecial`)
 
 ## ✔ Pas de rotation forcée  
-Le NIST recommande de **ne pas imposer de rotation périodique** sauf en cas de compromission.  
 SecureGen ne force aucune rotation.
 
 ## ✔ Pas de stockage ou journalisation des secrets  
-Le NIST impose qu’aucun secret ne soit stocké ou loggé.  
 SecureGen :
 
 - ne stocke rien  
@@ -63,96 +63,61 @@ SecureGen :
 
 ---
 
-# 🛡️ Conformité OWASP ASVS (Application Security Verification Standard)
+# 🛡️ Conformité OWASP ASVS
 
-SecureGen suit plusieurs recommandations du standard **OWASP ASVS**, notamment dans les catégories liées à la gestion des secrets, à la cryptographie et à la protection des données sensibles.
+SecureGen suit plusieurs recommandations du standard **OWASP ASVS**, notamment :
 
 ## ✔ ASVS 2.1 — Cryptographie approuvée  
-OWASP recommande d’utiliser des API cryptographiques modernes, reconnues et non obsolètes.  
-SecureGen applique cela via :
-
-- PS7+ : `RandomNumberGenerator.GetBytes()` + `Get‑SecureRandom`  
-- PS5.1 : `RNGCryptoServiceProvider` (fallback sécurisé)  
-- aucune implémentation maison de RNG  
+- API cryptographiques modernes  
+- aucune implémentation maison  
 - aucune dépendance externe non vérifiée  
 
 ## ✔ ASVS 2.2 — Génération sécurisée de secrets  
-OWASP impose que les secrets soient générés via des sources d’entropie cryptographiquement sûres.  
-SecureGen respecte ce point via :
-
-- un générateur interne basé sur RNG .NET  
-- une entropie élevée  
-- aucune prédictibilité  
-- pas de biais statistique  
+- entropie élevée  
+- absence de biais  
+- RNG cryptographiquement sûr  
 
 ## ✔ ASVS 3.4 — Pas de stockage de secrets en clair  
-OWASP interdit le stockage ou la journalisation de secrets.  
-SecureGen :
-
-- ne stocke rien  
-- ne log rien  
-- ne transmet rien  
-- ne conserve aucune valeur générée  
+SecureGen ne stocke ni ne log aucun secret.
 
 ## ✔ ASVS 3.5 — Clipboard non sécurisé  
-OWASP rappelle que le presse‑papier n’est **pas un espace sécurisé**.  
 SecureGen :
 
 - avertit l’utilisateur  
 - propose `Clear-ClipboardSafe`  
 - ne copie jamais automatiquement sans consentement  
 
-## ✔ ASVS 1.14 — Compatibilité multi‑plateforme sans dégradation de sécurité  
-SecureGen garantit :
-
-- une sécurité identique sur Windows, Linux, macOS  
-- un fallback PS5.1 sécurisé  
-- une API unifiée  
+## ✔ ASVS 1.14 — Compatibilité multi‑plateforme  
+Sécurité identique sur Windows, Linux, macOS.
 
 ---
 
-# 🛡️ Conformité ANSSI (Recommandations françaises)
+# 🛡️ Conformité ANSSI
 
-SecureGen suit également les bonnes pratiques de l’**ANSSI**, notamment celles décrites dans :
+SecureGen suit les bonnes pratiques de l’**ANSSI**, notamment :
 
-- **RGS v2.0** (Référentiel Général de Sécurité)  
-- **Guide d’hygiène informatique**  
-- **Recommandations sur les mots de passe**  
+- RGS v2.0  
+- Guide d’hygiène informatique  
+- Recommandations sur les mots de passe  
 
-## ✔ ANSSI — Préférer la longueur à la complexité  
-L’ANSSI recommande des secrets **longs**, plutôt que des règles de complexité artificielle.  
-SecureGen applique cela via :
+## ✔ Préférer la longueur  
+SecureGen encourage l’usage de passphrases longues.
 
-- `Get-PassPhrase` (passphrases longues, lisibles, robustes)  
-- paramètres configurables pour augmenter l’entropie  
-
-## ✔ ANSSI — Utiliser des générateurs cryptographiques fiables  
+## ✔ Utiliser des générateurs cryptographiques fiables  
 SecureGen utilise exclusivement :
 
-- RNG .NET moderne (PS7+)  
-- RNGCryptoServiceProvider (PS5.1)  
+- RNG .NET moderne (PS7+)
+- RNGCryptoServiceProvider (PS5.1)
 
-Aucune implémentation maison, aucun algorithme non approuvé.
+## ✔ Ne jamais stocker les secrets  
+SecureGen ne stocke rien.
 
-## ✔ ANSSI — Ne jamais stocker les secrets  
-SecureGen :
-
-- ne stocke rien  
-- ne journalise rien  
-- ne transmet rien  
-
-## ✔ ANSSI — Sécuriser les scripts automatisés  
-L’ANSSI recommande :
-
-- d’éviter les affichages de secrets  
-- d’utiliser des variables d’environnement  
-- d’utiliser des SecureString  
-
+## ✔ Sécuriser les scripts automatisés  
 SecureGen fournit :
 
-- `-Silent`  
-- compatibilité SecureString  
-- exemples CI/CD conformes  
+- `-Silent`
+- compatibilité SecureString
+- exemples CI/CD conformes
 
 ---
 
@@ -162,15 +127,14 @@ SecureGen fournit :
 
 SecureGen utilise :
 
-- `System.Security.Cryptography.RandomNumberGenerator.GetBytes()`  
+- `System.Security.Cryptography.RandomNumberGenerator.GetBytes()`
 - `Get‑SecureRandom` (si disponible)
 
-Ces API offrent :
+Avantages :
 
-- une génération cryptographiquement sûre  
-- une entropie élevée  
-- une absence de biais statistique  
-- une compatibilité totale Windows/Linux/macOS  
+- entropie élevée  
+- absence de biais  
+- compatibilité totale Windows/Linux/macOS  
 
 ## PowerShell 5.1 (fallback)
 
@@ -178,7 +142,7 @@ SecureGen utilise :
 
 - `RNGCryptoServiceProvider` (.NET Framework 4.8)
 
-Toujours sécurisé, mais API plus ancienne et moins performante.
+Toujours sécurisé, mais API plus ancienne.
 
 ---
 
@@ -186,24 +150,16 @@ Toujours sécurisé, mais API plus ancienne et moins performante.
 
 ### Mots de passe
 
-Les mots de passe générés par SecureGen sont :
-
 - aléatoires  
 - non prédictibles  
-- basés sur un pool configurable :  
-  - minuscules  
-  - majuscules  
-  - chiffres  
-  - caractères spéciaux (`-SpecialChars`)  
+- pool configurable (minuscules, majuscules, chiffres, symboles)
 
 ### Passphrases
 
-Les passphrases sont générées à partir d’une liste de mots sélectionnés pour :
-
-- lisibilité  
-- mémorisation  
+- lisibles  
+- mémorisables  
 - entropie élevée  
-- structure configurable (`-LettresParMot`, `-MotsParBloc`)  
+- structure configurable (`-LettresParMot`, `-MotsParBloc`)
 
 ---
 
@@ -223,29 +179,10 @@ Préférez :
 (Get-PassWord) | ConvertTo-SecureString -AsPlainText -Force
 ```
 
-## 2. Utiliser des passphrases pour les clés API
-
-Les passphrases longues sont souvent plus robustes que les mots de passe courts.
-
-## 3. Utiliser `-Silent` dans les scripts automatisés
-
-```powershell
-Get-PassWord -Silent
-```
-
-## 4. Ne jamais logguer un secret
-
-Évitez :
-
-```powershell
-Write-Host "Mot de passe : $pwd"
-```
-
-## 5. Utiliser des variables d’environnement pour les secrets
-
-```powershell
-$env:API_KEY = Get-PassPhrase -MotsParBloc 6 -LettresParMot 5
-```
+## 2. Utiliser des passphrases pour les clés API  
+## 3. Utiliser `-Silent` dans les scripts automatisés  
+## 4. Ne jamais logguer un secret  
+## 5. Utiliser des variables d’environnement pour les secrets  
 
 ---
 
@@ -259,8 +196,7 @@ SecureGen gère automatiquement le clipboard selon la plateforme :
 | macOS | `pbcopy` |
 | Linux | `xclip` ou `xsel` |
 
-### ⚠️ Attention  
-Le presse‑papier n’est **pas un espace sécurisé**.
+⚠️ Le presse‑papier n’est **pas un espace sécurisé**.
 
 Effacez‑le après usage :
 
@@ -319,13 +255,13 @@ New-LocalUser -Name "test" -Password (ConvertTo-SecureString $pwd -AsPlainText -
 
 SecureGen suit les bonnes pratiques :
 
-- `Set-StrictMode -Version Latest`  
-- pas de variables globales  
-- pas de dépendances externes  
-- pas de stockage de secrets  
-- pas de logs sensibles  
-- code compatible Windows/Linux/macOS  
-- API identiques entre PS5 et PS7  
+- `Set-StrictMode -Version Latest`
+- pas de variables globales
+- pas de dépendances externes
+- pas de stockage de secrets
+- pas de logs sensibles
+- API identiques entre PS5 et PS7
+- code compatible Windows/Linux/macOS
 
 ---
 
@@ -342,13 +278,13 @@ SecureGen suit les bonnes pratiques :
 
 # 📚 Documentations associées
 
-- 📦 Installation : [https://github.com/ledino/SecureGen/blob/main/docs/installation.md](https://github.com/ledino/SecureGen/blob/main/docs/installation.md)  
-- 📘 Exemples : `https://github.com/ledino/SecureGen/blob/main/docs/examples.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fexamples.md")  
-- 🧠 Guide avancé : `https://github.com/ledino/SecureGen/blob/main/docs/advanced.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fadvanced.md")  
-- 🧱 Architecture : `https://github.com/ledino/SecureGen/blob/main/docs/architecture.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Farchitecture.md")  
-- 🧪 Versioning : `https://github.com/ledino/SecureGen/blob/main/docs/versioning.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Fversioning.md")  
-- 🚀 Processus de release : `https://github.com/ledino/SecureGen/blob/main/docs/release-process.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2Fdocs%2Frelease-process.md")  
-- 📜 README principal : `https://github.com/ledino/SecureGen/blob/main/README.md` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fblob%2Fmain%2FREADME.md")  
+- `installation.md`
+- `examples.md`
+- `advanced.md`
+- `architecture.md`
+- `versioning.md`
+- `release-process.md`
+- `README.md`
 
 ---
 
@@ -356,5 +292,6 @@ SecureGen suit les bonnes pratiques :
 
 Pour toute suggestion ou contribution :  
 👉 GitHub — Issues & Pull Requests
+```
 
 ---

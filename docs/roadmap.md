@@ -1,62 +1,66 @@
-# 🗺️ Roadmap — SecureGen
+# 🗺️ Roadmap — SecureGen  
+*(Feuille de route officielle du projet)*
 
-Ce document présente la feuille de route officielle de SecureGen.  
-Elle reflète les objectifs à court, moyen et long terme du projet, ainsi que les fonctionnalités envisagées.
+Cette roadmap présente les objectifs à court, moyen et long terme de **SecureGen**.  
+Elle évolue en fonction :
 
-La roadmap est vivante : elle évolue en fonction des retours utilisateurs, des besoins de la communauté et des avancées techniques.
+- des retours utilisateurs  
+- des besoins de la communauté  
+- des avancées techniques PowerShell  
+- de la vision globale du projet  
 
 ---
 
-# 🎯 Objectifs généraux
+# 🎯 Vision générale
 
 SecureGen vise à rester :
 
-- **simple** — facile à utiliser, intuitif  
+- **simple** — intuitif, minimaliste, facile à utiliser  
 - **sécurisé** — basé sur des primitives cryptographiques modernes  
 - **cross‑platform** — Windows, Linux, macOS, PS5.1 et PS7+  
 - **performant** — génération rapide, overhead minimal  
-- **professionnel** — documentation complète, CI/CD robuste  
+- **professionnel** — documentation complète, CI/CD robuste, versioning automatisé  
 - **ouvert** — contributions bienvenues, code clair et auditable  
 
 ---
 
-# 🚀 Roadmap à court terme (1–3 mois)
+# 🚀 Court terme (1–3 mois)
 
-## ✔ Améliorations prévues
+## ✔ Fonctionnalités prévues
 
-- [ ] Ajout d’un mode “phrase naturelle”  
+- [ ] **Mode “phrase naturelle”**  
   Exemple : `lune‑argent‑cascade‑verre` (style Diceware amélioré)
 
-- [ ] Génération de clés API formatées  
+- [ ] **Génération de clés API formatées**  
   - UUID  
   - Base32  
   - Base58  
   - Hex sécurisé  
-  - Tokens aléatoires pour API / CI/CD
+  - Tokens pour API / CI/CD
 
-- [ ] Ajout d’un dictionnaire multilingue  
+- [ ] **Dictionnaire multilingue**  
   - Français  
   - Anglais  
   - Espagnol  
-  - Option `-Lang fr|en|es`
+  - Paramètre : `-Lang fr|en|es`
 
-- [ ] Ajout d’un module `SecureGen.Tools`  
+- [ ] **Module additionnel : `SecureGen.Tools`**  
   - Helpers pour scripts automatisés  
   - Génération de secrets pour pipelines  
   - Fonctions utilitaires avancées
 
-- [ ] Ajout de tests Pester supplémentaires  
-  - couverture des cas limites  
-  - tests PS5.1 / PS7  
-  - tests clipboard
+- [ ] **Tests Pester supplémentaires**  
+  - cas limites  
+  - compatibilité PS5.1 / PS7  
+  - tests clipboard  
 
 ---
 
-# 🧭 Roadmap à moyen terme (3–6 mois)
+# 🧭 Moyen terme (3–6 mois)
 
 ## 🔧 Fonctionnalités avancées
 
-- [ ] Mode interactif (TUI minimal)  
+- [ ] **Mode interactif (TUI minimal)**  
   Exemple :  
   ```
   [1] Générer un mot de passe
@@ -64,24 +68,24 @@ SecureGen vise à rester :
   [3] Copier dans le presse‑papier
   ```
 
-- [ ] Support natif du SecureString PS7  
+- [ ] **Support natif SecureString PS7**  
   - conversion automatique  
   - intégration dans les scripts sensibles
 
-- [ ] Ajout d’un système de presets  
+- [ ] **Système de presets**  
   Exemple :  
   ```powershell
   Get-PassWord -Preset "DevOps"
   Get-PassPhrase -Preset "Long"
   ```
 
-- [ ] Intégration d’un mode “entropy report”  
+- [ ] **Mode “entropy report”**  
   Exemple :  
   ```powershell
   Get-PassWord -ReportEntropy
   ```
 
-- [ ] Ajout d’un mode “batch”  
+- [ ] **Mode batch**  
   Exemple :  
   ```powershell
   Get-PassWord -Count 1000
@@ -89,41 +93,39 @@ SecureGen vise à rester :
 
 ---
 
-# 🛰️ Roadmap à long terme (6–12 mois)
+# 🛰️ Long terme (6–12 mois)
 
 ## 🌐 Écosystème SecureGen
 
-- [ ] Site web GitHub Pages  
+- [ ] **Site web GitHub Pages**  
   - documentation complète  
   - exemples interactifs  
-  - thèmes cohérents avec l’identité visuelle
+  - identité visuelle cohérente
 
-- [ ] Génération de secrets pour conteneurs / DevOps  
+- [ ] **Génération de secrets pour DevOps / conteneurs**  
   - Docker  
   - Kubernetes  
   - Terraform
 
-- [ ] Intégration avec des gestionnaires de secrets  
+- [ ] **Intégration avec des gestionnaires de secrets**  
   - Azure Key Vault  
   - HashiCorp Vault  
   - KeePass (via module externe)
 
-- [ ] Ajout d’un mode “audit”  
-  - vérification de la robustesse d’un mot de passe  
+- [ ] **Mode “audit”**  
+  - vérification de robustesse  
   - estimation d’entropie  
-  - recommandations NIST/ANSSI
+  - recommandations NIST / ANSSI  
 
 ---
 
-# 🧩 Idées en discussion
-
-Ces idées ne sont pas encore planifiées, mais ouvertes à contribution :
+# 💡 Idées en discussion (non planifiées)
 
 - [ ] Génération de phrases mnémotechniques  
-- [ ] Mode “secure wipe” pour effacer la mémoire  
-- [ ] Génération de secrets pour IoT / embarqué  
-- [ ] Intégration avec PowerShell Crescendo  
-- [ ] Génération de QR codes pour secrets (TOTP, API keys)
+- [ ] Mode “secure wipe” (effacement mémoire)  
+- [ ] Secrets pour IoT / embarqué  
+- [ ] Intégration PowerShell Crescendo  
+- [ ] Génération de QR codes (TOTP, API keys)
 
 ---
 
@@ -136,7 +138,7 @@ Vous pouvez :
 - proposer une **Pull Request**  
 - suggérer une amélioration dans `docs/roadmap.md`
 
-👉 `https://github.com/ledino/SecureGen/issues` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fissues")
+👉 `https://github.com/ledino/SecureGen/issues` (github.com in Bing) [(bing.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fwww.bing.com%2Fsearch%3Fq%3D%2522https%253A%252F%252Fgithub.com%252Fledino%252FSecureGen%252Fissues%2522")
 
 ---
 
@@ -144,5 +146,8 @@ Vous pouvez :
 
 SecureGen évolue grâce à vos retours.  
 Chaque suggestion, contribution ou test aide à rendre le module plus robuste, plus simple et plus agréable à utiliser.
+
+---
+```
 
 ---

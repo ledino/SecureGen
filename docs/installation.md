@@ -1,4 +1,4 @@
-# 📘 Guide d’installation — SecureGen
+# 📘 Guide d’installation — SecureGen  
 *(Version synchronisée avec CI/CD, PSGallery et structure du module)*
 
 ![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/SecureGen.svg?style=for-the-badge)
@@ -7,9 +7,9 @@
 
 ---
 
-# 🚀 Installation depuis la PowerShell Gallery
+# 🚀 Installation depuis la PowerShell Gallery (recommandé)
 
-La méthode la plus simple et recommandée :
+La méthode la plus simple, propre et fiable :
 
 ```powershell
 Install-Module SecureGen -Scope CurrentUser
@@ -50,8 +50,118 @@ SecureGen fonctionne automatiquement dans :
 
 Le module charge automatiquement :
 
-- `Core.PS7.ps1` pour PowerShell 7+
-- `Legacy.PS5.ps1` pour Windows PowerShell 5.1
+- `Core.PS7.ps1` pour PowerShell 7+  
+- `Legacy.PS5.ps1` pour Windows PowerShell 5.1  
+
+Aucune action n’est requise.
+
+---
+
+# 🧭 Workflow d’installation & développement recommandé
+
+SecureGen peut être utilisé de trois manières selon votre contexte :  
+développement local, test comme un module installé, ou usage professionnel.
+
+---
+
+## 1️⃣ Développement local pur (mode développeur)
+
+Idéal pour travailler sur le code sans installation, avec rechargement immédiat.
+
+```powershell
+# Dans PowerShell 7 (recommandé)
+cd C:\Users\<vous>\Git\SecureGen
+Import-Module .\SecureGen\SecureGen.psd1 -Force
+```
+
+Avantages :
+
+- pas d’installation → pas d’uninstall  
+- modifications rechargées instantanément  
+- parfait pour le développement rapide  
+- aucun impact sur les modules installés du système  
+
+⚠️ À éviter en production :  
+Importer via un chemin relatif contourne le PSModulePath et peut charger la mauvaise version.
+
+---
+
+## 2️⃣ Test “comme PSGallery” (simulation d’installation réelle)
+
+Permet de tester SecureGen **exactement comme s’il venait de la PowerShell Gallery**.
+
+```powershell
+$ModulePath = "$HOME/Documents/PowerShell/Modules/SecureGen"
+
+Remove-Item $ModulePath -Recurse -Force -ErrorAction SilentlyContinue
+Copy-Item .\SecureGen $ModulePath -Recurse -Force
+
+Import-Module SecureGen -Force
+```
+
+Avantages :
+
+- teste le module dans son environnement réel  
+- valide la structure du module  
+- valide le loader PS5/PS7  
+- valide les exports, le manifest, les chemins  
+
+Recommandé **avant chaque release**.
+
+---
+
+## 3️⃣ Usage professionnel / production
+
+Méthode officielle :
+
+```powershell
+Install-Module SecureGen -Scope CurrentUser
+```
+
+Mise à jour :
+
+```powershell
+Update-Module SecureGen
+```
+
+Désinstallation propre :
+
+```powershell
+Uninstall-Module SecureGen
+```
+
+Avantages :
+
+- installation propre  
+- versioning géré  
+- mise à jour simple  
+- aucune copie manuelle  
+- aucune pollution du PSModulePath  
+
+---
+
+# ❌ À éviter absolument
+
+### Copier manuellement le module sans cleanup
+Cela crée :
+
+- des modules fantômes  
+- des versions “Script” dans `Get-Module`  
+- des conflits PS5/PS7  
+- des imports instables  
+
+### Importer SecureGen via un chemin relatif en production
+
+```powershell
+Import-Module .\SecureGen.psm1   # ❌ À éviter
+```
+
+Cela contourne :
+
+- le manifest  
+- la détection PS5/PS7  
+- le PSModulePath  
+- la structure du module  
 
 ---
 
@@ -67,9 +177,9 @@ Il détecte automatiquement :
 
 - PowerShell 5.1  
 - PowerShell 7+  
-- et installe SecureGen dans tous les environnements disponibles
+- et installe SecureGen dans les bons chemins
 
-## ▶️ Exécution
+### ▶️ Exécution
 
 ```powershell
 pwsh ./scripts/Install-SecureGen.ps1
@@ -128,8 +238,6 @@ sudo apt install xclip
 
 ### ❗ Module non détecté
 
-Vérifiez :
-
 ```powershell
 $env:PSModulePath -split ';'
 ```
@@ -153,4 +261,3 @@ Get-PassPhrase
 ```
 
 ---
-

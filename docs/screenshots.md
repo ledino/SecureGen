@@ -1,6 +1,7 @@
-# 🖼️ Screenshots & GIFs — SecureGen
+# 🖼️ Screenshots & GIFs — SecureGen  
+*(Aperçus visuels du module en action)*
 
-Ce document présente des aperçus visuels de SecureGen en action : génération de mots de passe, passphrases, clipboard sécurisé, et utilisation dans différents environnements.
+Ce document présente des aperçus visuels de SecureGen : génération de mots de passe, passphrases, clipboard sécurisé, intégration dans des scripts et pipelines CI/CD.
 
 Les GIFs et captures d’écran sont stockés dans :
 
@@ -21,7 +22,7 @@ Ce GIF montre :
 - l’exécution de `Get-PassWord`
 - la génération instantanée d’un mot de passe sécurisé
 - l’utilisation du mode silencieux (`-Silent`)
-- l’affichage lisible et minimaliste
+- un affichage clair et lisible
 
 ---
 
@@ -48,10 +49,10 @@ Ce GIF illustre :
 
 Ce GIF montre :
 
-- la copie automatique dans le presse‑papier
+- la copie dans le presse‑papier via `Set-ClipboardSafe`
 - l’effacement sécurisé via `Clear-ClipboardSafe`
 - le beep discret (désactivable avec `-Silent`)
-- le fallback cross‑platform (Windows/macOS/Linux)
+- le fallback cross‑platform (Windows / macOS / Linux)
 
 ---
 
@@ -100,7 +101,7 @@ Pour créer des GIFs propres et légers :
 
 ### 🍎 macOS
 - **Kap**
-- **Gifski** (pour optimiser)
+- **Gifski** (optimisation)
 
 ### 🎨 Conseils
 - fond sombre (PowerShell par défaut)
@@ -137,6 +138,7 @@ assets/
 
 Pour toute suggestion d’amélioration visuelle :  
 👉 Issues GitHub  
-👉 Discussions  
+👉 Discussions
+```
 
 ---

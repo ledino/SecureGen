@@ -1,5 +1,5 @@
 # 📘 Exemples d'utilisation — SecureGen  
-*(Version synchronisée avec le README officiel)*
+*(Version alignée avec le README et l’architecture moderne)*
 
 Ce document présente des exemples pratiques et avancés pour exploiter pleinement les fonctionnalités du module **SecureGen**.
 
@@ -31,12 +31,11 @@ Get-PassWord -UseSpecial:$false
 Get-PassWord -Length 32
 ```
 
-Ou commande plus courte
+Alias équivalent :
 
 ```powershell
 sgw 32
 ```
-
 
 ## Générer un mot de passe silencieusement (sans beep)
 
@@ -73,7 +72,7 @@ Cet exemple est particulièrement utile pour obtenir une passphrase :
 Get-PassPhrase -LettresParMot 5 -MotsParBloc 7
 ```
 
-Commande courte :
+Alias équivalent :
 
 ```powershell
 sgp 5 7
@@ -180,15 +179,15 @@ Write-Host "Votre passphrase : $phrase"
 
 # 📚 Documentation associée
 
-- 📦 Installation : https://github.com/ledino/SecureGen/blob/main/docs/installation.md
-- 🧠 Guide avancé : https://github.com/ledino/SecureGen/blob/main/docs/advanced.md
-- 📜 README principal : https://github.com/ledino/SecureGen/blob/main/README.md
+- `installation.md`
+- `advanced.md`
+- `README.md`
 
 ---
 
 # 🎉 Merci d'utiliser SecureGen !
 
 N'hésitez pas à contribuer via GitHub : issues, PR, suggestions.
+```
 
 ---
-

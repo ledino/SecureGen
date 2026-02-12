@@ -1,9 +1,10 @@
-# ⚡ Benchmarks — SecureGen
+# ⚡ Benchmarks — SecureGen  
+*(Aligné avec l’architecture moderne et les performances PS7/PS5)*
 
 Ce document présente les performances de SecureGen sur différentes plateformes et versions de PowerShell.  
-Les tests ont été réalisés sur des scénarios réalistes : génération de mots de passe, passphrases et clés cryptographiques.
+Les tests ont été réalisés sur des scénarios réalistes : génération de mots de passe, passphrases et indices cryptographiques.
 
-Les benchmarks sont reproductibles via les scripts fournis ci‑dessous.
+Les benchmarks sont reproductibles via les exemples fournis ci‑dessous.
 
 ---
 
@@ -45,8 +46,8 @@ Measure-Command { ... }
 
 ### Analyse
 
-- PS7 est **2,4× plus rapide** que PS5.1  
-- L’implémentation PS7 est optimisée et sans overhead .NET Framework  
+- PS7 est **≈ 2,4× plus rapide** que PS5.1  
+- L’implémentation PS7 bénéficie de .NET 6+  
 - SecureGen reste performant même sur PS5.1
 
 ---
@@ -69,7 +70,7 @@ Measure-Command { ... }
 
 ### Analyse
 
-- PS7 offre un gain de **2,5×**  
+- PS7 offre un gain de **≈ 2,5×**  
 - Le dictionnaire interne est chargé une seule fois → overhead minimal  
 - Les passphrases restent très rapides à générer
 
@@ -93,7 +94,7 @@ Measure-Command { ... }
 
 ### Analyse
 
-- PS7 est **3× plus rapide**  
+- PS7 est **≈ 3× plus rapide**  
 - Le RNG moderne est extrêmement performant  
 - SecureGen exploite pleinement les API cryptographiques natives
 
@@ -101,13 +102,7 @@ Measure-Command { ... }
 
 # 🧪 Script de benchmark (reproductible)
 
-Vous pouvez exécuter les benchmarks avec :
-
-```powershell
-pwsh ./scripts/benchmarks.ps1
-```
-
-Ou créer votre propre script :
+Vous pouvez exécuter vos propres benchmarks avec :
 
 ```powershell
 Write-Host "Benchmark SecureGen"
@@ -140,5 +135,8 @@ foreach ($test in $tests) {
   - environnements professionnels  
 
 SecureGen combine **sécurité**, **performance**, et **simplicité**.
+
+---
+```
 
 ---
