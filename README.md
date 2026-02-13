@@ -468,6 +468,14 @@ SecureGen/
 ├── package-lock.json              # Verrouillage des dépendances
 ├── .versioningrc.json             # Configuration standard-version
 │
+tests/
+│   ├── Get-PKIPass.Tests.ps1
+│   ├── Get-PassWord.Tests.ps1
+│   ├── Get-PassPhrase.Tests.ps1
+│   ├── Get-CryptoIndex.Tests.ps1
+│   ├── Invoke-Beep.Tests.ps1
+│   └── Clipboard.Tests.ps1
+│
 ├── CHANGELOG.md                   # Changelog généré automatiquement
 ├── README.md                      # Documentation principale
 ├── LICENSE                        # Licence MIT

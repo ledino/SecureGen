@@ -84,6 +84,5 @@ Un entier aléatoire cryptographiquement sûr.
 
 ## RELATED LINKS
 https://github.com/ledino/SecureGen
-```
 
 ---

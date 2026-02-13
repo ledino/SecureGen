@@ -70,7 +70,7 @@ NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = 'Get-PassWord', 'Get-PassPhrase', 'Get-CryptoIndex', 'Invoke-Beep', 
-               'Set-ClipboardSafe', 'Clear-ClipboardSafe'
+               'Set-ClipboardSafe', 'Clear-ClipboardSafe', 'Get-PKIPass'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
@@ -79,7 +79,7 @@ CmdletsToExport = @()
 VariablesToExport = '*'
 
 # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-AliasesToExport = 'sgp', 'sgw'
+AliasesToExport = 'sgp', 'sgw', 'sgpki'
 
 # DSC resources to export from this module
 # DscResourcesToExport = @()
@@ -108,7 +108,7 @@ PrivateData = @{
         IconUri = 'https://raw.githubusercontent.com/ledino/SecureGen/main/assets/logo.png'
 
         # ReleaseNotes of this module
-        ReleaseNotes = 'Version 1.3.1 :
+        ReleaseNotes = 'Version 1.4.0 :
 - Compatibilité PowerShell 5 & 7
 - Clipboard cross-platform avec warnings propres
 - Beep encapsulé

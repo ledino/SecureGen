@@ -1,13 +1,47 @@
+function Get-CryptoIndex {
 <#
 .SYNOPSIS
-    Génère un index cryptographiquement sûr dans l’intervalle [0..Max-1].
+Génère un entier aléatoire cryptographiquement sûr dans l’intervalle [0 .. Max-1].
 
 .DESCRIPTION
-    Sous PowerShell 5.x, utilise RandomNumberGenerator (.NET Framework).
-    Cette source d’aléa est cryptographiquement sûre, mais n’est pas conforme
-    aux modules cryptographiques modernes (NIST SP 800‑90 / FIPS).
+Get-CryptoIndex retourne un entier pseudo‑aléatoire sécurisé compris entre 0 et Max - 1.
+
+Le générateur utilisé dépend de la version de PowerShell :
+- Sous PowerShell 7+, l’aléa provient de Get-SecureRandom (conforme NIST SP 800‑90).
+- Sous PowerShell 5.1, l’aléa provient de RNG .NET Framework (RandomNumberGenerator).
+
+Ce cmdlet est utilisé en interne par SecureGen pour garantir une distribution uniforme
+et une entropie maximale lors de la génération de mots de passe, passphrases ou sélections aléatoires.
+
+.EXAMPLE
+Get-CryptoIndex -Max 10
+Génère un index compris entre 0 et 9.
+
+.EXAMPLE
+$items = "alpha","beta","gamma","delta"
+$index = Get-CryptoIndex -Max $items.Count
+$items[$index]
+Sélectionne un élément aléatoire dans un tableau.
+
+.EXAMPLE
+1..6 | ForEach-Object { Get-CryptoIndex -Max 6 }
+Génère plusieurs tirages sécurisés.
+
+.PARAMETER Max
+Valeur maximale (exclusive).  
+Le résultat sera compris entre 0 et Max - 1.  
+Une exception est levée si Max est inférieur ou égal à 0.
+
+.OUTPUTS
+System.Int32  
+Retourne un entier aléatoire cryptographiquement sûr.
+
+.NOTES
+Compatible Windows, Linux, macOS.  
+Utilisé en interne par les autres cmdlets SecureGen.  
+Garantit une distribution uniforme même pour des valeurs de Max non puissances de 2.
 #>
-function Get-CryptoIndex {
+
     param([int]$Max)
 
     $bytes = New-Object byte[] 1
@@ -15,15 +49,58 @@ function Get-CryptoIndex {
     return ($bytes[0] % $Max)
 }
 
+
+function Invoke-Beep {
 <#
 .SYNOPSIS
-    Émet un bip sonore.
+Émet un bip sonore compatible Windows, Linux et macOS.
 
 .DESCRIPTION
-    Fonction utilitaire simple permettant d’émettre un bip.
-    Compatible PowerShell 5.x et PowerShell 7+.
+Invoke-Beep est une fonction utilitaire simple permettant d’émettre un bip sonore.
+
+Elle est utilisée par d’autres cmdlets SecureGen (comme Get-PassWord et Get-PassPhrase)
+pour signaler la fin d’une opération, sauf si l’utilisateur active l’option -Silent.
+
+Le comportement dépend de la plateforme :
+- Windows : utilise [Console]::Beep()
+- Linux / macOS : utilise le caractère BEL (`\a`) ou une alternative compatible terminal
+
+.EXAMPLE
+Invoke-Beep
+Émet un bip standard (800 Hz, 200 ms).
+
+.EXAMPLE
+Invoke-Beep -Frequency 1200
+Émet un bip plus aigu (1200 Hz).
+
+.EXAMPLE
+Invoke-Beep -Duration 500
+Émet un bip plus long (500 ms).
+
+.EXAMPLE
+Invoke-Beep -Frequency 1000 -Duration 300
+Émet un bip personnalisé.
+
+.PARAMETER Frequency
+Fréquence du bip en Hertz (Hz).  
+Plus la valeur est élevée, plus le son est aigu.  
+Valeur par défaut : 800.
+
+.PARAMETER Duration
+Durée du bip en millisecondes (ms).  
+Valeur par défaut : 200.
+
+.OUTPUTS
+None  
+La fonction ne retourne aucune valeur.  
+Elle produit uniquement un signal sonore.
+
+.NOTES
+Compatible Windows, Linux, macOS.  
+Utilisé en interne par les autres cmdlets SecureGen.  
+Peut être désactivé via l’option -Silent des autres cmdlets.
 #>
-function Invoke-Beep {
+
     param(
         [int]$Frequency = 800,
         [int]$Duration  = 200
@@ -37,16 +114,95 @@ function Invoke-Beep {
     }
 }
 
+
+function Get-PassPhrase {
 <#
 .SYNOPSIS
-    Génère une passephrase sécurisée et optionnellement la copie dans le presse‑papier.
+Génère une passphrase robuste, lisible et configurable, compatible Windows / Linux / macOS.
 
 .DESCRIPTION
-    Produit une passephrase composée de mots générés caractère par caractère
-    via un RNG cryptographique .NET Framework.
-    Cette source est sûre, mais non conforme aux modules cryptographiques modernes.
+Get-PassPhrase génère une passphrase composée de mots pseudo‑aléatoires construits caractère par caractère
+via un générateur cryptographique sécurisé.
+
+- Sous PowerShell 7+, l’aléa provient de Get-SecureRandom (conforme NIST SP 800‑90).
+- Sous PowerShell 5.1, l’aléa provient de RNG .NET Framework (RandomNumberGenerator).
+
+La passphrase est :
+- lisible
+- régulière
+- hautement entropique
+- idéale pour un usage quotidien ou professionnel
+
+Par défaut, SecureGen :
+- copie la passphrase dans le presse‑papier
+- efface automatiquement le presse‑papier après un délai sécurisé
+- émet un bip discret (désactivable via -Silent)
+
+Vous pouvez personnaliser :
+- le nombre de lettres par mot (-LettresParMot)
+- le nombre de mots par bloc (-MotsParBloc)
+- le séparateur (-Separateur)
+- le charset utilisé (-Charset)
+- le comportement du presse‑papier (-NoClipboard, -NoClear)
+- le bip (-Silent)
+
+.EXAMPLE
+Get-PassPhrase
+Génère une passphrase standard (6 mots de 6 lettres).
+
+.EXAMPLE
+Get-PassPhrase -LettresParMot 5 -MotsParBloc 7
+Génère une passphrase longue (7 mots de 5 lettres).
+
+.EXAMPLE
+Get-PassPhrase -Charset 'abcdefghijklmnopqrstuvwxyz'
+Génère une passphrase uniquement composée de lettres minuscules.
+
+.EXAMPLE
+Get-PassPhrase -Silent
+Génère une passphrase sans bip sonore.
+
+.EXAMPLE
+Get-PassPhrase -NoClipboard
+Génère une passphrase sans copie dans le presse‑papier.
+
+.PARAMETER LettresParMot
+Nombre de lettres par mot généré.  
+Valeur par défaut : 6.
+
+.PARAMETER MotsParBloc
+Nombre de mots composant la passphrase.  
+Valeur par défaut : 6.
+
+.PARAMETER Separateur
+Caractère ou chaîne utilisée pour séparer les mots.  
+Valeur par défaut : "-".
+
+.PARAMETER Charset
+Ensemble de caractères utilisés pour générer les mots.  
+Valeur par défaut : lettres majuscules, minuscules et chiffres.
+
+.PARAMETER NoClipboard
+Empêche la copie automatique de la passphrase dans le presse‑papier.
+
+.PARAMETER NoClear
+Empêche l’effacement automatique du presse‑papier après un délai sécurisé.
+
+.PARAMETER Silent
+Désactive le bip de confirmation.
+
+.OUTPUTS
+System.String  
+Retourne la passphrase générée.
+
+.NOTES
+Compatible Windows, Linux, macOS.  
+PS7 utilise Get-SecureRandom.  
+PS5.1 utilise RNG .NET Framework.  
+Le clipboard utilise automatiquement la meilleure méthode selon la plateforme.  
+Le séparateur peut être un caractère ou une chaîne complète.
 #>
-function Get-PassPhrase {
+
     param(
         [int]$LettresParMot = 6,
         [int]$MotsParBloc = 6,
@@ -102,21 +258,64 @@ function Get-PassPhrase {
 }
 
 
+
+function Get-PassWord {
 <#
 .SYNOPSIS
-    Génère un mot de passe sécurisé et configurable.
+Génère un mot de passe sécurisé, configurable et compatible Windows / Linux / macOS.
 
 .DESCRIPTION
-    Par défaut, utilise :
-        - minuscules
-        - majuscules
-        - chiffres
-        - caractères spéciaux (personnalisables)
+Get-PassWord génère un mot de passe robuste en utilisant un générateur cryptographique sécurisé.
 
-    L’aléa est généré via RandomNumberGenerator (.NET Framework),
-    cryptographiquement sûr mais non conforme aux modules cryptographiques modernes.
+- Sous PowerShell 7+, l’aléa provient de Get-SecureRandom (conforme NIST SP 800‑90).
+- Sous PowerShell 5.1, l’aléa provient de RNG .NET Framework (RandomNumberGenerator).
+
+Le mot de passe inclut par défaut :
+- minuscules
+- majuscules
+- chiffres
+- caractères spéciaux (personnalisables)
+
+Vous pouvez :
+- personnaliser les caractères spéciaux via -SpecialChars
+- désactiver totalement les caractères spéciaux via -UseSpecial:$false
+- exiger la présence de toutes les catégories via -RequireAllTypes
+- désactiver la copie dans le presse‑papier (-NoClipboard)
+- empêcher l’effacement automatique du presse‑papier (-NoClear)
+- désactiver le bip de confirmation (-Silent)
+
+.PARAMETER Len
+Longueur du mot de passe à générer.  
+Valeur par défaut : 20.
+
+.PARAMETER SpecialChars
+Liste personnalisée de caractères spéciaux à utiliser.
+
+.PARAMETER UseSpecial
+Active ou désactive l’utilisation de caractères spéciaux.  
+Valeur par défaut : True.
+
+.PARAMETER RequireAllTypes
+Exige que le mot de passe contienne au moins :
+- une minuscule
+- une majuscule
+- un chiffre
+- un caractère spécial (si UseSpecial = $true)
+
+.PARAMETER NoClipboard
+Empêche la copie automatique du mot de passe dans le presse‑papier.
+
+.PARAMETER NoClear
+Empêche l’effacement automatique du presse‑papier après un délai sécurisé.
+
+.PARAMETER Silent
+Désactive le bip de confirmation.
+
+.OUTPUTS
+System.String  
+Retourne le mot de passe généré.
 #>
-function Get-PassWord {
+
     param(
         [int]$Len = 20,
 
@@ -125,6 +324,9 @@ function Get-PassWord {
 
         # Activation/désactivation des caractères spéciaux
         [bool]$UseSpecial = $true,
+
+        # Exiger toutes les catégories
+        [bool]$RequireAllTypes = $false,
 
         # Options d'affichage
         [switch]$NoClipboard,
@@ -146,9 +348,31 @@ function Get-PassWord {
         $Charset += $SpecialChars
     }
 
-    # --- Génération ---
-    $indices = 1..$Len | ForEach-Object { Get-CryptoIndex -Max $Charset.Length }
-    $mdp     = -join ($indices | ForEach-Object { $Charset[$_] })
+    # --- Génération + RequireAllTypes ---
+    # Garantit que le mot de passe contient au moins 1 minuscule, 1 majuscule, 1 chiffre & 1 caractère spécial
+    
+    do {
+        $indices = 1..$Len | ForEach-Object { Get-CryptoIndex -Max $Charset.Length }
+        $mdp     = -join ($indices | ForEach-Object { $Charset[$_] })
+
+        if ($RequireAllTypes) {
+            $hasLower   = $mdp -match '[a-z]'
+            $hasUpper   = $mdp -match '[A-Z]'
+            $hasDigit   = $mdp -match '\d'
+            $hasSpecial = $mdp -match "[$SpecialChars]"
+
+            # Si UseSpecial = $false → on n’exige PAS de caractère spécial
+            $requireSpecial = $UseSpecial ? $hasSpecial : $true
+
+            $ok = $hasLower -and $hasUpper -and $hasDigit -and $requireSpecial
+        }
+        else {
+            $ok = $true
+        }
+
+    } while (-not $ok)
+
+    # Entropie calculée sur le charset effectif
     $entropy = [math]::Round($Len * [math]::Log($Charset.Length, 2))
 
     # --- Mode silencieux ---
@@ -157,7 +381,7 @@ function Get-PassWord {
     }
 
     # --- Copie ---
-    if (-not $NoClipboard) { $mdp | Set-Clipboard }
+    if (-not $NoClipboard) { Set-ClipboardSafe $mdp }
 
     # --- Affichage ---
     Write-Host "🔐 $mdp" -ForegroundColor Green
@@ -165,23 +389,17 @@ function Get-PassWord {
     Write-Host "🧠 Mot de passe ($entropy bits) : " -NoNewline -ForegroundColor Cyan
     if (-not $NoClipboard) { Write-Host "📋 Copié !" } else { Write-Host "(clipboard désactivé)" }
     Write-Host "🎲 Aléa utilisé : $alea" -ForegroundColor Blue
-    #Write-Host "   Catégories utilisées :" -ForegroundColor Magenta
-    #Write-Host "     - Minuscules : Oui"
-    #Write-Host "     - Majuscules : Oui"
-    #Write-Host "     - Chiffres   : Oui"
-    #Write-Host "     - Spéciaux   : $UseSpecial ($SpecialChars)"
     Write-Host "----------------------------"
     Write-Host "⏳ Clipboard 35s auto-clear or Ctrl+C continue" -ForegroundColor Yellow
-    # Write-Host "----------------------------"
 
     # --- Effacement automatique ---
     if (-not $NoClipboard -and -not $NoClear) {
         try { Start-Sleep 35 }
         finally { 
-            Set-Clipboard $null; 
+            Clear-ClipboardSafe
             Write-Host "[!] Clipboard cleared !" -ForegroundColor Red
             Invoke-Beep -Frequency 1200 -Duration 500
-         }
+        }
     }
 }
 
