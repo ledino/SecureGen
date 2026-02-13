@@ -19,7 +19,6 @@ get-
 #Requires -Version 7.4 -Modules @{ModuleName='PlatyPS';ModuleVersion='1.0.0'}
 #>
 
-
 [CmdletBinding()]
 param(
     [string]$ModuleName = 'SecureGen',
@@ -31,16 +30,19 @@ param(
 
 Write-Host "📘 Génération de la documentation PlatyPS : $ModuleName" -ForegroundColor Cyan
 
-# --- 1. IMPORT PLATYPS ---
-try {
-    Import-Module PlatyPS -MinimumVersion 1.0.0 -Force -ErrorAction Stop
-    Write-Host "✅ PlatyPS chargé (v$((Get-Module PlatyPS).Version))" -ForegroundColor Green
-}
-catch {
-    Write-Host "⚠️ PlatyPS absent. Installation..." -ForegroundColor Yellow
+# --- 1. DÉTECTION AUTOMATIQUE DE PLATYPS ---
+$platy = Get-Module -ListAvailable -Name PlatyPS | Sort-Object Version -Descending | Select-Object -First 1
+
+if (-not $platy) {
+    Write-Host "⚠️ PlatyPS non installé. Installation..." -ForegroundColor Yellow
     Install-Module PlatyPS -Scope CurrentUser -Force -AllowClobber
-    Import-Module PlatyPS -Force
+    $platy = Get-Module -ListAvailable -Name PlatyPS | Sort-Object Version -Descending | Select-Object -First 1
 }
+
+$platyVersion = [version]$platy.Version
+Write-Host "📦 PlatyPS détecté : version $platyVersion" -ForegroundColor Green
+
+Import-Module PlatyPS -Force
 
 # --- 2. MODULE CIBLE ---
 if (-not $ModulePath) {
@@ -75,11 +77,11 @@ if ($Clean) {
 $existing = Get-ChildItem $OutputFolder -Filter "*.md" -ErrorAction SilentlyContinue
 
 $params = @{
-    Module        = $ModuleName
-    OutputFolder  = $OutputFolder
+    Module         = $ModuleName
+    OutputFolder   = $OutputFolder
     WithModulePage = $true
-    Locale        = 'fr-FR'
-    Force         = $Force.IsPresent
+    Locale         = 'fr-FR'
+    Force          = $Force.IsPresent
 }
 
 if ($existing.Count -eq 0) {
@@ -92,12 +94,12 @@ else {
 }
 
 # --- 6. VALIDATION ---
-if (Get-Command Test-MarkdownHelp -ErrorAction SilentlyContinue) {
+if ($platyVersion -ge [version]"1.0.0") {
     Write-Host "🧪 Validation PlatyPS..." -ForegroundColor Cyan
     Test-MarkdownHelp -Path $OutputFolder
 }
 else {
-    Write-Host "⚡ Validation PlatyPS non disponible (version < 1.0)" -ForegroundColor Yellow
+    Write-Host "⚡Validation PlatyPS non disponible (version < 1.0)" -ForegroundColor Yellow
 }
 
 # --- 7. RÉSUMÉ ---

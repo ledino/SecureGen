@@ -8,48 +8,81 @@ schema: 2.0.0
 # Get-PassWord
 
 ## SYNOPSIS
-Génère un mot de passe sécurisé et configurable.
+Génère un mot de passe sécurisé, configurable et compatible Windows / Linux / macOS.
 
 ## SYNTAX
 
 ```
-Get-PassWord [[-Len] <Int32>] [[-SpecialChars] <String>] [[-UseSpecial] <Boolean>] [-NoClipboard] [-NoClear]
- [-Silent]
+Get-PassWord [[-Len] <Int32>] [[-SpecialChars] <String>] [[-UseSpecial] <Boolean>] [-NoClipboard] [-NoClear] [-Silent]
 ```
 
 ## DESCRIPTION
-Par défaut, utilise :
-    - minuscules
-    - majuscules
-    - chiffres
-    - caractères spéciaux (personnalisables)
+`Get-PassWord` génère un mot de passe robuste en utilisant un générateur cryptographique sécurisé :
 
-L'utilisateur peut :
-    - personnaliser les caractères spéciaux via -SpecialChars
-    - désactiver totalement les caractères spéciaux via -UseSpecial:$false
+- **PS7+** : `Get-SecureRandom` (conforme NIST SP 800‑90)
+- **PS5.1** : RNG .NET Framework (cryptographiquement sûr)
 
-L'aléa est généré via Get-SecureRandom (PS7+),
-conforme aux modules cryptographiques modernes.
+Par défaut, le mot de passe inclut :
+
+- minuscules  
+- majuscules  
+- chiffres  
+- caractères spéciaux (personnalisables)
+
+Vous pouvez :
+
+- personnaliser les caractères spéciaux via `-SpecialChars`
+- désactiver totalement les caractères spéciaux via `-UseSpecial:$false`
+- désactiver la copie automatique dans le presse‑papier (`-NoClipboard`)
+- empêcher l’effacement automatique du presse‑papier (`-NoClear`)
+- désactiver le beep (`-Silent`)
 
 ## EXAMPLES
 
-### Example 1
+### EXAMPLE 1
+Générer un mot de passe standard (20 caractères par défaut) :
+
 ```powershell
-PS C:\> {{ Add example code here }}
+Get-PassWord
 ```
 
-{{ Add example description here }}
+### EXAMPLE 2
+Mot de passe avec caractères spéciaux personnalisés :
+
+```powershell
+Get-PassWord -SpecialChars '!@#?%'
+```
+
+### EXAMPLE 3
+Mot de passe sans caractères spéciaux :
+
+```powershell
+Get-PassWord -UseSpecial:$false
+```
+
+### EXAMPLE 4
+Mot de passe long (32 caractères) :
+
+```powershell
+Get-PassWord -Len 32
+```
+
+### EXAMPLE 5
+Générer un mot de passe sans beep ni clipboard :
+
+```powershell
+Get-PassWord -Silent -NoClipboard
+```
 
 ## PARAMETERS
 
 ### -Len
-{{ Fill Len Description }}
+Longueur du mot de passe à générer.
 
 ```yaml
 Type: Int32
 Parameter Sets: (All)
-Aliases:
-
+Aliases: 
 Required: False
 Position: 1
 Default value: 20
@@ -58,28 +91,26 @@ Accept wildcard characters: False
 ```
 
 ### -SpecialChars
-Caractères spéciaux personnalisables
+Liste personnalisée de caractères spéciaux à utiliser.
 
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases:
-
+Aliases: 
 Required: False
 Position: 2
-Default value: !@#$%^&*()_+-=[]{}<>/\;~
+Default value: [!@#$%^&*()_+\-=\[\]{}<>\/\\|;~]
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -UseSpecial
-Activation/désactivation des caractères spéciaux
+Active ou désactive l’utilisation de caractères spéciaux.
 
 ```yaml
 Type: Boolean
 Parameter Sets: (All)
-Aliases:
-
+Aliases: 
 Required: False
 Position: 3
 Default value: True
@@ -88,13 +119,12 @@ Accept wildcard characters: False
 ```
 
 ### -NoClipboard
-Options d'affichage
+Empêche la copie automatique du mot de passe dans le presse‑papier.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases:
-
+Aliases: 
 Required: False
 Position: Named
 Default value: False
@@ -103,13 +133,12 @@ Accept wildcard characters: False
 ```
 
 ### -NoClear
-{{ Fill NoClear Description }}
+Empêche l’effacement automatique du presse‑papier après un délai sécurisé.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases:
-
+Aliases: 
 Required: False
 Position: Named
 Default value: False
@@ -118,13 +147,12 @@ Accept wildcard characters: False
 ```
 
 ### -Silent
-{{ Fill Silent Description }}
+Désactive le beep de confirmation.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases:
-
+Aliases: 
 Required: False
 Position: Named
 Default value: False
@@ -133,9 +161,19 @@ Accept wildcard characters: False
 ```
 
 ## INPUTS
+Aucune entrée.
 
 ## OUTPUTS
+`System.String`  
+Le mot de passe généré.
 
 ## NOTES
+- Compatible Windows, Linux, macOS  
+- PS7 utilise `Get-SecureRandom`  
+- PS5.1 utilise RNG .NET Framework  
+- Le clipboard utilise automatiquement la meilleure méthode disponible selon la plateforme
 
 ## RELATED LINKS
+https://github.com/ledino/SecureGen
+
+---

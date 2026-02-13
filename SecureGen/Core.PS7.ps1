@@ -124,7 +124,7 @@ function Get-PassWord {
         [int]$Len = 20,
 
         # Caractères spéciaux personnalisables
-        [string]$SpecialChars = '!@#$%^&*()_+-=[]{}<>/\;~',
+        [string]$SpecialChars = '[!@#$%^&*()_+\-=\[\]{}<>\/\\|;~]', # True (= } < { )
 
         # Activation/désactivation des caractères spéciaux
         [bool]$UseSpecial = $true,
