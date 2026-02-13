@@ -9,62 +9,104 @@
     - met à jour la documentation existante
     - crée automatiquement la page du module (SecureGen.md)
     - garantit une documentation toujours synchronisée avec le code
-
+get-
 .NOTES
     Auteur  : SecureGen Project
     Version : 1.0
 #>
 
-Write-Host "📘 Génération de la documentation PlatyPS..." -ForegroundColor Cyan
+<# Ligne ci-dessous est une directive de parsing traitée AVANT toute exécution. Module 1.0.0 n'existe pas encore dans PSGallery - cmd non utilisée
+#Requires -Version 7.4 -Modules @{ModuleName='PlatyPS';ModuleVersion='1.0.0'}
+#>
 
-# --- Vérification du module PlatyPS ---
-if (-not (Get-Module -ListAvailable -Name PlatyPS)) {
-    Write-Host "📦 Installation de PlatyPS..." -ForegroundColor Yellow
-    Install-Module PlatyPS -Scope CurrentUser -Force
+
+[CmdletBinding()]
+param(
+    [string]$ModuleName = 'SecureGen',
+    [string]$ModulePath,
+    [string]$OutputFolder,
+    [switch]$Force,
+    [switch]$Clean
+)
+
+Write-Host "📘 Génération de la documentation PlatyPS : $ModuleName" -ForegroundColor Cyan
+
+# --- 1. IMPORT PLATYPS ---
+try {
+    Import-Module PlatyPS -MinimumVersion 1.0.0 -Force -ErrorAction Stop
+    Write-Host "✅ PlatyPS chargé (v$((Get-Module PlatyPS).Version))" -ForegroundColor Green
+}
+catch {
+    Write-Host "⚠️ PlatyPS absent. Installation..." -ForegroundColor Yellow
+    Install-Module PlatyPS -Scope CurrentUser -Force -AllowClobber
+    Import-Module PlatyPS -Force
 }
 
-Import-Module PlatyPS -Force
-
-# --- Import du module SecureGen ---
-$modulePath = Join-Path $PSScriptRoot "..\SecureGen\SecureGen\SecureGen.psd1"
-
-if (-not (Test-Path $modulePath)) {
-    Write-Host "❌ Impossible de trouver le module SecureGen à l'emplacement attendu :" -ForegroundColor Red
-    Write-Host "   $modulePath"
-    exit 1
+# --- 2. MODULE CIBLE ---
+if (-not $ModulePath) {
+    $ModulePath = Join-Path $PSScriptRoot "../SecureGen/SecureGen.psd1"
 }
 
-Write-Host "📦 Import du module SecureGen..." -ForegroundColor Cyan
-Import-Module $modulePath -Force
-
-# --- Dossier de sortie ---
-$outputFolder = Join-Path $PSScriptRoot "..\docs\cmdlets"
-
-if (-not (Test-Path $outputFolder)) {
-    Write-Host "📁 Création du dossier : $outputFolder" -ForegroundColor Yellow
-    New-Item -ItemType Directory -Path $outputFolder | Out-Null
+if (-not (Test-Path $ModulePath)) {
+    throw "❌ Module non trouvé : $ModulePath"
 }
 
-# --- Génération ou mise à jour ---
-$existingFiles = Get-ChildItem $outputFolder -Filter "*.md" -ErrorAction SilentlyContinue
+Import-Module $ModulePath -Force -ErrorAction Stop
+Write-Host "📦 Module importé : $ModulePath" -ForegroundColor Green
 
-if ($existingFiles.Count -eq 0) {
+# --- 3. DOSSIER DE SORTIE ---
+if (-not $OutputFolder) {
+    $OutputFolder = Join-Path $PSScriptRoot "../docs/cmdlets"
+}
+
+if (-not (Test-Path $OutputFolder)) {
+    Write-Host "📁 Création du dossier : $OutputFolder" -ForegroundColor Yellow
+    New-Item -ItemType Directory -Path $OutputFolder -Force | Out-Null
+}
+
+# --- 4. NETTOYAGE OPTIONNEL ---
+if ($Clean) {
+    Write-Host "🧹 Nettoyage des anciens fichiers..." -ForegroundColor Yellow
+    Get-ChildItem $OutputFolder -Filter "*.md" -ErrorAction SilentlyContinue |
+        Remove-Item -Force
+}
+
+# --- 5. GÉNÉRATION / MISE À JOUR ---
+$existing = Get-ChildItem $OutputFolder -Filter "*.md" -ErrorAction SilentlyContinue
+
+$params = @{
+    Module        = $ModuleName
+    OutputFolder  = $OutputFolder
+    WithModulePage = $true
+    Locale        = 'fr-FR'
+    Force         = $Force.IsPresent
+}
+
+if ($existing.Count -eq 0) {
     Write-Host "🆕 Aucune documentation trouvée. Génération complète..." -ForegroundColor Green
-
-    New-MarkdownHelp `
-        -Module SecureGen `
-        -OutputFolder $outputFolder `
-        -WithModulePage `
-        -Force
+    New-MarkdownHelp @params
 }
 else {
     Write-Host "🔄 Documentation existante détectée. Mise à jour..." -ForegroundColor Green
-
-    Update-MarkdownHelp `
-        -Module SecureGen `
-        -OutputFolder $outputFolder `
-        -Force
+    Update-MarkdownHelp @params
 }
 
-Write-Host "✅ Documentation générée dans : $outputFolder" -ForegroundColor Green
-Write-Host "🎉 Terminé !"
+# --- 6. VALIDATION ---
+if (Get-Command Test-MarkdownHelp -ErrorAction SilentlyContinue) {
+    Write-Host "🧪 Validation PlatyPS..." -ForegroundColor Cyan
+    Test-MarkdownHelp -Path $OutputFolder
+}
+else {
+    Write-Host "⚡ Validation PlatyPS non disponible (version < 1.0)" -ForegroundColor Yellow
+}
+
+# --- 7. RÉSUMÉ ---
+$files = Get-ChildItem $OutputFolder -Filter "*.md"
+
+Write-Host ""
+Write-Host "📊 Résumé" -ForegroundColor Cyan
+Write-Host "   📄 Fichiers générés : $($files.Count)"
+Write-Host "   📁 Dossier : $OutputFolder"
+Write-Host "   🧩 Cmdlets détectés : $((Get-Command -Module $ModuleName).Count)"
+Write-Host ""
+Write-Host "🎉 Documentation PlatyPS générée avec succès !" -ForegroundColor Green
