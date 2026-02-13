@@ -200,6 +200,7 @@ git checkout -b feat/ma-nouvelle-fonction
 - `docs/versioning.md`  
 - `docs/release-process.md`  
 - `docs/architecture.md`  
+- `docs/diagrams/overview.md`
 - `README.md`  
 
 ---

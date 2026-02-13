@@ -203,11 +203,51 @@ Mettre à jour :
 Update-Module SecureGen
 ```
 
+---
+
+### 🛡️ Problème courant : “Running scripts is disabled on this system”
+
+Sur un poste Windows qui n’a jamais exécuté de script PowerShell, il est fréquent d’obtenir :
+
+```
+Impossible de charger le fichier .ps1, car l'exécution de scripts est désactivée sur ce système.
+```
+
+Cela provient de la **Execution Policy**, qui est par défaut :
+
+```
+Restricted
+```
+
+### ✅ Solution recommandée (sécurisée)
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+```
+
+### 🧪 Exécution ponctuelle (sans modifier la policy)
+
+PowerShell 7+ :
+
+```powershell
+pwsh -ExecutionPolicy Bypass -File ./script.ps1
+```
+
+Windows PowerShell 5.1 :
+
+```powershell
+powershell.exe -ExecutionPolicy Bypass -File .\script.ps1
+```
+
+---
+
 ## 🛠️ Installation via script (développeurs)
 
 ```powershell
 pwsh ./scripts/Install-SecureGen.ps1
 ```
+
+---
 
 ## 📜 Documentation complète de l’installation
 
@@ -324,6 +364,14 @@ Manifest :
 SecureGen.psd1
 ```
 
+## 📘 Documentation technique
+
+Pour les détails avancés, consultez :
+
+- [Architecture du module](docs/architecture.md)
+- [Diagrammes UML](docs/diagrams/overview.md)
+- [Processus de publication](docs/release-process.md)
+
 ---
 
 # ⚙️ Versioning & Releases (v1.4.0+)
@@ -350,7 +398,7 @@ Ce processus est **simple, fiable et entièrement maîtrisé côté développeur
 
 ---
 
-# 📦 Structure du dépôt
+# 📦 Structure complète du module
 
 ```text
 SecureGen/
@@ -387,12 +435,18 @@ SecureGen/
 │   ├── benchmarks.md
 │   ├── screenshots.md
 │   ├── generate-help.md
-│   └── cmdlets/
-│       ├── Get-PassWord.md
-│       ├── Get-PassPhrase.md
-│       ├── Get-CryptoIndex.md
-│       ├── Invoke-Beep.md
-│       └── SecureGen.md
+│   ├── cmdlets/
+│   │   ├── Get-PassWord.md
+│   │   ├── Get-PassPhrase.md
+│   │   ├── Get-CryptoIndex.md
+│   │   ├── Invoke-Beep.md
+│   │   └── SecureGen.md
+│   └── diagrams/
+│       ├── components.md
+│       ├── deployment.md
+│       ├── overview.md
+│       ├── pipeline-ci-cd.md
+│       └── sequence-get-password.md
 │
 ├── scripts/                       # Scripts internes & outils dev
 │   ├── build.ps1

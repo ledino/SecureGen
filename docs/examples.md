@@ -103,13 +103,15 @@ Renvoie un entier compris entre `0` et `99`, basé sur un générateur cryptogra
 ## Copier une valeur arbitraire
 
 ```powershell
-Set-ClipboardSafe "Bonjour SecureGen"
+"SecureGen" | Set-Clipboard 
 ```
 
 ## Effacer le presse‑papier
 
 ```powershell
-Clear-ClipboardSafe
+Set-Clipboard ""
+# ou
+Set-Clipboard $null
 ```
 
 ---

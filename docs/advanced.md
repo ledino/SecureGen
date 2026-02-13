@@ -110,17 +110,28 @@ steps:
 
 # 📋 Gestion avancée du presse‑papier
 
+SecureGen utilise automatiquement la meilleure méthode disponible selon l’OS :
+
+| OS | Méthode |
+|----|---------|
+| Windows | `Set-Clipboard` |
+| macOS | `pbcopy` |
+| Linux | `xclip` / `xsel` |
+
 ## Copier une valeur arbitraire
 
 ```powershell
-Set-ClipboardSafe (Get-PassPhrase -MotsParBloc 5)
+(Get-PassPhrase -MotsParBloc 5) | Set-Clipboard
 ```
 
-## Effacer le presse‑papier
+## Effacer le presse‑papier (Windows uniquement)
 
 ```powershell
-Clear-ClipboardSafe
+Set-Clipboard ""
 ```
+
+> Note : SecureGen ne fournit pas de fonctions `Set-ClipboardSafe` ou `Clear-ClipboardSafe`.  
+> Le module utilise simplement les commandes natives selon la plateforme.
 
 ---
 
@@ -192,11 +203,11 @@ Describe "SecureGen" {
 
 Le script `scripts/build.ps1` permet :
 
-- nettoyage
-- validation de la structure
-- packaging
-- tests Pester
-- génération de la documentation PlatyPS
+- nettoyage  
+- validation de la structure  
+- packaging  
+- tests Pester  
+- génération de la documentation PlatyPS  
 - publication PSGallery (optionnelle)
 
 Exécution simple :
@@ -211,16 +222,19 @@ Publication :
 pwsh ./scripts/build.ps1 -Publish
 ```
 
+> Note : la **publication officielle** passe par GitHub Actions via `publish.yml`.  
+> Le script local reste utile pour les tests et builds manuels.
+
 ---
 
 # 📚 Documentations associées
 
-- `installation.md`
-- `examples.md`
-- `architecture.md`
-- `versioning.md`
-- `release-process.md`
-- `README.md`
+- `installation.md`  
+- `examples.md`  
+- `architecture.md`  
+- `versioning.md`  
+- `release-process.md`  
+- `README.md`  
 
 ---
 
@@ -230,5 +244,3 @@ Pour toute suggestion ou contribution :
 👉 GitHub — Issues & Pull Requests
 
 ---
-
-

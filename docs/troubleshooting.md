@@ -45,6 +45,33 @@ pwsh ./scripts/Install-SecureGen.ps1
 
 ---
 
+# ❗ Impossible d’exécuter un script : “Running scripts is disabled on this system”
+
+## Cause  
+La **Execution Policy** est en mode `Restricted` (valeur par défaut sur Windows).
+
+## Solution recommandée
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+```
+
+## Exécution ponctuelle sans changer la policy
+
+PowerShell 7+ :
+
+```powershell
+pwsh -ExecutionPolicy Bypass -File ./script.ps1
+```
+
+PowerShell 5.1 :
+
+```powershell
+powershell.exe -ExecutionPolicy Bypass -File .\script.ps1
+```
+
+---
+
 # ❗ Le clipboard ne fonctionne pas
 
 ## Symptôme
@@ -356,8 +383,15 @@ Get-PassPhrase -MotsParBloc 7 -LettresParMot 5
 ## Solution
 
 ```powershell
-Clear-ClipboardSafe
+Set-Clipboard ""
+# ou
+Set-Clipboard $null
 ```
+
+> Note :
+SecureGen ne fournit pas de fonction `Clear-ClipboardSafe`.  
+Utilisez simplement `Set-Clipboard ""` pour vider le presse‑papier.
+
 
 ---
 

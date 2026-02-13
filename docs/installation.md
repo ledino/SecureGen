@@ -29,6 +29,42 @@ Import-Module SecureGen
 
 ---
 
+## 🛡️ Problème courant : “Running scripts is disabled on this system”
+
+Sur un poste Windows qui n’a jamais exécuté de script PowerShell, il est fréquent d’obtenir :
+
+```
+Impossible de charger le fichier .ps1, car l'exécution de scripts est désactivée sur ce système.
+```
+
+Cela provient de la **Execution Policy**, qui est par défaut :
+
+```
+Restricted
+```
+
+### ✅ Solution recommandée (sécurisée)
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+```
+
+### 🧪 Exécution ponctuelle (sans modifier la policy)
+
+PowerShell 7+ :
+
+```powershell
+pwsh -ExecutionPolicy Bypass -File ./script.ps1
+```
+
+Windows PowerShell 5.1 :
+
+```powershell
+powershell.exe -ExecutionPolicy Bypass -File .\script.ps1
+```
+
+---
+
 # 📦 Installation depuis GitHub Release
 
 Télécharger la dernière version :
