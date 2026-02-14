@@ -2,6 +2,101 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/ledino/SecureGen/compare/v1.4.0...v1.5.0) (2026‑02‑14)
+
+# ✨ Nouveautés majeures
+
+### 🔐 Nouveau : Get‑PKIPass (mode Password / Passphrase + SecureString)
+- Ajout d’une nouvelle commande dédiée aux usages sensibles (PKI, certificats, comptes de service, KMS, CI/CD).
+- Support complet des deux modes :
+  - **Password** (32 caractères par défaut, personnalisable via `-Length`)
+  - **Passphrase** (5×5 par défaut, personnalisable via `-Words` et `-Len`)
+- Nouveau paramètre **`-AsSecureString`** pour intégration directe dans :
+  - PSCredential
+  - scripts d’automatisation
+  - services Windows
+  - pipelines CI/CD
+- Alias ergonomique : **`sgpki`**
+- API cohérente avec `Get-PassWord` et `Get-PassPhrase`.
+
+---
+
+# 🧪 Tests & Qualité
+
+### ✔ Ajout des tests Pester pour Get‑PKIPass
+- Tests complets : valeurs par défaut, modes Password/Passphrase, SecureString, clipboard, forwarding interne.
+- Mock du clipboard pour compatibilité Linux/macOS/CI.
+- Cohérence totale avec les tests existants.
+
+### ✔ Harmonisation de tous les tests existants
+- Mise à jour des tests Get‑PassWord, Get‑PassPhrase, Get‑CryptoIndex.
+- Nettoyage des mocks obsolètes.
+- Compatibilité PS7 / PS5.1 garantie.
+
+---
+
+# 📚 Documentation (mise à jour complète)
+
+### ✔ Mise à jour de **toutes** les pages PlatyPS :
+- `Get-PKIPass.md` (nouvelle page)
+- `Get-PassPhrase.md` (API modernisée : Words / Len)
+- `Get-PassWord.md` (valeurs par défaut, cohérence API)
+- `Get-CryptoIndex.md`
+- `SecureGen.md`
+
+### ✔ Mise à jour des documents avancés :
+- `docs/examples.md` (nouvelle section PKI complète)
+- `docs/advanced.md`
+- `docs/security.md`
+- `docs/architecture.md`
+- `docs/release-process.md`
+- `docs/versioning.md`
+
+### ✔ Mise à jour du README :
+- Nouvelle section PKIPass
+- Table des fonctions mise à jour
+- Exemples modernisés
+- Cohérence totale avec SecureGen 1.5.0
+
+---
+
+# 🧩 API & Cohérence
+
+### ✔ Harmonisation complète de l’API
+- `Get-PassPhrase` utilise désormais **Words** et **Len** (plus de MotsParBloc / LettresParMot).
+- `Get-PKIPass` reprend exactement la même logique.
+- `Get-PassWord` reste cohérent avec `-Len`.
+
+### ✔ Alias officiels
+- `sgw` → Get-PassWord  
+- `sgp` → Get-PassPhrase  
+- `sgpki` → Get-PKIPass  
+
+---
+
+# 🧹 Nettoyage & Maintenance
+
+- Suppression des paramètres obsolètes dans la documentation.
+- Nettoyage global des exemples, guides et sections CI/CD.
+- Mise à jour des chemins, scripts et conventions.
+- Cohérence totale entre README, docs, PlatyPS et tests.
+
+---
+
+# 🚀 Résultat
+
+SecureGen 1.5.0 apporte :
+
+- une **nouvelle commande PKI professionnelle**  
+- une **API cohérente et modernisée**  
+- une **documentation entièrement revue**  
+- des **tests robustes et complets**  
+- une **expérience utilisateur plus claire et plus fiable**  
+
+SecureGen devient un module **mature**, **professionnel**, et parfaitement adapté aux environnements modernes (PKI, CI/CD, automatisation, multi‑plateforme).
+
+---
+
 ## [1.4.0](https://github.com/ledino/SecureGen/compare/v1.3.2...v1.4.0) (2026-02-12)
 
 # 📜 Changelog — SecureGen  

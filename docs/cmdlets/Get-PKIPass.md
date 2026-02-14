@@ -8,25 +8,32 @@ schema: 2.0.0
 # Get-PKIPass
 
 ## SYNOPSIS
-Génère un secret robuste (mot de passe ou passphrase), lisible et conforme aux bonnes pratiques cryptographiques.
-(PKI, certificats, clés privées, comptes de service etc.)
+Génère un secret PKI robuste (mot de passe ou passphrase), personnalisable et compatible avec les usages sensibles  
+(certificats, clés privées, comptes de service, KMS, automatisation sécurisée).
 
 ## SYNTAX
 
+### Password (par défaut)
 ```
-Get-PKIPass [-Len <Int32>] [-NoClipboard] [-NoClear] [-Silent] [<CommonParameters>]
+Get-PKIPass [-Type <String>] [-Length <Int32>] [-AsSecureString] [-NoClipboard] [<CommonParameters>]
+```
+
+### Passphrase
+```
+Get-PKIPass -Type Passphrase [-Words <Int32>] [-Len <Int32>] [-AsSecureString] [-NoClipboard] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Get-PKIPass génère un mot de passe destiné aux usages PKI (certificats, clés privées, HSM, comptes sensibles).  
-Il produit une chaîne aléatoire composée uniquement de caractères **alphanumériques** et **spéciaux sûrs**, garantissant :
+`Get-PKIPass` génère un secret hautement entropique destiné aux environnements exigeants :  
+PKI, certificats, HSM, comptes de service, automatisation CI/CD, KMS, etc.
 
-- une entropie élevée  
-- une compatibilité maximale avec les outils PKI  
-- une lisibilité correcte  
-- une absence de caractères ambigus  
+Il peut produire :
 
-Le mot de passe peut être automatiquement copié dans le presse‑papier, puis effacé après un délai sécurisé.
+- un **mot de passe PKI** (32 caractères par défaut)
+- une **passphrase PKI** (5 mots × 5 lettres par défaut)
+- un **SecureString** pour intégration dans des systèmes sensibles
+
+La fonction est entièrement personnalisable et cohérente avec `Get-PassWord` et `Get-PassPhrase`.
 
 ## EXAMPLES
 
@@ -38,25 +45,54 @@ Génère un mot de passe PKI standard (32 caractères).
 
 ### EXAMPLE 2
 ```
-Get-PKIPass -Len 48
+Get-PKIPass -Type Passphrase
 ```
-Génère un mot de passe PKI long (48 caractères).
+Génère une passphrase PKI (5 mots × 5 lettres).
 
 ### EXAMPLE 3
 ```
-Get-PKIPass -Silent -NoClipboard
+Get-PKIPass -Type Password -Length 48
 ```
-Génère un mot de passe sans bip et sans copie dans le presse‑papier.
+Génère un mot de passe PKI long (48 caractères).
+
+### EXAMPLE 4
+```
+Get-PKIPass -Type Passphrase -Words 8 -Len 10
+```
+Génère une passphrase personnalisée (8 mots de 10 lettres).
+
+### EXAMPLE 5
+```
+Get-PKIPass -AsSecureString
+```
+Retourne le secret sous forme de `SecureString` (KMS, AD, DSC, scripts sensibles).
 
 ## PARAMETERS
 
-### -Len
-Longueur du mot de passe PKI à générer.  
+### -Type
+Type de secret à générer :  
+- `Password` (par défaut)  
+- `Passphrase`
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+Accepted values: Password, Passphrase
+Required: False
+Position: 0
+Default value: Password
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Length
+Longueur du mot de passe PKI (mode Password).  
 Valeur par défaut : 32.
 
 ```yaml
 Type: Int32
-Parameter Sets: (All)
+Parameter Sets: Password
 Aliases:
 Required: False
 Position: Named
@@ -65,36 +101,53 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Words
+Nombre de mots dans la passphrase (mode Passphrase).  
+Valeur par défaut : 5.
+
+```yaml
+Type: Int32
+Parameter Sets: Passphrase
+Aliases: MotsParBloc, WordsCount, NbWords
+Required: False
+Position: Named
+Default value: 5
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Len
+Longueur de chaque mot dans la passphrase (mode Passphrase).  
+Valeur par défaut : 5.
+
+```yaml
+Type: Int32
+Parameter Sets: Passphrase
+Aliases:
+Required: False
+Position: Named
+Default value: 5
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -AsSecureString
+Retourne le secret sous forme de `SecureString`.  
+Idéal pour les usages PKI, KMS, AD, DSC, automatisation sécurisée.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -NoClipboard
-Empêche la copie automatique du mot de passe dans le presse‑papier.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
-Required: False
-Position: Named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -NoClear
-Empêche l’effacement automatique du presse‑papier après un délai sécurisé.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
-Required: False
-Position: Named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Silent
-Désactive le bip de confirmation.
+Empêche la copie automatique dans le presse‑papier.
 
 ```yaml
 Type: SwitchParameter
@@ -108,14 +161,18 @@ Accept wildcard characters: False
 ```
 
 ## OUTPUTS
+
 ### System.String
-Retourne le mot de passe PKI généré.
+Secret PKI généré (mot de passe ou passphrase).
+
+### System.Security.SecureString
+Si `-AsSecureString` est utilisé.
 
 ## NOTES
-- Compatible Windows, Linux, macOS.  
-- Utilise Get-CryptoIndex pour garantir une distribution uniforme.  
-- Le presse‑papier utilise automatiquement la meilleure méthode selon la plateforme.  
-- Le mot de passe est conçu pour être compatible avec les outils PKI (OpenSSL, certreq, HSM, etc.).
+- Compatible Windows, Linux, macOS  
+- Utilise `Get-PassWord` ou `Get-PassPhrase` selon le mode  
+- Retour `SecureString` pour intégration dans des systèmes sensibles  
+- Clipboard intelligent (désactivable via `-NoClipboard`)  
 
 ## RELATED LINKS
 Get-PassWord  
@@ -123,4 +180,3 @@ Get-PassPhrase
 Get-CryptoIndex  
 
 ---
-

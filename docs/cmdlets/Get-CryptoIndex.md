@@ -17,14 +17,33 @@ Get-CryptoIndex [[-Max] <Int32>]
 ```
 
 ## DESCRIPTION
-`Get-CryptoIndex` retourne un entier pseudo‑aléatoire sécurisé compris entre `0` et `Max - 1`.
+`Get-CryptoIndex` retourne un entier pseudo‑aléatoire **cryptographiquement sûr**, compris entre `0` et `Max - 1`.
 
-Le générateur utilisé dépend de la version de PowerShell :
+Ce cmdlet constitue la **brique de base** utilisée par SecureGen pour garantir :
 
-- **PS7+** : `Get-SecureRandom` (conforme NIST SP 800‑90)
-- **PS5.1** : RNG .NET Framework (`System.Security.Cryptography.RandomNumberGenerator`)
+- une distribution uniforme  
+- une entropie maximale  
+- l’absence de biais dans les tirages  
+- une compatibilité totale PS7 / PS5.1  
 
-Ce cmdlet est utilisé en interne par SecureGen pour garantir une distribution uniforme et une entropie maximale lors de la génération de mots de passe, passphrases ou sélections aléatoires.
+Il est utilisé en interne par :
+
+- `Get-PassWord`  
+- `Get-PassPhrase`  
+- `Get-PKIPass`  
+
+### 🔐 Source d’aléa selon la version PowerShell
+
+- **PowerShell 7+**  
+  Utilise `Get-SecureRandom` (NIST SP 800‑90), via `.NET 6+`.
+
+- **PowerShell 5.1**  
+  Utilise `System.Security.Cryptography.RandomNumberGenerator`  
+  (fallback sécurisé du .NET Framework).
+
+Aucune implémentation maison n’est utilisée.
+
+---
 
 ## EXAMPLES
 
@@ -36,7 +55,7 @@ Get-CryptoIndex -Max 10
 ```
 
 ### EXAMPLE 2
-Générer un index pour sélectionner un élément dans un tableau :
+Sélectionner un élément dans un tableau :
 
 ```powershell
 $items = "alpha","beta","gamma","delta"
@@ -45,11 +64,13 @@ $items[$index]
 ```
 
 ### EXAMPLE 3
-Générer un index pour un tirage sécurisé :
+Tirage sécurisé (ex. lancer de dé) :
 
 ```powershell
 1..6 | ForEach-Object { Get-CryptoIndex -Max 6 }
 ```
+
+---
 
 ## PARAMETERS
 
@@ -70,19 +91,29 @@ Accept wildcard characters: False
 
 > **Note :** Si `-Max` vaut `0` ou une valeur négative, une exception est levée.
 
+---
+
 ## INPUTS
 Aucune entrée.
 
 ## OUTPUTS
-`System.Int32`  
+
+### System.Int32
 Un entier aléatoire cryptographiquement sûr.
+
+---
 
 ## NOTES
 - Utilise automatiquement la meilleure source d’aléa selon la version de PowerShell.  
-- Peut être utilisé pour des tirages, sélections aléatoires, index de tableaux, etc.  
-- Fonction interne utilisée par d’autres cmdlets SecureGen.
+- Fonction interne utilisée par les autres cmdlets SecureGen.  
+- Compatible Windows, Linux, macOS.  
+- Entièrement déterministe du point de vue API (mais non prédictible).  
+
+---
 
 ## RELATED LINKS
-https://github.com/ledino/SecureGen
+Get-PassWord  
+Get-PassPhrase  
+Get-PKIPass  
 
 ---

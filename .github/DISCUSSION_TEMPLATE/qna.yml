@@ -1,0 +1,29 @@
+title: "❓ Question / Help"
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for opening a Q&A discussion!  
+        Please describe your question clearly so the community can help.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+      description: What do you want to understand or achieve?
+      placeholder: "How do I generate a PKI passphrase with SecureString output?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Add any relevant details (OS, PowerShell version, use case…)
+      placeholder: |
+        - PowerShell 7.4 on Linux
+        - Using SecureGen 1.5.0
+        - Need to automate certificate creation
+    validations:
+      required: false

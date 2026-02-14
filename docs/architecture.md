@@ -1,5 +1,5 @@
 # 🧱 Architecture interne — SecureGen  
-*(Version synchronisée avec la structure actuelle du module)*
+*(Version synchronisée avec SecureGen 1.5.0)*
 
 Ce document présente l’architecture interne du module **SecureGen**, son fonctionnement, ses choix techniques et la manière dont il assure une compatibilité totale entre **PowerShell 7+** et **Windows PowerShell 5.1**.
 
@@ -18,29 +18,28 @@ SecureGen repose sur trois principes fondamentaux :
    Architecture duale PS7 / PS5.1 avec implémentations séparées.
 
 3. **Expérience utilisateur fluide**  
-   Clipboard cross‑platform, beep encapsulé, alias ergonomiques, documentation complète.
+   Clipboard cross‑platform, beep encapsulé, alias ergonomiques, documentation complète, SecureString pour les usages PKI.
 
 ---
 
 # 📚 Diagrammes UML
 
-Les diagrammes suivants décrivent l’architecture complète du module **SecureGen**.  
-Ils sont regroupés dans le dossier `docs/diagrams/` pour une consultation claire et structurée.
+Les diagrammes décrivant l’architecture complète du module sont regroupés dans `docs/diagrams/`.
 
-### 🧩 **Diagramme des composants**  
-**Fichier :** `docs/diagrams/components.md`  
+### 🧩 Diagramme des composants  
+`docs/diagrams/components.md`  
 Vue interne du module : orchestrateur, implémentations PS5/PS7, ressources.
 
-### 🏗️ **Diagramme de déploiement**  
-**Fichier :** `docs/diagrams/deployment.md`  
+### 🏗️ Diagramme de déploiement  
+`docs/diagrams/deployment.md`  
 Où vivent les fichiers : poste utilisateur, PowerShell Gallery, GitHub Actions.
 
-### 🔁 **Diagramme de séquence — Get-PassWord**  
-**Fichier :** `docs/diagrams/sequence-get-password.md`  
-Flux d’exécution complet d’un appel utilisateur jusqu’à la génération du mot de passe.
+### 🔁 Diagramme de séquence — Get-PassWord  
+`docs/diagrams/sequence-get-password.md`  
+Flux d’exécution complet d’un appel utilisateur.
 
-### 🚀 **Pipeline CI/CD**  
-**Fichier :** `docs/diagrams/pipeline-ci-cd.md`  
+### 🚀 Pipeline CI/CD  
+`docs/diagrams/pipeline-ci-cd.md`  
 Processus complet : développement → versioning → CI → publication PSGallery.
 
 ---
@@ -62,6 +61,7 @@ SecureGen/
 - `Get-SecureRandom` (si disponible)  
 - Clipboard cross‑platform  
 - API modernes et performantes  
+- Gestion des SecureString pour Get‑PKIPass  
 
 ## ▶️ Legacy.PS5.ps1 (Windows PowerShell 5.1)
 
@@ -79,8 +79,9 @@ Le fichier principal `SecureGen.psm1` agit comme un **orchestrateur** :
 - détecte la version de PowerShell  
 - charge automatiquement l’implémentation PS7 ou PS5  
 - exporte les fonctions publiques  
-- applique les alias (`sgw`, `sgp`)  
+- applique les alias (`sgw`, `sgp`, `sgpki`)  
 - centralise la logique commune (clipboard, beep, helpers)  
+- expose les cmdlets de manière cohérente  
 
 Détection automatique :
 
@@ -202,16 +203,21 @@ tests/
 |----|---------|
 | Windows | `Set-Clipboard` |
 | macOS | `pbcopy` |
-| Linux | `xclip` / `xsel` |
+| Linux | `wl-copy`, `xclip`, `xsel` |
 
-Fallback propre si non disponible.
+SecureGen encapsule ces appels via :
+
+- `Set-ClipboardSafe`  
+- `Clear-ClipboardSafe`  
+
+Avec fallback propre si non disponible.
 
 ---
 
 # 🔔 Beep encapsulé
 
-- Windows : OK  
-- Linux/macOS : silencieux si non supporté  
+- Windows : bip natif  
+- Linux/macOS : bip simulé ou silencieux selon support  
 
 ```powershell
 Invoke-Beep
@@ -227,6 +233,8 @@ Invoke-Beep
 - PS5 : `RNGCryptoServiceProvider`  
 - Retourne un index sécurisé entre `0` et `Max - 1`  
 
+C’est la brique fondamentale garantissant l’absence de biais.
+
 ---
 
 # 🧰 Design des fonctions
@@ -235,15 +243,24 @@ Invoke-Beep
 - Génération caractère par caractère  
 - Pools configurables  
 - Paramètres modernes (`-UseSpecial`, `-SpecialChars`, `-Silent`)  
+- Entropie affichée automatiquement  
 
 ## Get-PassPhrase
-- Liste de mots optimisée  
-- Séparateur `-`  
-- Paramètres (`-MotsParBloc`, `-LettresParMot`, `-Silent`)  
+- Mots générés caractère par caractère  
+- Séparateur configurable  
+- Paramètres (`-Words`, `-Len`, `-Separator`)  
+- Entropie affichée automatiquement  
+
+## Get-PKIPass
+- Fonction dédiée aux usages sensibles (PKI, KMS, comptes de service)  
+- Modes Password / Passphrase  
+- Retour `SecureString` optionnel  
+- Paramètres cohérents avec Get‑PassWord et Get‑PassPhrase  
 
 ## Aliases
 - `sgw` → `Get-PassWord`  
 - `sgp` → `Get-PassPhrase`  
+- `sgpki` → `Get-PKIPass`  
 
 ---
 
@@ -252,10 +269,11 @@ Invoke-Beep
 - Code clair et modulaire  
 - Pas de dépendances externes  
 - Compatibilité maximale  
-- Documentation complète  
-- CI/CD robuste  
-- Versioning automatisé  
+- Documentation complète (PlatyPS)  
+- CI/CD robuste (GitHub Actions)  
+- Versioning automatisé (standard-version)  
 - Publication automatique via GitHub Actions  
+- Tests Pester multi‑plateformes  
 
 ---
 

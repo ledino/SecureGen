@@ -1,5 +1,5 @@
 # 📘 Exemples d'utilisation — SecureGen  
-*(Version alignée avec le README et l’architecture moderne)*
+*(Version alignée avec SecureGen 1.5.0)*
 
 Ce document présente des exemples pratiques et avancés pour exploiter pleinement les fonctionnalités du module **SecureGen**.
 
@@ -28,7 +28,7 @@ Get-PassWord -UseSpecial:$false
 ## Mot de passe plus long (32 caractères)
 
 ```powershell
-Get-PassWord -Length 32
+Get-PassWord -Len 32
 ```
 
 Alias équivalent :
@@ -56,32 +56,74 @@ Get-PassPhrase
 ## Passphrase longue (6 mots)
 
 ```powershell
-Get-PassPhrase -MotsParBloc 6
+Get-PassPhrase -Words 6
 ```
 
 ## Passphrase structurée (exemple recommandé)
 
-Cet exemple est particulièrement utile pour obtenir une passphrase :
-
-- très lisible  
-- très régulière  
-- très robuste  
-- idéale pour un usage quotidien ou professionnel  
-
 ```powershell
-Get-PassPhrase -LettresParMot 5 -MotsParBloc 7
+Get-PassPhrase -Words 7 -Len 5
 ```
 
 Alias équivalent :
 
 ```powershell
-sgp 5 7
+sgp 7 5
 ```
 
 ## Générer une passphrase silencieusement
 
 ```powershell
 Get-PassPhrase -Silent
+```
+
+---
+
+# 🔐 Génération PKI (Get‑PKIPass)
+
+`Get-PKIPass` est conçu pour les usages sensibles :  
+certificats, clés privées, comptes de service, KMS, automatisation sécurisée, etc.
+
+## Mot de passe PKI par défaut (32 caractères)
+
+```powershell
+Get-PKIPass
+```
+
+## Mot de passe PKI personnalisé (48 caractères)
+
+```powershell
+Get-PKIPass -Type Password -Length 48
+```
+
+## Passphrase PKI par défaut (5×5)
+
+```powershell
+Get-PKIPass -Type Passphrase
+```
+
+## Passphrase PKI personnalisée (8 mots × 10 lettres)
+
+```powershell
+Get-PKIPass -Type Passphrase -Words 8 -Len 10
+```
+
+## Retour en SecureString (KMS, AD, DSC, comptes de service)
+
+```powershell
+$secure = Get-PKIPass -AsSecureString
+```
+
+## Utilisation dans un PSCredential
+
+```powershell
+$cred = New-Object pscredential "svc-kms", (Get-PKIPass -AsSecureString)
+```
+
+## Alias rapide
+
+```powershell
+sgpki
 ```
 
 ---
@@ -103,15 +145,13 @@ Renvoie un entier compris entre `0` et `99`, basé sur un générateur cryptogra
 ## Copier une valeur arbitraire
 
 ```powershell
-"SecureGen" | Set-Clipboard 
+Set-ClipboardSafe -Text "SecureGen"
 ```
 
 ## Effacer le presse‑papier
 
 ```powershell
-Set-Clipboard ""
-# ou
-Set-Clipboard $null
+Clear-ClipboardSafe
 ```
 
 ---
@@ -127,7 +167,7 @@ Invoke-Beep
 ## Beep personnalisé
 
 ```powershell
-Invoke-Beep -Freq 1500 -Duration 300
+Invoke-Beep -Frequency 1500 -Duration 300
 ```
 
 ---
@@ -146,6 +186,12 @@ sgp
 sgw
 ```
 
+## Générer un secret PKI rapidement
+
+```powershell
+sgpki
+```
+
 ---
 
 # 🧪 Exemples combinés
@@ -160,8 +206,14 @@ Write-Host "Mot de passe généré : $pwd"
 ## Générer une passphrase longue et l’utiliser dans un script
 
 ```powershell
-$phrase = Get-PassPhrase -LettresParMot 4 -MotsParBloc 5
+$phrase = Get-PassPhrase -Words 5 -Len 8
 Write-Host "Votre passphrase : $phrase"
+```
+
+## Générer un secret PKI et l’utiliser dans un credential
+
+```powershell
+$cred = New-Object pscredential "svc-backup", (Get-PKIPass -AsSecureString)
 ```
 
 ---
@@ -172,7 +224,7 @@ Write-Host "Votre passphrase : $phrase"
 - Le clipboard utilise automatiquement la meilleure méthode disponible :
   - Windows : `Set-Clipboard`
   - macOS : `pbcopy`
-  - Linux : `xclip` ou `xsel`
+  - Linux : `wl-copy`, `xclip`, `xsel`
 - SecureGen charge automatiquement la version adaptée :
   - **Core.PS7.ps1** pour PowerShell 7+
   - **Legacy.PS5.ps1** pour Windows PowerShell 5.1
@@ -190,6 +242,5 @@ Write-Host "Votre passphrase : $phrase"
 # 🎉 Merci d'utiliser SecureGen !
 
 N'hésitez pas à contribuer via GitHub : issues, PR, suggestions.
-```
 
 ---

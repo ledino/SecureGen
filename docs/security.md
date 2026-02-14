@@ -1,5 +1,5 @@
 # 🔐 Guide de sécurité — SecureGen  
-*(Aligné avec l’architecture moderne et les recommandations NIST / OWASP / ANSSI)*
+*(Aligné avec SecureGen 1.5.0 et les recommandations NIST / OWASP / ANSSI)*
 
 Ce document présente les principes de sécurité utilisés par **SecureGen**, ainsi que les bonnes pratiques recommandées pour intégrer le module dans des environnements professionnels.
 
@@ -20,9 +20,9 @@ Aucune implémentation maison de RNG n’est utilisée.
 
 ---
 
-# 📘 Conformité aux recommandations NIST (SP 800‑63B)
+# 📘 Conformité NIST (SP 800‑63B)
 
-SecureGen suit les recommandations modernes du **NIST SP 800‑63B – Digital Identity Guidelines**, notamment :
+SecureGen suit les recommandations modernes du **NIST SP 800‑63B – Digital Identity Guidelines**.
 
 ## ✔ Préférer la longueur à la complexité artificielle  
 Le NIST recommande d’abandonner les règles obsolètes du type :
@@ -35,24 +35,22 @@ Au profit de **mots de passe plus longs** ou de **passphrases**.
 
 SecureGen applique cette approche via :
 
-- `Get-PassPhrase`
-- paramètres configurables : `-MotsParBloc`, `-LettresParMot`
+- `Get-PassPhrase`  
+- paramètres configurables : `-Words`, `-Len`  
+- `Get-PKIPass` (mode Passphrase)
 
 ## ✔ Génération aléatoire cryptographiquement sûre  
 SecureGen utilise :
 
-- PS7+ : `RandomNumberGenerator.GetBytes()` + `Get‑SecureRandom`
+- PS7+ : `RandomNumberGenerator.GetBytes()` + `Get‑SecureRandom`  
 - PS5.1 : `RNGCryptoServiceProvider`
 
 ## ✔ Pas de restrictions inutiles  
 SecureGen laisse l’utilisateur choisir :
 
-- la longueur (`-Length`)
-- les symboles (`-SpecialChars`)
+- la longueur (`-Len`, `-Length`)  
+- les symboles (`-SpecialChars`)  
 - l’usage ou non des caractères spéciaux (`-UseSpecial`)
-
-## ✔ Pas de rotation forcée  
-SecureGen ne force aucune rotation.
 
 ## ✔ Pas de stockage ou journalisation des secrets  
 SecureGen :
@@ -65,7 +63,7 @@ SecureGen :
 
 # 🛡️ Conformité OWASP ASVS
 
-SecureGen suit plusieurs recommandations du standard **OWASP ASVS**, notamment :
+SecureGen suit plusieurs recommandations du standard **OWASP ASVS**.
 
 ## ✔ ASVS 2.1 — Cryptographie approuvée  
 - API cryptographiques modernes  
@@ -106,7 +104,7 @@ SecureGen encourage l’usage de passphrases longues.
 ## ✔ Utiliser des générateurs cryptographiques fiables  
 SecureGen utilise exclusivement :
 
-- RNG .NET moderne (PS7+)
+- RNG .NET moderne (PS7+)  
 - RNGCryptoServiceProvider (PS5.1)
 
 ## ✔ Ne jamais stocker les secrets  
@@ -115,9 +113,9 @@ SecureGen ne stocke rien.
 ## ✔ Sécuriser les scripts automatisés  
 SecureGen fournit :
 
-- `-Silent`
-- compatibilité SecureString
-- exemples CI/CD conformes
+- `-Silent`  
+- `-AsSecureString`  
+- `Get-PKIPass` pour les usages sensibles  
 
 ---
 
@@ -127,7 +125,7 @@ SecureGen fournit :
 
 SecureGen utilise :
 
-- `System.Security.Cryptography.RandomNumberGenerator.GetBytes()`
+- `System.Security.Cryptography.RandomNumberGenerator.GetBytes()`  
 - `Get‑SecureRandom` (si disponible)
 
 Avantages :
@@ -159,13 +157,29 @@ Toujours sécurisé, mais API plus ancienne.
 - lisibles  
 - mémorisables  
 - entropie élevée  
-- structure configurable (`-LettresParMot`, `-MotsParBloc`)
+- structure configurable (`-Words`, `-Len`)
+
+### Secrets PKI
+
+- mode Password ou Passphrase  
+- retour `SecureString`  
+- idéal pour :  
+  - certificats  
+  - comptes de service  
+  - KMS  
+  - automatisation sécurisée  
 
 ---
 
 # 🛡️ Bonnes pratiques d’utilisation
 
-## 1. Ne jamais stocker un mot de passe en clair
+## 1. Utiliser `Get-PKIPass -AsSecureString` pour les usages sensibles
+
+```powershell
+$secure = Get-PKIPass -AsSecureString
+```
+
+## 2. Ne jamais stocker un mot de passe en clair
 
 Évitez :
 
@@ -179,10 +193,10 @@ Préférez :
 (Get-PassWord) | ConvertTo-SecureString -AsPlainText -Force
 ```
 
-## 2. Utiliser des passphrases pour les clés API  
-## 3. Utiliser `-Silent` dans les scripts automatisés  
-## 4. Ne jamais logguer un secret  
-## 5. Utiliser des variables d’environnement pour les secrets  
+## 3. Utiliser des passphrases pour les clés API  
+## 4. Utiliser `-Silent` dans les scripts automatisés  
+## 5. Ne jamais logguer un secret  
+## 6. Utiliser des variables d’environnement pour les secrets  
 
 ---
 
@@ -194,7 +208,7 @@ SecureGen gère automatiquement le clipboard selon la plateforme :
 |----|---------|
 | Windows | `Set-Clipboard` |
 | macOS | `pbcopy` |
-| Linux | `xclip` ou `xsel` |
+| Linux | `wl-copy`, `xclip`, `xsel` |
 
 ⚠️ Le presse‑papier n’est **pas un espace sécurisé**.
 
@@ -215,10 +229,10 @@ steps:
   - name: Installer SecureGen
     run: Install-Module SecureGen -Scope CurrentUser -Force
 
-  - name: Générer un secret
+  - name: Générer un secret PKI
     shell: pwsh
     run: |
-      $pwd = Get-PassWord -SpecialChars '!@#?%' -Silent
+      $pwd = Get-PKIPass -AsSecureString
       echo "SECRET=$pwd" >> $GITHUB_ENV
 ```
 
@@ -227,7 +241,7 @@ steps:
 ```yaml
 - powershell: |
     Install-Module SecureGen -Force
-    $key = Get-PassPhrase -MotsParBloc 8 -LettresParMot 5
+    $key = Get-PKIPass -Type Passphrase -Words 8 -Len 5
     Write-Host "##vso[task.setvariable variable=API_KEY]$key"
 ```
 
@@ -235,18 +249,17 @@ steps:
 
 # 🧰 Sécurisation dans vos propres scripts
 
-## Convertir un mot de passe en SecureString
+## Utiliser un mot de passe PKI pour créer un utilisateur
 
 ```powershell
-$pwd = Get-PassWord -SpecialChars '!@#?%' -Silent
-$secure = ConvertTo-SecureString $pwd -AsPlainText -Force
+$pwd = Get-PKIPass -AsSecureString
+New-LocalUser -Name "svc-backup" -Password $pwd
 ```
 
-## Utiliser un mot de passe pour créer un utilisateur
+## Générer un secret pour un service externe
 
 ```powershell
-$pwd = Get-PassWord -SpecialChars '!@#?%' -Silent
-New-LocalUser -Name "test" -Password (ConvertTo-SecureString $pwd -AsPlainText -Force)
+$secret = Get-PKIPass -Type Passphrase -Words 6 -Len 8
 ```
 
 ---
@@ -255,13 +268,13 @@ New-LocalUser -Name "test" -Password (ConvertTo-SecureString $pwd -AsPlainText -
 
 SecureGen suit les bonnes pratiques :
 
-- `Set-StrictMode -Version Latest`
-- pas de variables globales
-- pas de dépendances externes
-- pas de stockage de secrets
-- pas de logs sensibles
-- API identiques entre PS5 et PS7
-- code compatible Windows/Linux/macOS
+- `Set-StrictMode -Version Latest`  
+- pas de variables globales  
+- pas de dépendances externes  
+- pas de stockage de secrets  
+- pas de logs sensibles  
+- API identiques entre PS5 et PS7  
+- code compatible Windows/Linux/macOS  
 
 ---
 
@@ -278,13 +291,13 @@ SecureGen suit les bonnes pratiques :
 
 # 📚 Documentations associées
 
-- `installation.md`
-- `examples.md`
-- `advanced.md`
-- `architecture.md`
-- `versioning.md`
-- `release-process.md`
-- `README.md`
+- `installation.md`  
+- `examples.md`  
+- `advanced.md`  
+- `architecture.md`  
+- `versioning.md`  
+- `release-process.md`  
+- `README.md`  
 
 ---
 
@@ -292,6 +305,5 @@ SecureGen suit les bonnes pratiques :
 
 Pour toute suggestion ou contribution :  
 👉 GitHub — Issues & Pull Requests
-```
 
 ---

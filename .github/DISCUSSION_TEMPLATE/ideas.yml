@@ -1,0 +1,35 @@
+title: "💡 Idea / Feature Brainstorming"
+labels: ["enhancement", "idea"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea to improve SecureGen?  
+        Share it here so we can explore it together!
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea
+      description: Describe the feature or improvement you have in mind.
+      placeholder: "Add a -Profile parameter to generate passwords based on predefined rules."
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Why this idea?
+      description: What problem does it solve? Who benefits from it?
+      placeholder: "This would help automate password policies in enterprise environments."
+    validations:
+      required: true
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Example usage (optional)
+      placeholder: |
+        Get-PassWord -Profile 'HighEntropy'
+    validations:
+      required: false

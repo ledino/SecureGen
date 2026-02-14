@@ -1,5 +1,5 @@
 # 📘 Guide avancé — SecureGen  
-*(Aligné avec l’architecture moderne et le pipeline CI/CD)*
+*(Aligné avec SecureGen 1.5.0 et l’architecture moderne)*
 
 Ce document couvre les usages avancés, l’architecture interne, les bonnes pratiques de sécurité et les intégrations possibles du module **SecureGen** dans des environnements professionnels.
 
@@ -9,7 +9,7 @@ Ce document couvre les usages avancés, l’architecture interne, les bonnes pra
 
 SecureGen utilise une architecture modulaire permettant une compatibilité maximale entre :
 
-- **PowerShell 7+** (Windows, Linux, macOS)
+- **PowerShell 7+** (Windows, Linux, macOS)  
 - **Windows PowerShell 5.1**
 
 Le module charge automatiquement la bonne implémentation :
@@ -41,7 +41,7 @@ Aucune action n’est requise : tout est automatique.
 ## PowerShell 7+
 SecureGen utilise :
 
-- `RandomNumberGenerator.GetBytes()`
+- `RandomNumberGenerator.GetBytes()`  
 - `Get-SecureRandom` (si disponible)
 
 Ces API sont basées sur **.NET 6+**, offrant un niveau de sécurité moderne, robuste et cross‑platform.
@@ -67,7 +67,7 @@ Set-Content -Path "./config.json" -Value "{ `"password`": `"$pwd`" }"
 ## Générer une passphrase pour un secret d’API
 
 ```powershell
-$secret = Get-PassPhrase -MotsParBloc 6 -LettresParMot 5
+$secret = Get-PassPhrase -Words 6 -Len 5
 Write-Host "Secret généré : $secret"
 ```
 
@@ -75,8 +75,39 @@ Write-Host "Secret généré : $secret"
 
 ```powershell
 1..10 | ForEach-Object {
-    Get-PassWord -Length 20 -Silent
+    Get-PassWord -Len 20 -Silent
 }
+```
+
+---
+
+# 🔐 Intégration PKI / KMS / Comptes de service
+
+`Get-PKIPass` est la commande dédiée aux usages sensibles.
+
+## Mot de passe PKI (SecureString)
+
+```powershell
+$secure = Get-PKIPass -AsSecureString
+```
+
+## Passphrase PKI personnalisée
+
+```powershell
+Get-PKIPass -Type Passphrase -Words 8 -Len 10
+```
+
+## Utilisation dans un PSCredential
+
+```powershell
+$cred = New-Object pscredential "svc-backup", (Get-PKIPass -AsSecureString)
+```
+
+## Intégration dans un script d’automatisation
+
+```powershell
+$pwd = Get-PKIPass -AsSecureString
+New-LocalUser -Name "svc-kms" -Password $pwd
 ```
 
 ---
@@ -90,10 +121,10 @@ steps:
   - name: Installer SecureGen
     run: Install-Module SecureGen -Scope CurrentUser -Force
 
-  - name: Générer un secret
+  - name: Générer un secret PKI
     shell: pwsh
     run: |
-      $pwd = Get-PassWord -SpecialChars '!@#?%' -Silent
+      $pwd = Get-PKIPass -AsSecureString
       echo "SECRET=$pwd" >> $GITHUB_ENV
 ```
 
@@ -102,7 +133,7 @@ steps:
 ```yaml
 - powershell: |
     Install-Module SecureGen -Force
-    $key = Get-PassPhrase -MotsParBloc 8 -LettresParMot 5
+    $key = Get-PKIPass -Type Passphrase -Words 8 -Len 5
     Write-Host "##vso[task.setvariable variable=API_KEY]$key"
 ```
 
@@ -116,22 +147,19 @@ SecureGen utilise automatiquement la meilleure méthode disponible selon l’OS 
 |----|---------|
 | Windows | `Set-Clipboard` |
 | macOS | `pbcopy` |
-| Linux | `xclip` / `xsel` |
+| Linux | `wl-copy`, `xclip`, `xsel` |
 
 ## Copier une valeur arbitraire
 
 ```powershell
-(Get-PassPhrase -MotsParBloc 5) | Set-Clipboard
+Set-ClipboardSafe -Text "SecureGen"
 ```
 
-## Effacer le presse‑papier (Windows uniquement)
+## Effacer le presse‑papier
 
 ```powershell
-Set-Clipboard ""
+Clear-ClipboardSafe
 ```
-
-> Note : SecureGen ne fournit pas de fonctions `Set-ClipboardSafe` ou `Clear-ClipboardSafe`.  
-> Le module utilise simplement les commandes natives selon la plateforme.
 
 ---
 
@@ -146,14 +174,12 @@ $pwd = Get-PassWord -Silent
 ## Beep personnalisé pour un workflow
 
 ```powershell
-Invoke-Beep -Freq 1800 -Duration 150
+Invoke-Beep -Frequency 1800 -Duration 150
 ```
 
 ---
 
 # 🧰 Intégration dans un module externe
-
-Vous pouvez réutiliser SecureGen dans vos propres modules :
 
 ```powershell
 Import-Module SecureGen
@@ -161,11 +187,10 @@ Import-Module SecureGen
 function New-UserAccount {
     param([string]$UserName)
 
-    $pwd = Get-PassWord -SpecialChars '!@#?%' -Silent
-    New-LocalUser -Name $UserName -Password (ConvertTo-SecureString $pwd -AsPlainText -Force)
+    $pwd = Get-PKIPass -AsSecureString
+    New-LocalUser -Name $UserName -Password $pwd
 
     Write-Host "Utilisateur créé : $UserName"
-    Write-Host "Mot de passe : $pwd"
 }
 ```
 
@@ -173,26 +198,28 @@ function New-UserAccount {
 
 # 🛡️ Bonnes pratiques de sécurité
 
-- Ne stockez jamais un mot de passe généré en clair dans un fichier non chiffré.
-- Utilisez `ConvertTo-SecureString` pour manipuler les secrets.
-- Préférez les passphrases pour les clés API ou tokens.
-- Activez le mode `-Silent` dans les scripts automatisés.
-- Sur Linux/macOS, installez `xclip` ou `xsel` pour une compatibilité clipboard optimale.
+- Utilisez `Get-PKIPass -AsSecureString` pour les usages sensibles.  
+- Ne stockez jamais un secret en clair dans un fichier non chiffré.  
+- Préférez les passphrases pour les clés API ou tokens.  
+- Activez `-Silent` dans les scripts automatisés.  
+- Sur Linux/macOS, installez `wl-copy`, `xclip` ou `xsel` pour un clipboard optimal.
 
 ---
 
 # 🧪 Tests Pester (avancé)
 
-Exemple de test :
-
 ```powershell
 Describe "SecureGen" {
     It "Génère un mot de passe de la bonne longueur" {
-        (Get-PassWord -Length 24).Length | Should -Be 24
+        (Get-PassWord -Len 24).Length | Should -Be 24
     }
 
     It "Génère une passphrase avec le bon nombre de mots" {
-        (Get-PassPhrase -MotsParBloc 5).Split('-').Count | Should -Be 5
+        (Get-PassPhrase -Words 5).Split('-').Count | Should -Be 5
+    }
+
+    It "Retourne un SecureString en mode PKI" {
+        Get-PKIPass -AsSecureString | Should -BeOfType "System.Security.SecureString"
     }
 }
 ```
@@ -204,10 +231,10 @@ Describe "SecureGen" {
 Le script `scripts/build.ps1` permet :
 
 - nettoyage  
-- validation de la structure  
-- packaging  
+- validation  
 - tests Pester  
 - génération de la documentation PlatyPS  
+- packaging  
 - publication PSGallery (optionnelle)
 
 Exécution simple :
@@ -221,9 +248,6 @@ Publication :
 ```powershell
 pwsh ./scripts/build.ps1 -Publish
 ```
-
-> Note : la **publication officielle** passe par GitHub Actions via `publish.yml`.  
-> Le script local reste utile pour les tests et builds manuels.
 
 ---
 

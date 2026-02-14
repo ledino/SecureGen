@@ -1,11 +1,12 @@
 # 🔐 SecureGen — Documentation officielle  
-*(Version alignée avec l’architecture moderne et le pipeline CI/CD)*
+*(Version alignée avec SecureGen 1.5.0, l’architecture moderne et le pipeline CI/CD)*
 
 Bienvenue dans la documentation officielle de **SecureGen**, un module PowerShell moderne, sécurisé et cross‑platform conçu pour générer :
 
 - des **mots de passe sécurisés**
 - des **passphrases robustes**
-- des **clés aléatoires cryptographiquement sûres**
+- des **secrets PKI** (Password / Passphrase, SecureString)
+- des **valeurs aléatoires cryptographiquement sûres**
 
 SecureGen fonctionne automatiquement sous :
 
@@ -45,11 +46,12 @@ Import-Module SecureGen
 
 - Génération de mots de passe sécurisés (`Get-PassWord`)
 - Génération de passphrases lisibles (`Get-PassPhrase`)
+- Génération de secrets PKI (`Get-PKIPass`, SecureString optionnel)
 - Générateur cryptographique interne (`Get-CryptoIndex`)
 - Clipboard cross‑platform (`Set-ClipboardSafe`)
 - Effacement sécurisé du clipboard (`Clear-ClipboardSafe`)
 - Beep encapsulé (`Invoke-Beep`)
-- Aliases ergonomiques : **`sgw`**, **`sgp`**
+- Aliases ergonomiques : **`sgw`**, **`sgp`**, **`sgpki`**
 
 ---
 
@@ -64,7 +66,13 @@ SecureGen/
 └── Legacy.PS5.ps1    # Version fallback (PowerShell 5.1)
 ```
 
-Le fichier principal `SecureGen.psm1` détecte automatiquement la version PowerShell et charge la bonne implémentation.
+Le fichier principal `SecureGen.psm1` :
+
+- détecte automatiquement la version PowerShell  
+- charge la bonne implémentation  
+- expose les cmdlets  
+- gère les alias  
+- centralise clipboard, beep et helpers  
 
 ---
 
@@ -94,35 +102,28 @@ Chaque release :
 La documentation complète est organisée en plusieurs sections :
 
 ### ▶️ Installation  
-Guide complet pour installer SecureGen sur PS5, PS7, Windows, Linux et macOS.  
 👉 `installation.md`
 
 ### ▶️ Exemples d’utilisation  
-Exemples simples et avancés pour générer mots de passe, passphrases, copier dans le clipboard, etc.  
 👉 `examples.md`
 
 ### ▶️ Guide avancé  
-Intégration dans des scripts, pipelines CI/CD, automatisation, bonnes pratiques.  
 👉 `advanced.md`
 
 ### ▶️ Architecture interne  
-Détails techniques sur la structure du module, PS7/PS5, crypto, clipboard, beep.  
 👉 `architecture.md`
 
 ### ▶️ Sécurité  
-Bonnes pratiques, cryptographie, gestion des secrets, recommandations.  
 👉 `security.md`
 
 ### ▶️ FAQ  
-Réponses aux questions les plus fréquentes.  
 👉 `faq.md`
 
 ### ▶️ Contribution  
-Guide pour contribuer au projet : PR, style, tests, build, CI.  
-👉 `contributing.md`
+- Version française : `contributing.md`  
+- English version : `contributing.en.md`
 
 ### ▶️ Processus de release  
-Pipeline complet pour publier une version stable sur PSGallery.  
 👉 `release-process.md`
 
 ---
@@ -147,16 +148,16 @@ Scripts legacy (remplacés par standard-version + GitHub Actions) :
 
 SecureGen est conçu pour être :
 
-- robuste
-- maintenable
-- compatible PS5/PS7
-- prêt pour CI/CD
+- robuste  
+- maintenable  
+- compatible PS5/PS7  
+- prêt pour CI/CD  
 
 La CI (`ci.yml`) exécute automatiquement :
 
-- PSScriptAnalyzer
-- Import du module
-- Tests Pester (si présents)
+- PSScriptAnalyzer  
+- Import du module  
+- Tests Pester (incluant Get‑PKIPass, clipboard, PS5/PS7)
 
 ---
 
@@ -185,7 +186,7 @@ SecureGen est distribué sous licence **MIT**.
 Les contributions sont les bienvenues :  
 Pull Requests, Issues, suggestions.
 
-👉 Voir `contributing.md`
+👉 Voir `contributing.md` ou `contributing.en.md`
 
 ---
 
@@ -199,6 +200,7 @@ Pull Requests, Issues, suggestions.
 - `versioning.md`
 - `release-process.md`
 - `contributing.md`
+- `contributing.en.md`
 - `README.md`
 
 ---

@@ -1,5 +1,5 @@
 # 🧩 Versioning — SecureGen  
-*(Version alignée avec le workflow moderne : standard-version local + publication via tag)*
+*(Aligné avec le workflow moderne : standard-version local + publication via tag)*
 
 SecureGen utilise un système de versioning moderne basé sur :
 
@@ -23,8 +23,8 @@ MAJOR.MINOR.PATCH
 
 Exemples :
 
-- `1.3.3`
 - `1.4.0`
+- `1.5.0`
 - `2.0.0`
 
 ---
@@ -92,14 +92,14 @@ Le type de commit détermine le bump :
 | `feat:`        | MINOR |
 | `fix:`         | PATCH |
 | `perf:`        | PATCH |
-| `docs:`        | Aucun bump |
 | `refactor:`    | PATCH |
+| `docs:`        | Aucun bump |
 | `BREAKING CHANGE:` | MAJOR |
 
 Exemples :
 
 ```
-feat: ajout du paramètre -Silent
+feat: ajout de Get-PKIPass
 fix: correction du clipboard sous Linux
 refactor: simplification du loader PS7
 ```
@@ -124,7 +124,7 @@ La release est désormais **simple, locale et maîtrisée** :
    git push origin vX.Y.Z
    ```
 5. GitHub Actions détecte le tag et publie automatiquement sur PowerShell Gallery  
-6. Créer la Release GitHub (notes générées dans CHANGELOG.md)
+6. Créer la Release GitHub (notes générées dans `CHANGELOG.md`)
 
 Aucune exécution de standard-version dans GitHub Actions.
 
@@ -155,6 +155,7 @@ CHANGELOG.md
 - README et docs à jour  
 - commits conformes à Conventional Commits  
 - pas de modifications manuelles du manifest ou du changelog  
+- tests Pester OK sur toutes les plateformes  
 
 ---
 
@@ -188,6 +189,5 @@ Grâce à standard-version exécuté localement + publication via tag, SecureGen
 - reproductible  
 - sans erreur humaine  
 - parfaitement aligné avec SemVer  
-```
 
 ---

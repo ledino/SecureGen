@@ -8,28 +8,39 @@ schema: 2.0.0
 # Get-PassPhrase
 
 ## SYNOPSIS
-Génère une passphrase sécurisée composée de plusieurs mots aléatoires.
+Génère une passphrase robuste, lisible et hautement entropique, composée de plusieurs mots aléatoires.
 
 ## SYNTAX
 
 ```
-Get-PassPhrase [-Len <Int32>] [-Words <Int32>] [-Separator <String>]
-               [-Charset <String>] [-NoClipboard] [-NoClear] [-Silent]
+Get-PassPhrase [-Words <Int32>] [-Len <Int32>] [-Separator <String>]
+               [-Charset <String>] [-NoClipboard] [-Silent]
                [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Get-PassPhrase génère une passphrase robuste et lisible, composée de plusieurs mots
-aléatoires de longueur fixe.  
+`Get-PassPhrase` génère une passphrase sécurisée composée de plusieurs mots aléatoires de longueur fixe.
+
+Elle est idéale pour :
+
+- les comptes utilisateurs  
+- les clés API  
+- les secrets d’automatisation  
+- les usages professionnels nécessitant lisibilité + sécurité  
+
 La génération utilise un générateur cryptographique sécurisé via `Get-CryptoIndex`.
 
-La passphrase peut être automatiquement copiée dans le presse‑papier, puis effacée
-après un délai sécurisé.  
-Le mode `-Silent` permet de récupérer uniquement la valeur, sans affichage.
+La passphrase peut être automatiquement copiée dans le presse‑papier, puis effacée après un délai sécurisé.  
+Le mode `-Silent` supprime l’affichage et le beep.
+
+### Valeurs par défaut
+- `Words` : **5**  
+- `Len` : **5**  
+- `Separator` : `-`
 
 ### Alias disponibles
-- `-Len` : `Length`, `Lenght`
-- `-Words` : `WordsCount`, `NbWords`
+- `Words` : `WordsCount`, `NbWords`
+- `Len` : `Length`
 
 ### Entropie
 L’entropie est calculée selon :
@@ -46,13 +57,13 @@ Elle est affichée automatiquement (sauf en mode `-Silent`).
 ```
 Get-PassPhrase
 ```
-Génère une passphrase standard composée de 6 mots de 6 caractères.
+Génère une passphrase standard composée de 5 mots de 5 lettres.
 
 ### EXAMPLE 2
 ```
 Get-PassPhrase -Words 8 -Len 7
 ```
-Génère une passphrase plus longue : 8 mots de 7 caractères chacun.
+Génère une passphrase longue (8 mots × 7 lettres).
 
 ### EXAMPLE 3
 ```
@@ -68,26 +79,9 @@ Génère une passphrase sans affichage et sans copie dans le presse‑papier.
 
 ## PARAMETERS
 
-### -Len
-Longueur de chaque mot.  
-Alias : `Length`, `Lenght`  
-Valeur par défaut : 6.
-
-```yaml
-Type: Int32
-Parameter Sets: (All)
-Aliases: Length, Lenght
-Required: False
-Position: Named
-Default value: 6
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Words
 Nombre de mots à générer.  
-Alias : `WordsCount`, `NbWords`  
-Valeur par défaut : 6.
+Valeur par défaut : 5.
 
 ```yaml
 Type: Int32
@@ -95,7 +89,22 @@ Parameter Sets: (All)
 Aliases: WordsCount, NbWords
 Required: False
 Position: Named
-Default value: 6
+Default value: 5
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Len
+Longueur de chaque mot.  
+Valeur par défaut : 5.
+
+```yaml
+Type: Int32
+Parameter Sets: (All)
+Aliases: Length
+Required: False
+Position: Named
+Default value: 5
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -143,22 +152,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -NoClear
-Empêche l’effacement automatique du presse‑papier après un délai sécurisé.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
-Required: False
-Position: Named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Silent
-Désactive l’affichage et le bip, mais conserve la copie dans le presse‑papier.
+Désactive l’affichage et le beep.
 
 ```yaml
 Type: SwitchParameter
@@ -172,6 +167,7 @@ Accept wildcard characters: False
 ```
 
 ## OUTPUTS
+
 ### System.String
 Retourne la passphrase générée.
 
@@ -179,8 +175,8 @@ Retourne la passphrase générée.
 - Compatible Windows, Linux, macOS.  
 - Utilise `Get-CryptoIndex` pour garantir une distribution uniforme.  
 - Le presse‑papier utilise automatiquement la meilleure méthode selon la plateforme.  
-- L’entropie est affichée sauf en mode `-Silent`.  
-- Fonction centrale du module SecureGen.
+- Fonction centrale du module SecureGen.  
+- Cohérente avec `Get-PKIPass` (mode Passphrase).
 
 ## RELATED LINKS
 Get-PassWord  

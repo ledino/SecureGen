@@ -1,5 +1,5 @@
 # 🤝 Contribuer à SecureGen  
-*(Guide officiel pour contributeurs — v1.4.0+)*
+*(Guide officiel pour contributeurs — v1.5.0+)*
 
 Merci de votre intérêt pour **SecureGen** !  
 Ce document explique comment contribuer efficacement au projet, respecter les conventions, exécuter les tests, et participer au processus de release.
@@ -8,11 +8,16 @@ Ce document explique comment contribuer efficacement au projet, respecter les co
 
 # 🧱 Principes fondamentaux
 
-SecureGen suit trois principes :
+SecureGen repose sur trois piliers :
 
 1. **Sécurité moderne**  
+   Utilisation exclusive d’API cryptographiques approuvées (PS7 : Get‑SecureRandom, PS5 : RNGCryptoServiceProvider).
+
 2. **Compatibilité maximale (PS5.1 + PS7+)**  
-3. **Qualité professionnelle (CI, lint, tests, documentation)**  
+   Deux implémentations internes, unifiées via un loader intelligent.
+
+3. **Qualité professionnelle**  
+   CI multi‑plateformes, tests Pester, documentation PlatyPS, versioning automatisé.
 
 Toute contribution doit respecter ces principes.
 
@@ -57,6 +62,13 @@ Le CI GitHub exécute automatiquement :
 - tests sur Windows PS7  
 - tests sur Linux PS7  
 
+Les tests couvrent désormais **Get‑PKIPass**, y compris :
+
+- modes Password / Passphrase  
+- retour SecureString  
+- forwarding interne  
+- mocks du clipboard  
+
 ---
 
 # 🧩 3. Conventions de code
@@ -65,7 +77,7 @@ Le CI GitHub exécute automatiquement :
 
 - indentation 4 espaces  
 - pas de variables globales  
-- pas de Write-Host dans les fonctions  
+- pas de `Write-Host` dans les fonctions  
 - pas de dépendances externes  
 - code compatible PS5.1 **et** PS7+  
 - éviter les constructions non supportées par PS5.1  
@@ -84,6 +96,8 @@ Toute nouvelle fonctionnalité doit :
 - être compatible PS5.1  
 - tirer parti de PS7+ quand possible  
 - être encapsulée dans le loader `SecureGen.psm1`  
+- respecter la cohérence API (Words / Len / Length)  
+- intégrer un test Pester  
 
 ---
 
@@ -109,7 +123,7 @@ Types principaux :
 Exemples :
 
 ```
-feat: ajout du paramètre -Silent
+feat: ajout de Get-PKIPass
 fix: correction du clipboard sous Linux
 refactor: simplification du loader PS7
 ```
@@ -142,7 +156,7 @@ git push origin vX.Y.Z
 ```
 
 5. GitHub Actions publie automatiquement sur PowerShell Gallery  
-6. Créer la Release GitHub (notes déjà prêtes dans CHANGELOG.md)
+6. Créer la Release GitHub (notes déjà prêtes dans `CHANGELOG.md`)
 
 ---
 
@@ -151,12 +165,14 @@ git push origin vX.Y.Z
 ## Checklist obligatoire :
 
 - [ ] Code compatible PS5.1 et PS7+  
-- [ ] Tests Pester ajoutés ou mis à jour  
+- [ ] Tests Pester ajoutés ou mis à jour (incluant mocks si clipboard)  
 - [ ] Analyse PSScriptAnalyzer OK  
 - [ ] Documentation mise à jour (cmdlet + README si nécessaire)  
 - [ ] Commit messages conformes à Conventional Commits  
 - [ ] Pas de bump manuel du manifest  
 - [ ] Pas de modification manuelle du changelog  
+- [ ] Cohérence API (Words / Len / Length / Type / AsSecureString)  
+- [ ] Si ajout d’une fonctionnalité sensible → tests PKI + SecureString  
 
 ## Processus :
 
@@ -180,7 +196,7 @@ git checkout -b feat/ma-nouvelle-fonction
 |--------|------|
 | `scripts/Generate-Help.ps1` | Génère la documentation PlatyPS |
 | `scripts/Install-SecureGen.ps1` | Installation locale |
-| `scripts/Publish-SecureGen.ps1` | Publication manuelle (optionnel) |
+| `scripts/Publish-SecureGen.ps1` | Publication manuelle (rarement utilisée) |
 | `scripts/Versioning-SecureGen.ps1` | **Legacy — ne plus utiliser** |
 
 ---
@@ -192,6 +208,8 @@ git checkout -b feat/ma-nouvelle-fonction
 - ❌ ne pas utiliser `Release-All.ps1`  
 - ❌ ne pas créer de tag manuellement (hors release locale)  
 - ❌ ne pas exécuter standard-version dans GitHub Actions  
+- ❌ ne pas modifier `SecureGen-help.xml` directement  
+- ❌ ne pas introduire de paramètres non compatibles PS5.1  
 
 ---
 
@@ -200,7 +218,7 @@ git checkout -b feat/ma-nouvelle-fonction
 - `docs/versioning.md`  
 - `docs/release-process.md`  
 - `docs/architecture.md`  
-- `docs/diagrams/overview.md`
+- `docs/diagrams/overview.md`  
 - `README.md`  
 
 ---
@@ -208,7 +226,6 @@ git checkout -b feat/ma-nouvelle-fonction
 # 🎉 Merci de contribuer à SecureGen !
 
 Votre aide rend le module plus robuste, plus moderne et plus agréable à utiliser.  
-Issues, discussions et PRs sont les bienvenues !
-```
+Issues, discussions et PRs sont les bienvenues.
 
 ---

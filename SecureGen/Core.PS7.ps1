@@ -241,12 +241,12 @@ Le séparateur peut être un caractère ou une chaîne complète.
 
     # Mode silencieux
     if ($Silent) {
-        if (-not $NoClipboard) { $joined | Set-ClipboardSafe }
+        if (-not $NoClipboard) { Set-ClipboardSafe -Text $joined }
         return $joined
     }
 
     # Copie
-    if (-not $NoClipboard) { $joined | Set-ClipboardSafe }
+    if (-not $NoClipboard) { Set-ClipboardSafe -Text $joined }
 
     # Affichage
     Write-Host "🔐 $joined" -ForegroundColor Green
@@ -386,13 +386,14 @@ Retourne le mot de passe généré.
 
 	$entropy = [math]::Round($Len * [math]::Log($Charset.Length, 2))
 
-    # --- Mode silencieux ---
+    # Mode silencieux
     if ($Silent) {
+        if (-not $NoClipboard) { Set-ClipboardSafe -Text $mdp }
         return $mdp
     }
 
     # --- Copie ---
-    if (-not $NoClipboard) { Set-ClipboardSafe $mdp }
+    if (-not $NoClipboard) { Set-ClipboardSafe -Text $mdp }
 
     # --- Affichage ---
     Write-Host "🔐 $mdp" -ForegroundColor Green

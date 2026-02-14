@@ -151,16 +151,22 @@ Utilise Get-PassWord et Get-PassPhrase du module SecureGen.
         [ValidateSet('Password','Passphrase')]
         [string]$Type = 'Password',
 
+        [int]$Length = 32,
+
+        [int]$Words = 5,
+        [Alias('MotsParBloc','WordsCount','NbWords')]
+        [int]$Len = 5,
+
         [switch]$AsSecureString,
         [switch]$NoClipboard
     )
 
     # Génération du secret
     if ($Type -eq 'Password') {
-        $secret = Get-PassWord -Len 32 -UseSpecial $true -NoClipboard:$NoClipboard
+        $secret = Get-PassWord -Len $Length -UseSpecial $true -NoClipboard:$NoClipboard
     }
     else {
-        $secret = Get-PassPhrase -LettresParMot 5 -MotsParBloc 5 -NoClipboard:$NoClipboard
+        $secret = Get-PassPhrase -Words $Words -Len $Len -NoClipboard:$NoClipboard
     }
 
     # Conversion SecureString si demandé

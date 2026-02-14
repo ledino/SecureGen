@@ -14,12 +14,12 @@ Génère un mot de passe sécurisé, configurable et compatible Windows, Linux e
 
 ```
 Get-PassWord [-Len <Int32>] [-SpecialChars <String>] [-UseSpecial <Boolean>]
-             [-RequireAllTypes <Boolean>] [-NoClipboard] [-NoClear] [-Silent]
+             [-RequireAllTypes <Boolean>] [-NoClipboard] [-Silent]
              [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Get-PassWord génère un mot de passe robuste en utilisant un générateur cryptographique sécurisé.
+`Get-PassWord` génère un mot de passe robuste en utilisant un générateur cryptographique sécurisé.
 
 ### 🔐 Source d’aléa selon la version de PowerShell
 
@@ -29,7 +29,7 @@ Get-PassWord génère un mot de passe robuste en utilisant un générateur crypt
 
 - **PowerShell 5.1**  
   Utilise `RandomNumberGenerator` (.NET Framework).  
-  Cryptographiquement sûr, mais non conforme aux modules cryptographiques modernes.
+  Cryptographiquement sûr, mais API plus ancienne.
 
 ### 🔤 Composition du mot de passe
 Le mot de passe peut inclure :
@@ -42,7 +42,6 @@ Le mot de passe peut inclure :
 - `-RequireAllTypes` : impose la présence d’au moins une occurrence de chaque catégorie  
 - `-UseSpecial:$false` : désactive les caractères spéciaux  
 - `-NoClipboard` : désactive la copie automatique  
-- `-NoClear` : empêche l’effacement automatique du presse‑papier  
 - `-Silent` : désactive le bip de confirmation  
 
 ### 🔢 Entropie
@@ -52,7 +51,7 @@ L’entropie est calculée automatiquement :
 entropy = Len × log2(|charset|)
 ```
 
-Elle est affichée après génération.
+Elle est affichée après génération (sauf en mode `-Silent`).
 
 ## EXAMPLES
 
@@ -60,7 +59,7 @@ Elle est affichée après génération.
 ```
 Get-PassWord
 ```
-Génère un mot de passe sécurisé de 20 caractères.
+Génère un mot de passe sécurisé de 16 caractères.
 
 ### EXAMPLE 2
 ```
@@ -70,7 +69,7 @@ Génère un mot de passe long contenant obligatoirement :
 - une minuscule  
 - une majuscule  
 - un chiffre  
-- un caractère spécial  
+- un caractère spécial (si `-UseSpecial` est activé)
 
 ### EXAMPLE 3
 ```
@@ -88,7 +87,7 @@ Génère un mot de passe sans bip et sans copie dans le presse‑papier.
 
 ### -Len
 Longueur du mot de passe à générer.  
-Valeur par défaut : 20.
+Valeur par défaut : 16.
 
 ```yaml
 Type: Int32
@@ -96,7 +95,7 @@ Parameter Sets: (All)
 Aliases:
 Required: False
 Position: Named
-Default value: 20
+Default value: 16
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -110,7 +109,7 @@ Parameter Sets: (All)
 Aliases:
 Required: False
 Position: Named
-Default value: [!@#$%^&*()_+\-=\[\]{}<>\/\\|;~]
+Default value: !@#$%^&*()_+-=[]{}<>\/\\|;~
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -162,20 +161,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -NoClear
-Empêche l’effacement automatique du presse‑papier après un délai sécurisé.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
-Required: False
-Position: Named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Silent
 Désactive le bip de confirmation.
 
@@ -191,6 +176,7 @@ Accept wildcard characters: False
 ```
 
 ## OUTPUTS
+
 ### System.String
 Retourne le mot de passe généré.
 
@@ -199,6 +185,7 @@ Retourne le mot de passe généré.
 - Utilise `Get-SecureRandom` sous PS7+ et `RandomNumberGenerator` sous PS5.1.  
 - Le presse‑papier utilise automatiquement la meilleure méthode selon la plateforme.  
 - L’entropie est calculée en bits.  
+- Cohérent avec `Get-PKIPass` (mode Password).  
 - Fonction centrale du module SecureGen.
 
 ## RELATED LINKS

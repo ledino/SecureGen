@@ -1,0 +1,39 @@
+title: "📣 Announcement"
+labels: ["announcement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to publish an announcement, release note, or important update about SecureGen.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What is this announcement about?
+      placeholder: "SecureGen 1.5.0 released!"
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Provide the full announcement text.
+      placeholder: |
+        - New PKI passphrase generator
+        - Clipboard safety improvements
+        - Documentation overhaul
+    validations:
+      required: true
+
+  - type: textarea
+    id: links
+    attributes:
+      label: Related links (optional)
+      placeholder: |
+        - Release notes
+        - Documentation
+        - Migration guide
+    validations:
+      required: false
