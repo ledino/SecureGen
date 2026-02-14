@@ -8,83 +8,94 @@ schema: 2.0.0
 # Get-PassWord
 
 ## SYNOPSIS
-Génère un mot de passe sécurisé, configurable et compatible Windows / Linux / macOS.
+Génère un mot de passe sécurisé, configurable et compatible Windows, Linux et macOS.
 
 ## SYNTAX
 
 ```
-Get-PassWord [[-Len] <Int32>] [[-SpecialChars] <String>] [[-UseSpecial] <Boolean>] [-NoClipboard] [-NoClear] [-Silent]
+Get-PassWord [-Len <Int32>] [-SpecialChars <String>] [-UseSpecial <Boolean>]
+             [-RequireAllTypes <Boolean>] [-NoClipboard] [-NoClear] [-Silent]
+             [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-`Get-PassWord` génère un mot de passe robuste en utilisant un générateur cryptographique sécurisé :
+Get-PassWord génère un mot de passe robuste en utilisant un générateur cryptographique sécurisé.
 
-- **PS7+** : `Get-SecureRandom` (conforme NIST SP 800‑90)
-- **PS5.1** : RNG .NET Framework (cryptographiquement sûr)
+### 🔐 Source d’aléa selon la version de PowerShell
 
-Par défaut, le mot de passe inclut :
+- **PowerShell 7+**  
+  Utilise `Get-SecureRandom`, conforme aux recommandations modernes (NIST SP 800‑90).  
+  Distribution uniforme, génération cryptographiquement forte.
 
+- **PowerShell 5.1**  
+  Utilise `RandomNumberGenerator` (.NET Framework).  
+  Cryptographiquement sûr, mais non conforme aux modules cryptographiques modernes.
+
+### 🔤 Composition du mot de passe
+Le mot de passe peut inclure :
 - minuscules  
 - majuscules  
 - chiffres  
 - caractères spéciaux (personnalisables)
 
-Vous pouvez :
+### 🎛️ Options avancées
+- `-RequireAllTypes` : impose la présence d’au moins une occurrence de chaque catégorie  
+- `-UseSpecial:$false` : désactive les caractères spéciaux  
+- `-NoClipboard` : désactive la copie automatique  
+- `-NoClear` : empêche l’effacement automatique du presse‑papier  
+- `-Silent` : désactive le bip de confirmation  
 
-- personnaliser les caractères spéciaux via `-SpecialChars`
-- désactiver totalement les caractères spéciaux via `-UseSpecial:$false`
-- désactiver la copie automatique dans le presse‑papier (`-NoClipboard`)
-- empêcher l’effacement automatique du presse‑papier (`-NoClear`)
-- désactiver le beep (`-Silent`)
+### 🔢 Entropie
+L’entropie est calculée automatiquement :
+
+```
+entropy = Len × log2(|charset|)
+```
+
+Elle est affichée après génération.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
-Générer un mot de passe standard (20 caractères par défaut) :
-
-```powershell
+```
 Get-PassWord
 ```
+Génère un mot de passe sécurisé de 20 caractères.
 
 ### EXAMPLE 2
-Mot de passe avec caractères spéciaux personnalisés :
-
-```powershell
-Get-PassWord -SpecialChars '!@#?%'
 ```
+Get-PassWord -Len 32 -RequireAllTypes
+```
+Génère un mot de passe long contenant obligatoirement :
+- une minuscule  
+- une majuscule  
+- un chiffre  
+- un caractère spécial  
 
 ### EXAMPLE 3
-Mot de passe sans caractères spéciaux :
-
-```powershell
+```
 Get-PassWord -UseSpecial:$false
 ```
+Génère un mot de passe alphanumérique uniquement.
 
 ### EXAMPLE 4
-Mot de passe long (32 caractères) :
-
-```powershell
-Get-PassWord -Len 32
 ```
-
-### EXAMPLE 5
-Générer un mot de passe sans beep ni clipboard :
-
-```powershell
 Get-PassWord -Silent -NoClipboard
 ```
+Génère un mot de passe sans bip et sans copie dans le presse‑papier.
 
 ## PARAMETERS
 
 ### -Len
-Longueur du mot de passe à générer.
+Longueur du mot de passe à générer.  
+Valeur par défaut : 20.
 
 ```yaml
 Type: Int32
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 Required: False
-Position: 1
+Position: Named
 Default value: 20
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -96,24 +107,43 @@ Liste personnalisée de caractères spéciaux à utiliser.
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 Required: False
-Position: 2
+Position: Named
 Default value: [!@#$%^&*()_+\-=\[\]{}<>\/\\|;~]
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -UseSpecial
-Active ou désactive l’utilisation de caractères spéciaux.
+Active ou désactive l’utilisation de caractères spéciaux.  
+Valeur par défaut : True.
 
 ```yaml
 Type: Boolean
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 Required: False
-Position: 3
+Position: Named
 Default value: True
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -RequireAllTypes
+Exige que le mot de passe contienne au moins :
+- une minuscule  
+- une majuscule  
+- un chiffre  
+- un caractère spécial (si `-UseSpecial` est activé)
+
+```yaml
+Type: Boolean
+Parameter Sets: (All)
+Aliases:
+Required: False
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -124,7 +154,7 @@ Empêche la copie automatique du mot de passe dans le presse‑papier.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 Required: False
 Position: Named
 Default value: False
@@ -138,7 +168,7 @@ Empêche l’effacement automatique du presse‑papier après un délai sécuris
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 Required: False
 Position: Named
 Default value: False
@@ -147,12 +177,12 @@ Accept wildcard characters: False
 ```
 
 ### -Silent
-Désactive le beep de confirmation.
+Désactive le bip de confirmation.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 Required: False
 Position: Named
 Default value: False
@@ -160,20 +190,21 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-## INPUTS
-Aucune entrée.
-
 ## OUTPUTS
-`System.String`  
-Le mot de passe généré.
+### System.String
+Retourne le mot de passe généré.
 
 ## NOTES
-- Compatible Windows, Linux, macOS  
-- PS7 utilise `Get-SecureRandom`  
-- PS5.1 utilise RNG .NET Framework  
-- Le clipboard utilise automatiquement la meilleure méthode disponible selon la plateforme
+- Compatible Windows, Linux, macOS.  
+- Utilise `Get-SecureRandom` sous PS7+ et `RandomNumberGenerator` sous PS5.1.  
+- Le presse‑papier utilise automatiquement la meilleure méthode selon la plateforme.  
+- L’entropie est calculée en bits.  
+- Fonction centrale du module SecureGen.
 
 ## RELATED LINKS
-https://github.com/ledino/SecureGen
+Get-PassPhrase  
+Get-PKIPass  
+Set-ClipboardSafe  
+Clear-ClipboardSafe  
 
 ---

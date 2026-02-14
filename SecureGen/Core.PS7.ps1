@@ -203,8 +203,8 @@ Le séparateur peut être un caractère ou une chaîne complète.
 #>
 
     param(
-        [int]$LettresParMot = 6,
-        [int]$MotsParBloc = 6,
+        [int]$LettresParMot = 5,
+        [int]$MotsParBloc = 5,
         [string]$Separateur = '-',
         [string]$Charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
         [switch]$NoClipboard,

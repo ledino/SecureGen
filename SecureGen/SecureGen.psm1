@@ -139,7 +139,7 @@ Utilise Get-PassWord et Get-PassPhrase du module SecureGen.
 
     # Génération du secret
     if ($Type -eq 'Password') {
-        $secret = Get-PassWord -Len 24 -UseSpecial $true -NoClipboard:$NoClipboard
+        $secret = Get-PassWord -Len 32 -UseSpecial $true -NoClipboard:$NoClipboard
     }
     else {
         $secret = Get-PassPhrase -LettresParMot 5 -MotsParBloc 5 -NoClipboard:$NoClipboard
@@ -220,52 +220,43 @@ Texte à copier dans le presse‑papier.
 # Fonction Clear-ClipboardSafe
 # ---------------------------------------------------------------------------
 
-function Set-ClipboardSafe {
+function Clear-ClipboardSafe {
 <#
 .SYNOPSIS
-Copie du texte dans le presse‑papier de manière réellement cross‑platform.
+Efface le presse‑papier de manière cross‑platform.
 
 .DESCRIPTION
-Set-ClipboardSafe détecte automatiquement la plateforme et utilise la meilleure
-méthode disponible pour copier du texte dans le presse‑papier :
+Efface le presse‑papier selon la plateforme :
 
-- Windows : Set-Clipboard
-- macOS   : pbcopy
-- Linux   : xclip / xsel / wl-copy (selon disponibilité)
+- Windows : Set-Clipboard $null
+- macOS   : pbcopy < /dev/null
+- Linux   : wl-copy / xclip / xsel selon disponibilité
 
-En cas d’échec, la fonction reste silencieuse pour ne pas interrompre l’exécution.
-
-.PARAMETER Text
-Texte à copier dans le presse‑papier.
+Reste silencieux en cas d’échec.
 #>
-
-    param(
-        [Parameter(Mandatory=$true)]
-        [string]$Text
-    )
 
     try {
         if ($IsWindows) {
-            Set-Clipboard -Value $Text -ErrorAction Stop
+            Set-Clipboard -Value $null -ErrorAction Stop
             return
         }
 
         if ($IsMacOS) {
-            $Text | pbcopy 2>$null
+            "" | pbcopy 2>$null
             return
         }
 
         if ($IsLinux) {
             if (Get-Command wl-copy -ErrorAction SilentlyContinue) {
-                $Text | wl-copy 2>$null
+                "" | wl-copy 2>$null
                 return
             }
             if (Get-Command xclip -ErrorAction SilentlyContinue) {
-                $Text | xclip -selection clipboard 2>$null
+                "" | xclip -selection clipboard 2>$null
                 return
             }
             if (Get-Command xsel -ErrorAction SilentlyContinue) {
-                $Text | xsel --clipboard --input 2>$null
+                "" | xsel --clipboard --input 2>$null
                 return
             }
         }
@@ -274,7 +265,7 @@ Texte à copier dans le presse‑papier.
         # Silence volontaire
     }
 
-    Write-Verbose "Clipboard non disponible sur cette plateforme."
+    Write-Verbose "Impossible d'effacer le presse‑papier sur cette plateforme."
 }
 
 

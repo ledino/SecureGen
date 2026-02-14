@@ -8,133 +8,77 @@ schema: 2.0.0
 # Get-PassPhrase
 
 ## SYNOPSIS
-Génère une passphrase robuste, lisible et configurable, compatible Windows / Linux / macOS.
+Génère une passphrase sécurisée composée de plusieurs mots aléatoires.
 
 ## SYNTAX
 
 ```
-Get-PassPhrase [[-LettresParMot] <Int32>] [[-MotsParBloc] <Int32>] [[-Separateur] <String>] [[-Charset] <String>] [-NoClipboard] [-NoClear] [-Silent]
+Get-PassPhrase [-Words <Int32>] [-Len <Int32>] [-NoClipboard] [-NoClear] [-Silent] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-`Get-PassPhrase` génère une passphrase composée de blocs de mots pseudo‑aléatoires, construits caractère par caractère via un générateur cryptographique sécurisé :
+Get-PassPhrase génère une passphrase robuste et lisible, composée de plusieurs mots
+aléatoires de longueur fixe.  
+Contrairement à un mot de passe classique, une passphrase est :
 
-- **PS7+** : `Get-SecureRandom` (conforme NIST SP 800‑90)
-- **PS5.1** : RNG .NET Framework (cryptographiquement sûr)
+- plus longue  
+- plus facile à lire  
+- plus simple à taper  
+- extrêmement robuste grâce à son entropie élevée  
 
-La passphrase est :
+La génération utilise un générateur cryptographique sécurisé via `Get-CryptoIndex`.
 
-- lisible  
-- régulière  
-- hautement entropique  
-- idéale pour un usage quotidien ou professionnel  
-
-Par défaut, SecureGen :
-
-- copie la passphrase dans le presse‑papier  
-- efface automatiquement le presse‑papier après un délai sécurisé  
-- émet un beep discret (désactivable)
-
-Vous pouvez personnaliser :
-
-- le nombre de lettres par mot (`-LettresParMot`)
-- le nombre de mots par bloc (`-MotsParBloc`)
-- le séparateur (`-Separateur`)
-- le charset utilisé (`-Charset`)
-- le comportement du presse‑papier (`-NoClipboard`, `-NoClear`)
-- le beep (`-Silent`)
+La passphrase peut être automatiquement copiée dans le presse‑papier, puis effacée
+après un délai sécurisé.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
-Générer une passphrase standard (6 mots de 6 lettres) :
-
-```powershell
+```
 Get-PassPhrase
 ```
+Génère une passphrase standard composée de 6 mots de 6 caractères.
 
 ### EXAMPLE 2
-Passphrase longue (7 mots de 5 lettres) :
-
-```powershell
-Get-PassPhrase -LettresParMot 5 -MotsParBloc 7
 ```
+Get-PassPhrase -Words 8 -Len 7
+```
+Génère une passphrase plus longue : 8 mots de 7 caractères chacun.
 
 ### EXAMPLE 3
-Passphrase sans caractères spéciaux, uniquement lettres :
-
-```powershell
-Get-PassPhrase -Charset 'abcdefghijklmnopqrstuvwxyz'
 ```
-
-### EXAMPLE 4
-Passphrase silencieuse (pas de beep) :
-
-```powershell
-Get-PassPhrase -Silent
+Get-PassPhrase -Silent -NoClipboard
 ```
-
-### EXAMPLE 5
-Passphrase sans clipboard :
-
-```powershell
-Get-PassPhrase -NoClipboard
-```
+Génère une passphrase sans bip et sans copie dans le presse‑papier.
 
 ## PARAMETERS
 
-### -LettresParMot
-Nombre de lettres par mot généré.
+### -Words
+Nombre de mots à générer.  
+Valeur par défaut : 6.
 
 ```yaml
 Type: Int32
 Parameter Sets: (All)
 Aliases:
 Required: False
-Position: 1
+Position: Named
 Default value: 6
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -MotsParBloc
-Nombre de mots composant la passphrase.
+### -Len
+Longueur de chaque mot.  
+Valeur par défaut : 6.
 
 ```yaml
 Type: Int32
 Parameter Sets: (All)
 Aliases:
 Required: False
-Position: 2
+Position: Named
 Default value: 6
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Separateur
-Caractère ou chaîne utilisée pour séparer les mots.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-Required: False
-Position: 3
-Default value: -
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Charset
-Ensemble de caractères utilisés pour générer les mots.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-Required: False
-Position: 4
-Default value: AbcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -168,7 +112,7 @@ Accept wildcard characters: False
 ```
 
 ### -Silent
-Désactive le beep de confirmation.
+Désactive le bip de confirmation.
 
 ```yaml
 Type: SwitchParameter
@@ -181,21 +125,21 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-## INPUTS
-Aucune entrée.
-
 ## OUTPUTS
-`System.String`  
-La passphrase générée.
+### System.String
+Retourne la passphrase générée.
 
 ## NOTES
-- Compatible Windows, Linux, macOS  
-- PS7 utilise `Get-SecureRandom`  
-- PS5.1 utilise RNG .NET Framework  
-- Le clipboard utilise automatiquement la meilleure méthode disponible selon la plateforme  
-- Le séparateur peut être un caractère ou une chaîne complète  
+- Compatible Windows, Linux, macOS.  
+- Utilise `Get-CryptoIndex` pour garantir une distribution uniforme.  
+- Le presse‑papier utilise automatiquement la meilleure méthode selon la plateforme.  
+- L’entropie dépend du nombre de mots, de leur longueur et du charset utilisé.  
+- Conçue pour être lisible, mémorisable et extrêmement robuste.
 
 ## RELATED LINKS
-https://github.com/ledino/SecureGen
+Get-PassWord  
+Get-PKIPass  
+Set-ClipboardSafe  
+Clear-ClipboardSafe  
 
 ---
