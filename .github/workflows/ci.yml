@@ -64,7 +64,7 @@ jobs:
       run: |
         if (Test-Path ./tests) {
           Install-Module Pester -Force -Scope CurrentUser -ErrorAction Stop
-          Invoke-Pester -Path ./tests -Output Detailed -EnableExit
+          Invoke-Pester -Script ./tests --CI
         } else {
           echo "Aucun test Pester trouvé"
         }
