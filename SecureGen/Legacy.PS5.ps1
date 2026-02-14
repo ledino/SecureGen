@@ -203,32 +203,46 @@ Le clipboard utilise automatiquement la meilleure méthode selon la plateforme.
 Le séparateur peut être un caractère ou une chaîne complète.
 #>
 
+    [CmdletBinding()]
     param(
-        [int]$LettresParMot = 6,
-        [int]$MotsParBloc = 6,
-        [string]$Separateur = '-',
+        [Alias('Length','Lenght')]
+        [int]$Len = 6,
+
+        [Alias('WordsCount','NbWords')]
+        [int]$Words = 6,
+
+        [string]$Separator = '-',
+
         [string]$Charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+
         [switch]$NoClipboard,
         [switch]$NoClear,
         [switch]$Silent
     )
 
-    # --- Détection de la source d'aléa ---
-    $alea = "Crypto (RNG .NET, non conforme modules cryptographiques modernes)"
+    # Vérification des paramètres
+    if ($Len -lt 1) { throw "Len doit être supérieur ou égal à 1." }
+    if ($Words -lt 1) { throw "Words doit être supérieur ou égal à 1." }
 
-    # --- Génération des mots ---
+    # --- Détection de la source d'aléa ---
+    $alea = "Non conforme NIST SP 800-90 mais sûr pour usage classique"
+
+    # --- Génération cryptographique ---
     $bloc = @()
-    for ($i = 0; $i -lt $MotsParBloc; $i++) {
-        $indices = 1..$LettresParMot | ForEach-Object { Get-CryptoIndex -Max $Charset.Length }
+    for ($i = 0; $i -lt $Words; $i++) {
+        $indices = 1..$Len | ForEach-Object { Get-CryptoIndex -Max $Charset.Length }
         $mot = -join ($indices | ForEach-Object { $Charset[$_] })
         $bloc += $mot
     }
 
-    $joined  = $bloc -join $Separateur
-    $entropy = [math]::Round(($LettresParMot * $MotsParBloc) * [math]::Log($Charset.Length, 2))
+    $joined  = $bloc -join $Separator
+    
+    # --- Calcul entropie ---
+    $entropy = [math]::Round(($Len * $Words) * [math]::Log($Charset.Length, 2))
 
     # --- Mode silencieux ---
     if ($Silent) {
+        if (-not $NoClipboard) { $joined | Set-ClipboardSafe }
         return $joined
     }
 

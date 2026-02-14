@@ -5,12 +5,12 @@ Describe "Get-PassPhrase" {
     }
 
     It "Génère une passphrase avec le bon nombre de mots" {
-        $pp = Get-PassPhrase -MotsParBloc 5 -LettresParMot 4 -NoClipboard
+        $pp = Get-PassPhrase -Words 5 -Len 4 -NoClipboard
         ($pp -split ' ').Count | Should -Be 5
     }
 
     It "Chaque mot a la bonne longueur" {
-        $pp = Get-PassPhrase -MotsParBloc 4 -LettresParMot 6 -NoClipboard
+        $pp = Get-PassPhrase -Words 4 -Len 6 -NoClipboard
         foreach ($mot in $pp -split ' ') {
             $mot.Length | Should -Be 6
         }

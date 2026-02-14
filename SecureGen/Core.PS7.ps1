@@ -202,39 +202,53 @@ Le clipboard utilise automatiquement la meilleure méthode selon la plateforme.
 Le séparateur peut être un caractère ou une chaîne complète.
 #>
 
+    [CmdletBinding()]
     param(
-        [int]$LettresParMot = 5,
-        [int]$MotsParBloc = 5,
-        [string]$Separateur = '-',
+        [Alias('Length','Lenght')]
+        [int]$Len = 6,
+
+        [Alias('WordsCount','NbWords')]
+        [int]$Words = 6,
+
+        [string]$Separator = '-',
+
         [string]$Charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+
         [switch]$NoClipboard,
         [switch]$NoClear,
         [switch]$Silent
     )
 
-    # --- Détection de la source d'aléa ---
-    $alea = "Crypto (Get-SecureRandom, conforme modules cryptographiques modernes)"
+    # Vérification des paramètres
+    if ($Len -lt 1) { throw "Len doit être supérieur ou égal à 1." }
+    if ($Words -lt 1) { throw "Words doit être supérieur ou égal à 1." }
 
-    # --- Génération des mots ---
+    # Source d'aléa
+    $alea = "Conforme NIST SP 800-90 (modules cryptographiques modernes)"
+
+    # Génération cryptographique
     $bloc = @()
-    for ($i = 0; $i -lt $MotsParBloc; $i++) {
-        $indices = 1..$LettresParMot | ForEach-Object { Get-CryptoIndex -Max $Charset.Length }
+    for ($i = 0; $i -lt $Words; $i++) {
+        $indices = 1..$Len | ForEach-Object { Get-CryptoIndex -Max $Charset.Length }
         $mot = -join ($indices | ForEach-Object { $Charset[$_] })
         $bloc += $mot
     }
 
-    $joined  = $bloc -join $Separateur
-    $entropy = [math]::Round(($LettresParMot * $MotsParBloc) * [math]::Log($Charset.Length, 2))
+    $joined = $bloc -join $Separator   # <-- Correction ici
 
-    # --- Mode silencieux ---
+    # Calcul entropie
+    $entropy = [math]::Round(($Words * $Len) * [math]::Log($Charset.Length, 2))
+
+    # Mode silencieux
     if ($Silent) {
+        if (-not $NoClipboard) { $joined | Set-ClipboardSafe }
         return $joined
     }
 
-    # --- Copie ---
-    if (-not $NoClipboard) { $joined | Set-Clipboard }
+    # Copie
+    if (-not $NoClipboard) { $joined | Set-ClipboardSafe }
 
-    # --- Affichage ---
+    # Affichage
     Write-Host "🔐 $joined" -ForegroundColor Green
     Write-Host "----------------------------"
     Write-Host "🧠 Passephrase ($entropy bits) : " -NoNewline -ForegroundColor Cyan
@@ -243,13 +257,12 @@ Le séparateur peut être un caractère ou une chaîne complète.
     Write-Host "   Séparateurs possibles : - . _ ! ?" -ForegroundColor Magenta
     Write-Host "----------------------------"
     Write-Host "⏳ Clipboard 35s auto-clear or Ctrl+C continue" -ForegroundColor Yellow
-    # Write-Host "----------------------------"
 
-    # --- Effacement automatique ---
+    # Effacement automatique
     if (-not $NoClipboard -and -not $NoClear) {
         try { Start-Sleep 35 }
         finally {
-            Set-Clipboard $null;
+            Clear-ClipboardSafe
             Write-Host "[!] Clipboard cleared !" -ForegroundColor Red
             Invoke-Beep -Frequency 1200 -Duration 500
         }
@@ -334,7 +347,7 @@ Retourne le mot de passe généré.
     )
 
     # --- Détection de la source d'aléa ---
-    $alea = "Get-SecureRandom, conforme aux modules cryptos modernes (FIPS-compliant)"
+    $alea = "Conforme NIST SP 800-90"
 
     # --- Définition des catégories ---
     $Lower = 'abcdefghijklmnopqrstuvwxyz'

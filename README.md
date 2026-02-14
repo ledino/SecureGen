@@ -121,7 +121,7 @@ Le module inclut également :
 
 - un **clipboard intelligent** (Windows/macOS/Linux)
 - un **beep discret**
-- des alias ergonomiques (`sgp`, `sgw`)
+- des alias ergonomiques (`sgp`, `sgw`, `sgpki`)
 
 ---
 
@@ -168,9 +168,12 @@ SecureGen combine **simplicité**, **sécurité**, et **expérience utilisateur*
   - Longueur personnalisable  
   - Caractères spéciaux configurables  
 
-- 🧠 **Passphrases lisibles**  
-  - Dictionnaire interne optimisé  
-  - Options avancées  
+- 🧠 **Passphrases robustes**  
+  - Mots aléatoires cryptographiquement sûrs  
+  - Longueur configurable  
+  - Séparateur personnalisable  
+  - Alias ergonomique : `sgp`
+
 
 - 📋 **Clipboard intelligent**  
   - Windows / macOS / Linux  
@@ -272,6 +275,7 @@ https://github.com/ledino/SecureGen/blob/main/docs/installation.md
 |----------------------|-------------|
 | `Get-PassWord`       | Génère un mot de passe sécurisé |
 | `Get-PassPhrase`     | Génère une passphrase robuste et lisible |
+| `Get-PKIPass`        | Génère un secret robuste et lisible | 
 | `Get-CryptoIndex`    | Générateur cryptographique interne |
 | `Invoke-Beep`        | Feedback sonore cross-platform |
 | `Set-ClipboardSafe`  | Copie cross-platform avec fallback |
@@ -279,10 +283,11 @@ https://github.com/ledino/SecureGen/blob/main/docs/installation.md
 
 Alias ergonomiques :
 
-| Alias | Fonction |
-|-------|----------|
-| `sgw` | `Get-PassWord` |
-| `sgp` | `Get-PassPhrase` |
+| Alias   | Fonction         |
+|---------|------------------|
+| `sgw`   | `Get-PassWord`   |
+| `sgp`   | `Get-PassPhrase` |
+| `sgpki` | `Get-PKIPass`    |
 
 ---
 
@@ -300,8 +305,14 @@ Get-PassWord -UseSpecial:$false
 
 ```powershell
 Get-PassPhrase
-Get-PassPhrase -MotsParBloc 6 -LettresParMot 10
+Get-PassPhrase -Words 6 -Len 10
 Get-PassPhrase -Silent
+sgp -Words 5 -Len 8
+```
+
+## 🚀 PKIPass
+Get-PKIPass -Type Passphrase
+sgpki -Type Password
 ```
 
 ---
@@ -348,7 +359,7 @@ SecureGen charge automatiquement la bonne version :
 ```text
 SecureGen/
 │
-├── Core.PS7.ps1      # Version moderne (Get-SecureRandom, conforme modules cryptographiques modernes)
+├── Core.PS7.ps1      # Get-SecureRandom (NIST SP 800‑90A compliant)
 └── Legacy.PS5.ps1    # Version fallback (RNG .NET Framework)
 ```
 

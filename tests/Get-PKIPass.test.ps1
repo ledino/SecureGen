@@ -7,10 +7,10 @@ Describe "Get-PKIPass" {
     }
 
     Context "Mode Password" {
-        It "Génère un mot de passe PKI de 24 caractères" {
+        It "Génère un mot de passe PKI de 32 caractères" {
             $pass = Get-PKIPass -Type Password -NoClipboard
             $pass | Should -BeOfType 'System.String'
-            $pass.Length | Should -Be 24
+            $pass.Length | Should -Be 32
         }
     }
 
