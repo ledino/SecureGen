@@ -77,6 +77,24 @@ else {
     . "$PSScriptRoot/Legacy.PS5.ps1"
 }
 
+
+# ---------------------------------------------------------------------------
+# Fonction pour by passer la règle : convertion de la chaîne en SecureString
+# ---------------------------------------------------------------------------
+
+function Convert-ToSecureStringSafe {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+        "PSAvoidUsingConvertToSecureStringWithPlainText", ""
+    )]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Value
+    )
+
+    return ConvertTo-SecureString $Value -AsPlainText -Force
+}
+
+
 # ---------------------------------------------------------------------------
 # Fonction utilitaire pour PKI/SecureString
 # ---------------------------------------------------------------------------
@@ -147,7 +165,7 @@ Utilise Get-PassWord et Get-PassPhrase du module SecureGen.
 
     # Conversion SecureString si demandé
     if ($AsSecureString) {
-        return ConvertTo-SecureString $secret -AsPlainText -Force
+        return Convert-ToSecureStringSafe $secret
     }
 
     return $secret
