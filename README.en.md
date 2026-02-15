@@ -373,6 +373,7 @@ SecureGen/
 │   ├── architecture.md
 │   ├── security.md
 │   ├── contributing.md
+│   ├── developer-guide.md
 │   ├── troubleshooting.md
 │   ├── versioning.md
 │   ├── release-process.md

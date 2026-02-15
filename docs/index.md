@@ -76,6 +76,157 @@ Le fichier principal `SecureGen.psm1` :
 
 ---
 
+# 🧭 How to Navigate the Repository
+
+SecureGen est organisé de manière claire et modulaire pour faciliter la compréhension du code, la contribution et la maintenance.  
+Voici un guide rapide pour vous orienter dans le dépôt.
+
+## 🔐 1. Code source du module  
+📁 `SecureGen/`
+
+Contient l’intégralité du code PowerShell :
+
+- `Core.PS7.ps1` — Implémentation optimisée PowerShell 7+  
+- `Legacy.PS5.ps1` — Version fallback pour Windows PowerShell 5.1  
+- `SecureGen.psm1` — Loader intelligent (détection PS5/PS7, export des cmdlets, alias)  
+- `SecureGen.psd1` — Manifest du module (version mise à jour automatiquement)
+
+👉 **Point d’entrée pour comprendre le fonctionnement interne du module.**
+
+---
+
+## 🎨 2. Identité visuelle  
+📁 `assets/`
+
+Contient :
+
+- logo officiel  
+- bannière  
+- palette de couleurs  
+- GIFs et captures d’écran  
+
+👉 Utilisé dans le README, la documentation et les présentations.
+
+---
+
+## 📚 3. Documentation complète  
+📁 `docs/`
+
+Toute la documentation utilisateur et technique :
+
+- installation  
+- exemples  
+- guide avancé  
+- architecture  
+- sécurité  
+- benchmarks  
+- troubleshooting  
+- versioning & release process  
+
+### 📘 Documentation des commandes  
+📁 `docs/cmdlets/`  
+Documentation générée automatiquement via PlatyPS.
+
+### 🧩 Diagrammes UML  
+📁 `docs/diagrams/`  
+Diagrammes d’architecture, séquences, CI/CD.
+
+👉 **Si vous cherchez une information, elle est probablement ici.**
+
+---
+
+## 🛠️ 4. Scripts développeurs  
+📁 `scripts/`
+
+Scripts internes pour :
+
+- build local  
+- installation locale  
+- publication  
+- génération de documentation  
+- versioning (legacy)  
+- release (legacy)
+
+👉 **Indispensable pour les contributeurs et mainteneurs.**
+
+---
+
+## 🔧 5. Versioning automatisé  
+📁 `.version-updaters/`
+
+Contient les updaters custom utilisés par `standard-version` pour mettre à jour automatiquement :
+
+- la version du module (`ModuleVersion`)  
+- les métadonnées du manifest  
+
+👉 **Ne pas modifier sans comprendre le workflow de release.**
+
+---
+
+## 🧩 6. GitHub Community Standards  
+📁 `.github/`
+
+Inclut :
+
+- templates Issues  
+- templates PR  
+- templates Discussions  
+- workflows CI/CD  
+- fichier FUNDING  
+- advisory template  
+
+👉 **Tout ce qui concerne la communauté et l’automatisation GitHub.**
+
+---
+
+## 🧪 7. Tests Pester  
+📁 `tests/`
+
+Tests unitaires pour chaque commande :
+
+- `Get-PassWord`  
+- `Get-PassPhrase`  
+- `Get-PKIPass`  
+- `Get-CryptoIndex`  
+- `Invoke-Beep`  
+- clipboard  
+
+👉 **Point d’entrée pour valider vos modifications.**
+
+---
+
+## 📄 8. Fichiers racine
+
+- `README.md` / `README.en.md` — Documentation principale  
+- `CHANGELOG.md` — Historique généré automatiquement  
+- `ROADMAP.md` — Vision du projet  
+- `SECURITY.md` — Politique de sécurité  
+- `SUPPORT.md` — Support utilisateur  
+- `CODE_OF_CONDUCT.md` — Code de conduite  
+- `GOVERNANCE.md` — Gouvernance  
+- `CONTRIBUTING.md` — Guide de contribution  
+- `MAINTAINERS.md` — Mainteneurs  
+- `LICENSE` — Licence MIT  
+
+👉 **Ces fichiers définissent les règles, la vision et la gouvernance du projet.**
+
+---
+
+## 🎯 Résumé rapide
+
+| Besoin | Où aller |
+|-------|----------|
+| Comprendre le code | `SecureGen/` |
+| Lire la doc | `docs/` |
+| Voir les commandes | `docs/cmdlets/` |
+| Voir les diagrammes | `docs/diagrams/` |
+| Contribuer | `CONTRIBUTING.md` |
+| Tester | `tests/` |
+| Publier | `scripts/` + workflows GitHub |
+| Comprendre la structure | `docs/structure.md` |
+
+---
+
 # ⚙️ Automatisation du versioning & des releases
 
 SecureGen utilise un pipeline moderne basé sur :
