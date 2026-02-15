@@ -19,7 +19,7 @@ The maintainer is responsible for:
 
 Current maintainer:
 
-- **Saddek (ledino)** — Project creator & lead maintainer
+- **Ledino** — Project creator & lead maintainer
 
 Additional maintainers may be added in the future.
 

@@ -1,13 +1,25 @@
-# 🔐 SecureGen
+<h1 align="center">🔐 SecureGen</h1>
 
-<p align="right">
-  <a href="README.md">
-    <img src="https://img.shields.io/badge/English-000000?style=for-the-badge&logo=github&logoColor=white" />
-  </a>
-  <a href="README.fr.md">
-    <img src="https://img.shields.io/badge/Français-0055A4?style=for-the-badge&logo=github&logoColor=white" />
-  </a>
+<p align="center">
+  <em>Modern, secure & ergonomic password generation for PowerShell</em>
 </p>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+  <div>
+    <a href="https://ko-fi.com/ledino_creator">
+      <img src="https://img.shields.io/badge/Ko--fi-Support%20me-FF5E5B?style=for-the-badge&logo=kofi&logoColor=white" />
+    </a>
+  </div>
+
+  <div>
+    <a href="README.md">
+      <img src="https://img.shields.io/badge/Français-0055A4?style=for-the-badge&logo=github&logoColor=white" />
+    </a>
+    <a href="README.en.md">
+      <img src="https://img.shields.io/badge/English-000000?style=for-the-badge&logo=github&logoColor=white" />
+    </a>
+  </div>
+</div>
 
 ---
 
@@ -15,33 +27,23 @@
 
   <!-- PSGallery -->
   <a href="https://www.powershellgallery.com/packages/SecureGen">
-    <img src="https://img.shields.io/powershellgallery/v/SecureGen.svg?style=for-the-badge&label=PSGallery" alt="PSGallery Version"/>
+    <img src="https://img.shields.io/powershellgallery/v/SecureGen.svg?style=flat-square&label=PSGallery&color=0A2A4F" />
   </a>
   <a href="https://www.powershellgallery.com/packages/SecureGen">
-    <img src="https://img.shields.io/powershellgallery/dt/SecureGen.svg?style=for-the-badge&label=Downloads" alt="Downloads"/>
+    <img src="https://img.shields.io/powershellgallery/dt/SecureGen.svg?style=flat-square&label=Downloads&color=00BCD4" />
   </a>
 
-  <!-- Compatibility -->
-  <img src="https://img.shields.io/badge/PowerShell-5.1%20%7C%207.x-blue?style=for-the-badge" alt="PowerShell Compatibility"/>
+  <!-- Compatibilité -->
+  <img src="https://img.shields.io/badge/PowerShell-5.1%20%7C%207.x-4FC3F7?style=flat-square" />
 
   <!-- CI -->
   <a href="https://github.com/ledino/SecureGen/actions/workflows/ci.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/ledino/SecureGen/ci.yml?style=for-the-badge&label=CI" alt="CI Status"/>
+    <img src="https://img.shields.io/github/actions/workflow/status/ledino/SecureGen/ci.yml?style=flat-square&label=CI&color=4FC3F7" />
   </a>
 
   <!-- Release -->
   <a href="https://github.com/ledino/SecureGen/releases">
-    <img src="https://img.shields.io/github/v/release/ledino/SecureGen?style=for-the-badge&label=Latest%20Release&color=blue&logo=github" alt="Latest Release"/>
-  </a>
-
-  <!-- Changelog -->
-  <a href="https://github.com/ledino/SecureGen/blob/main/CHANGELOG.md">
-    <img src="https://img.shields.io/badge/Changelog-View-blue?style=for-the-badge" alt="Changelog"/>
-  </a>
-
-  <!-- VS Code -->
-  <a href="https://vscode.dev/github/ledino/SecureGen">
-    <img src="https://img.shields.io/badge/Open%20in-VS%20Code-23a8f2?style=for-the-badge&logo=visualstudiocode" alt="Open in VS Code"/>
+    <img src="https://img.shields.io/github/v/release/ledino/SecureGen?style=flat-square&label=Release&color=0A2A4F" />
   </a>
 
 </p>
@@ -60,152 +62,207 @@
 
 <p align="center">
 
-  <!-- Quality & Maintenance -->
-  <img src="https://img.shields.io/badge/Maintained-Yes-success?style=for-the-badge" alt="Maintained"/>
-  <img src="https://img.shields.io/badge/PRs-Welcome-blue?style=for-the-badge" alt="PRs Welcome"/>
-  <img src="https://img.shields.io/badge/Contributions-Welcome-4CAF50?style=for-the-badge" alt="Contributions Welcome"/>
+  <!-- Qualité & Maintenance -->
+  <img src="https://img.shields.io/badge/Maintained-Yes-0A2A4F?style=for-the-badge&logo=github" alt="Maintained"/>
+  <img src="https://img.shields.io/badge/PRs-Welcome-0A2A4F?style=for-the-badge&logo=github" alt="PRs Welcome"/>
+  <img src="https://img.shields.io/badge/Contributions-Welcome-4CAF50?style=for-the-badge&logo=github" alt="Contributions Welcome"/>
 
   <!-- Technologies -->
-  <img src="https://img.shields.io/badge/Made%20with-PowerShell-5391FE?style=for-the-badge&logo=powershell" alt="Made with PowerShell"/>
-  <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-0078D4?style=for-the-badge" alt="Platforms"/>
+  <img src="https://img.shields.io/badge/Made%20with-PowerShell-00BCD4?style=for-the-badge&logo=powershell&logoColor=white" alt="Made with PowerShell"/>
+  <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-00BCD4?style=for-the-badge&logo=windows-terminal&logoColor=white" alt="Platforms"/>
 
-  <!-- Security & Quality -->
-  <img src="https://img.shields.io/badge/Security-Crypto%20Safe-blue?style=for-the-badge" alt="Security"/>
-  <img src="https://img.shields.io/badge/Static%20Analysis-PSScriptAnalyzer-00A4EF?style=for-the-badge" alt="PSScriptAnalyzer"/>
-  <img src="https://img.shields.io/badge/Tests-Pester-4B275F?style=for-the-badge" alt="Pester Tests"/>
+  <!-- Sécurité & Qualité -->
+  <img src="https://img.shields.io/badge/Security-Crypto%20Safe-00BCD4?style=for-the-badge&logo=shield" alt="Security"/>
+  <img src="https://img.shields.io/badge/Static%20Analysis-PSScriptAnalyzer-4FC3F7?style=for-the-badge&logo=codefactor" alt="PSScriptAnalyzer"/>
+  <img src="https://img.shields.io/badge/Tests-Pester-4FC3F7?style=for-the-badge&logo=testcafe" alt="Pester Tests"/>
 
-  <!-- License & Docs -->
-  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License"/>
-  <img src="https://img.shields.io/badge/Docs-Complete-blue?style=for-the-badge&logo=readthedocs" alt="Docs"/>
+  <!-- Licence & Docs -->
+  <img src="https://img.shields.io/badge/License-MIT-4FC3F7?style=for-the-badge&logo=open-source-initiative&logoColor=white" alt="MIT License"/>
+  <img src="https://img.shields.io/badge/Docs-Complete-4FC3F7?style=for-the-badge&logo=readthedocs" alt="Docs"/>
 
 </p>
 
 ---
 
-# 📚 Table of Contents
+# 📚 Sommaire
 
-- [📘 About](#-about)
+- [📚 Documentation](#-documentation)
+- [📘 À propos](#-à-propos)
 - [⚡ Quick Start](#-quick-start)
-- [❓ Why SecureGen?](#-why-securegen)
-- [✨ Key Features](#-key-features)
+- [❓ Pourquoi SecureGen ?](#-pourquoi-securegen-)
+- [✨ Fonctionnalités clés](#-fonctionnalités-clés)
 - [🚀 Installation](#-installation)
-- [🧩 Included Functions](#-included-functions)
-- [📝 Usage Examples](#-usage-examples)
-- [🖥️ Compatibility](#-compatibility)
-- [🎨 Visual Identity](#-visual-identity)
-- [🧱 Module Architecture](#-module-architecture)
+- [🧩 Fonctions incluses](#-fonctions-incluses)
+- [📝 Exemples d'utilisation](#-exemples-dutilisation)
+- [🖥️ Compatibilité](#-compatibilité)
+- [🎨 Identité visuelle](#-identité-visuelle)
+- [🧱 Architecture du module](#-architecture-du-module)
 - [⚙️ Versioning & Releases](#-versioning--releases)
-- [📦 Repository Structure](#-repository-structure)
-- [📘 Cmdlet Documentation](#-cmdlet-documentation)
+- [📦 Structure du dépôt](#-structure-du-dépôt)
+- [📘 Documentation des commandes](#-documentation-des-commandes)
 - [🖼️ Screenshots / GIFs](#-screenshots--gifs)
 - [⚡ Benchmarks](#-benchmarks)
-- [🔐 Security](#-security)
+- [🔐 Sécurité](#-sécurité)
 - [🗺️ Roadmap](#-roadmap)
-- [🤝 Contributing](#-contributing)
+- [🤝 Contribuer](#-contribuer)
 - [💬 Support & Feedback](#-support--feedback)
-- [📜 License](#-license)
-- [⭐ Acknowledgments](#-acknowledgments)
+- [📜 Licence](#-licence)
+- [⭐ Remerciements](#-remerciements)
 
 ---
 
-# 📘 About
+# 📚 Documentation
 
-**SecureGen** is a modern, ergonomic, cross‑platform PowerShell module designed to generate:
+La documentation complète de SecureGen est disponible dans le dossier :
 
-- secure passwords  
-- robust passphrases  
-- cryptographically safe random values  
-- PKI‑grade secrets (`Get-PKIPass`) with optional SecureString output  
+👉 `docs/index.md`
 
-It supports **PowerShell 5.1** and **PowerShell 7+**, using an intelligent architecture that automatically loads:
+Elle est organisée en sections claires pour répondre à tous les besoins :
 
-- an optimized **PS7 version** (`Core.PS7.ps1`)  
-- a secure **PS5 fallback** (`Legacy.PS5.ps1`)  
+---
 
-The module also includes:
+## 📘 Guides essentiels
 
-- a cross‑platform clipboard system  
-- a discreet beep utility  
-- ergonomic aliases (`sgp`, `sgw`, `sgpki`)  
+- **Installation** → `docs/installation.md`  
+- **Exemples d’utilisation** → `docs/examples.md`  
+- **Guide avancé** → `docs/advanced.md`  
+- **FAQ** → `docs/faq.md`  
+- **Dépannage** → `docs/troubleshooting.md`
+
+---
+
+## 🧱 Architecture & Technique
+
+- **Architecture du module** → `docs/architecture.md`  
+- **Diagrammes UML** → `docs/diagrams/overview.md`  
+- **Sécurité & crypto** → `docs/security.md`  
+- **Benchmarks** → `docs/benchmarks.md`  
+- **Processus de release** → `docs/release-process.md`  
+- **Versioning** → `docs/versioning.md`
+
+---
+
+## 🧩 Documentation des commandes (PlatyPS)
+
+Chaque commande dispose d’une page dédiée :
+
+👉 `docs/cmdlets/`
+
+- `Get-PassWord.md`  
+- `Get-PassPhrase.md`  
+- `Get-PKIPass.md`  
+- `Get-CryptoIndex.md`  
+- `Invoke-Beep.md`  
+- `SecureGen.md`
+
+Documentation générée automatiquement via :  
+- `scripts/Generate-Help.ps1`
+
+---
+
+# 📘 À propos
+
+SecureGen est un module PowerShell moderne, ergonomique et cross‑platform permettant de générer :
+
+- des **mots de passe sécurisés**
+- des **passphrases robustes**
+- des **clés aléatoires cryptographiquement sûres**
+- un générateur PKI complet (`Get-PKIPass`) avec support SecureString
+
+Il est compatible **PowerShell 5.1** et **PowerShell 7+**, avec une architecture intelligente qui charge automatiquement :
+
+- une version **optimisée PS7** (`Core.PS7.ps1`)  
+- une version **fallback PS5** (`Legacy.PS5.ps1`)
+
+Le module inclut également :
+
+- un **clipboard intelligent** (Windows/macOS/Linux)
+- un **beep discret**
+- des alias ergonomiques (`sgp`, `sgw`, `sgpki`)
 
 ---
 
 # ⚡ Quick Start
 
+Les commandes essentielles pour commencer immédiatement avec SecureGen :
+
 ```powershell
-# Install the module
+# Installer le module
 Install-Module SecureGen -Scope CurrentUser
 
-# Generate a secure password
+# Générer un mot de passe sécurisé
 Get-PassWord
 
-# Generate a readable, robust passphrase
+# Générer une passphrase lisible et robuste
 Get-PassPhrase
 ```
 
 ---
 
-# ❓ Why SecureGen?
+# ❓ Pourquoi SecureGen ?
 
-SecureGen is not “just another password generator.”  
-It is designed to be:
+SecureGen n’est pas un simple générateur de mots de passe.  
+C’est un module pensé pour être :
 
-- **Secure** — built on modern cryptographic primitives  
-- **Cross‑platform** — Windows, Linux, macOS, PS5.1, PS7+  
-- **Ergonomic** — clean API, intuitive aliases, smart defaults  
-- **Automation‑friendly** — ideal for scripts, CI/CD, PKI workflows  
-- **User‑friendly** — clipboard helpers, silent mode, clean UX  
-- **Reliable** — modular architecture, fallback logic, full test suite  
+- **Sécurisé**              — basé sur des primitives cryptographiques modernes (Get‑SecureRandom)
+- **Cross‑platform**        — Windows, Linux, macOS, PS5.1 et PS7+
+- **Ergonomique**           — commandes courtes, alias intuitifs, options claires
+- **Automatisable**         — idéal pour les scripts, pipelines CI/CD, environnements pros
+- **Conçu pour le confort** — clipboard intelligent, beep discret, UX soignée
+- **Fiable**                — architecture modulaire, fallback PS5, tests automatisés
 
-SecureGen blends **simplicity**, **security**, and **developer comfort**.
+SecureGen combine **simplicité**, **sécurité**, et **expérience utilisateur**. 
 
 ---
 
-# ✨ Key Features
+# ✨ Fonctionnalités clés
 
-- 🔐 **Modern cryptography**  
-  - PS7: `Get-SecureRandom` (NIST SP 800‑90)  
-  - PS5: RNG .NET Framework  
+- 🔐 **Crypto moderne**
+  - PS7 : `Get-SecureRandom` (NIST SP 800‑90)
+  - PS5 : RNG .NET Framework
 
-- 🔑 **Secure passwords**  
-  - Custom length  
-  - Custom special characters  
+- 🔑 **Mots de passe sécurisés**
+  - Longueur personnalisable
+  - Caractères spéciaux configurables
 
-- 🧠 **Robust passphrases**  
-  - Cryptographically random words  
-  - Customizable length and separator  
-  - Alias: `sgp`
+- 🧠 **Passphrases robustes**
+  - Mots aléatoires cryptographiquement sûrs
+  - Longueur configurable
+  - Séparateur personnalisable
+  - Alias ergonomique : `sgp`
 
-- 🛡️ **PKI secrets (new in 1.5.0)**  
-  - Password mode (32+ chars)  
-  - Passphrase mode (Words × Len)  
-  - Optional `SecureString` output  
-  - Alias: `sgpki`
+- 🛡️ **Secrets PKI (nouveau en 1.5.0)**
+  - Mode Password (32+ caractères)
+  - Mode Passphrase (Words × Len)
+  - Retour `SecureString` pour comptes de service, KMS, AD, DSC
+  - Alias ergonomique : `sgpki`
 
-- 📋 **Smart clipboard**  
-  - Windows / macOS / Linux  
-  - Automatic clearing  
+- 📋 **Clipboard intelligent**
+  - Windows / macOS / Linux
+  - Effacement automatique
 
-- 🔊 **Discreet beep** (optional)
+- 🔊 **Beep discret** (désactivable)
 
-- 🧩 **Modular architecture**  
-  - Optimized PS7  
-  - Secure PS5 fallback  
+- 🧩 **Architecture modulaire**
+  - PS7 optimisé
+  - PS5 fallback
 
-- 🧪 **Quality assured**  
-  - PSScriptAnalyzer  
-  - Pester tests  
-  - Multi‑platform CI  
+- 🧪 **Qualité assurée**
+  - PSScriptAnalyzer
+  - Tests Pester
+  - CI multi‑plateformes
 
 ---
 
 # 🚀 Installation
 
+## 🚀 Depuis la PowerShell Gallery (recommandé)
+
 ```powershell
 Install-Module SecureGen -Scope CurrentUser
 ```
 
-Update:
+Mettre à jour :
 
 ```powershell
 Update-Module SecureGen
@@ -213,21 +270,82 @@ Update-Module SecureGen
 
 ---
 
-# 🧩 Included Functions
+### 🛡️ Problème courant : “Running scripts is disabled on this system”
 
-| Function              | Description |
+Sur un poste Windows qui n’a jamais exécuté de script PowerShell, il est fréquent d’obtenir :
+
+```
+Impossible de charger le fichier .ps1, car l'exécution de scripts est désactivée sur ce système.
+```
+
+Cela provient de la **Execution Policy**, qui est par défaut :
+
+```
+Restricted
+```
+
+### ✅ Solution recommandée (sécurisée)
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+```
+
+### 🧪 Exécution ponctuelle (sans modifier la policy)
+
+PowerShell 7+ :
+
+```powershell
+pwsh -ExecutionPolicy Bypass -File ./script.ps1
+```
+
+Windows PowerShell 5.1 :
+
+```powershell
+powershell.exe -ExecutionPolicy Bypass -File .\script.ps1
+```
+
+---
+
+## 🛠️ Installation via script (développeurs)
+
+```powershell
+pwsh ./scripts/Install-SecureGen.ps1
+```
+
+---
+
+## 📜 Documentation complète de l’installation
+
+Pour une documentation détaillée, incluant :
+
+- installation PowerShell Gallery  
+- installation via GitHub Release  
+- installation via script intelligent  
+- installation manuelle (PS5 / PS7)  
+- compatibilité complète  
+- dépannage  
+- vérification de l’installation  
+
+👉 Guide complet :  
+https://github.com/ledino/SecureGen/blob/main/docs/installation.md
+
+---
+
+# 🧩 Fonctions incluses
+
+| Fonction              | Description |
 |----------------------|-------------|
-| `Get-PassWord`       | Generates a secure password |
-| `Get-PassPhrase`     | Generates a robust, readable passphrase |
-| `Get-PKIPass`        | Generates PKI‑grade secrets (Password/Passphrase) + SecureString |
-| `Get-CryptoIndex`    | Cryptographically secure index generator |
-| `Invoke-Beep`        | Cross‑platform beep |
-| `Set-ClipboardSafe`  | Cross‑platform clipboard copy |
-| `Clear-ClipboardSafe`| Secure clipboard clearing |
+| `Get-PassWord`       | Génère un mot de passe sécurisé |
+| `Get-PassPhrase`     | Génère une passphrase robuste et lisible |
+| `Get-PKIPass`        | Génère un secret PKI (Password/Passphrase) + SecureString | 
+| `Get-CryptoIndex`    | Générateur cryptographique interne |
+| `Invoke-Beep`        | Feedback sonore cross-platform |
+| `Set-ClipboardSafe`  | Copie cross-platform avec fallback |
+| `Clear-ClipboardSafe`| Efface le clipboard de manière sûre |
 
-Aliases:
+Alias ergonomiques :
 
-| Alias   | Function         |
+| Alias   | Fonction         |
 |---------|------------------|
 | `sgw`   | `Get-PassWord`   |
 | `sgp`   | `Get-PassPhrase` |
@@ -235,9 +353,9 @@ Aliases:
 
 ---
 
-# 📝 Usage Examples
+# 📝 Exemples d'utilisation
 
-## 🔑 Passwords
+## 🔑 Mot de passe
 
 ```powershell
 Get-PassWord
@@ -245,7 +363,7 @@ Get-PassWord -SpecialChars '!@#?%'
 Get-PassWord -UseSpecial:$false
 ```
 
-## 🧠 Passphrases
+## 🧠 Passphrase
 
 ```powershell
 Get-PassPhrase
@@ -254,152 +372,396 @@ Get-PassPhrase -Silent
 sgp -Words 5 -Len 8
 ```
 
-## 🚀 PKI Secrets
+## 🚀 PKIPass (PKI / KMS / Comptes de service)
+
+`Get-PKIPass` est la commande dédiée aux usages sensibles :  
+certificats, clés privées, comptes de service, automatisation sécurisée, KMS, etc.
+
+Elle permet de générer :
+
+- un **mot de passe PKI** (32 caractères par défaut)
+- une **passphrase PKI** (5×5 lettres par défaut)
+- un **SecureString** pour intégration dans des systèmes exigeants
+
+### 🔑 Exemples
 
 ```powershell
-# Default PKI password (32 chars)
+# Mot de passe PKI par défaut (32 caractères)
 Get-PKIPass
 
-# Default PKI passphrase (5×5)
+# Passphrase PKI par défaut (5 mots de 5 lettres)
 Get-PKIPass -Type Passphrase
 
-# Custom PKI password
+# Mot de passe PKI personnalisé
 Get-PKIPass -Type Password -Length 48
 
-# Custom PKI passphrase
+# Passphrase PKI personnalisée
 Get-PKIPass -Type Passphrase -Words 8 -Len 10
 
-# SecureString output
+# Retour en SecureString (KMS, AD, DSC, scripts sensibles)
 Get-PKIPass -AsSecureString
 ```
+Alias ergonomique :
+
+```powershell
+sgpki
+```
+
+### 🎯 Pourquoi utiliser Get‑PKIPass ?
+
+- Retour **SecureString** optionnel  
+- Paramètres cohérents avec `Get-PassWord` et `Get-PassPhrase`  
+- Idéal pour :
+  - comptes de service  
+  - certificats / PKI  
+  - scripts d’automatisation  
+  - KMS / Vault / Secret Management  
+  - DSC / WinRM  
 
 ---
 
-# 🖥️ Compatibility
+# 🖥️ Compatibilité
 
-| Platform | Support |
-|----------|---------|
-| Windows PowerShell 5.1 | ✔ |
-| PowerShell 7+ Windows | ✔ |
+| Plateforme | Support |
+|------------|---------|
+| Windows PowerShell 5.1 | ✔ (Legacy, RNG .NET) |
+| PowerShell 7+ Windows | ✔ (Core, Get‑SecureRandom) |
 | PowerShell 7+ Linux | ✔ |
 | PowerShell 7+ macOS | ✔ |
 
-Clipboard:
+Clipboard :
 
-- Windows: `Set-Clipboard`
-- macOS: `pbcopy`
-- Linux: `xclip` / `xsel`
+- Windows : `Set-Clipboard`
+- macOS : `pbcopy`
+- Linux : `xclip` ou `xsel`
 
 ---
 
-# 🎨 Visual Identity
+# 🎨 Identité visuelle
 
-Official palette:
+La palette officielle SecureGen est disponible dans :
 
-```
+```text
 assets/palette.md
 ```
 
+Elle inclut :
+
+- Bleu foncé (#0A2A4F)
+- Cyan vibrant (#00BCD4)
+- Bleu clair (#4FC3F7)
+- Gris anthracite (#263238)
+- Blanc (#FFFFFF)
+
 ---
 
-# 🧱 Module Architecture
+# 🧱 Architecture du module
+
+SecureGen charge automatiquement la bonne version :
 
 ```
 SecureGen/
 │
-├── Core.PS7.ps1      # Modern implementation (PS7+)
-└── Legacy.PS5.ps1    # Fallback implementation (PS5.1)
+├── Core.PS7.ps1      # Get-SecureRandom (NIST SP 800‑90A compliant)
+└── Legacy.PS5.ps1    # Version fallback (RNG .NET Framework)
 ```
 
-The loader `SecureGen.psm1`:
+Le loader `SecureGen.psm1` :
+- détecte PS5/PS7
+- charge la bonne implémentation
+- expose les cmdlets
+- gère les alias (`sgw`, `sgp`, `sgpki`)
+- centralise clipboard, beep, SecureString et helpers
 
-- detects PS5/PS7  
-- loads the correct implementation  
-- exposes cmdlets  
-- manages aliases  
-- centralizes clipboard, beep, SecureString helpers  
+## 📘 Documentation technique
+
+Pour les détails avancés, consultez :
+
+- [Architecture du module](docs/architecture.md)
+- [Diagrammes UML](docs/diagrams/overview.md)
+- [Processus de publication](docs/release-process.md)
 
 ---
 
-# ⚙️ Versioning & Releases
+# ⚙️ Versioning & Releases (v1.4.0+)
 
-SecureGen uses:
+SecureGen utilise :
 
 - **Conventional Commits**
-- **standard-version** (local execution)
-- **Git tags** (trigger PSGallery publishing)
+- **standard-version** (exécuté en local)  
+- **Git tags**  pour déclencher la publication PSGallery
 
-Release workflow:
+## 🔄 Processus de release
 
-```powershell
-npm run release -- --release-as X.Y.Z
-git push
-git push origin vX.Y.Z
+1. Commit avec Conventional Commits  
+2. Exécution locale :  
+   ```powershell
+   npm run release -- --release-as x.y.z
+   ```
+3. Push de la branche `main`  
+4. Push du tag `vX.Y.Z`  
+5. GitHub Actions publie automatiquement sur PSGallery  
+6. Création de la Release GitHub (notes prêtes à coller)
+
+Ce processus est **simple, fiable et entièrement maîtrisé côté développeur**.  
+
+---
+
+# 📦 Structure complète du module
+
+```text
+SecureGen/
+│
+├── SecureGen/                     # Code source du module
+│   ├── Core.PS7.ps1               # Implémentation moderne (PowerShell 7+)
+│   ├── Legacy.PS5.ps1             # Implémentation fallback (Windows PowerShell 5.1)
+│   ├── SecureGen.psm1             # Loader intelligent PS5/PS7 + export des fonctions
+│   └── SecureGen.psd1             # Manifest du module (bumpé automatiquement)
+│
+├── assets/                        # Identité visuelle & médias
+│   ├── logo.png
+│   ├── banner.png
+│   ├── palette.md
+│   └── screenshots/
+│       ├── password-demo.gif
+│       ├── passphrase-demo.gif
+│       ├── clipboard-demo.gif
+│       ├── script-demo.png
+│       └── github-actions-demo.png
+│
+├── docs/                          # Documentations complètes
+│   ├── index.md
+│   ├── installation.md
+│   ├── examples.md
+│   ├── advanced.md
+│   ├── architecture.md
+│   ├── security.md
+│   ├── contributing.md
+│   ├── troubleshooting.md
+│   ├── versioning.md
+│   ├── release-process.md
+│   ├── faq.md
+│   ├── benchmarks.md
+│   ├── screenshots.md
+│   ├── generate-help.md
+│   ├── cmdlets/
+│   │   ├── Get-PassWord.md
+│   │   ├── Get-PassPhrase.md
+│   │   ├── Get-CryptoIndex.md
+│   │   ├── Invoke-Beep.md
+│   │   └── SecureGen.md
+│   └── diagrams/
+│       ├── components.md
+│       ├── deployment.md
+│       ├── overview.md
+│       ├── pipeline-ci-cd.md
+│       └── sequence-get-password.md
+│
+├── node_modules                   # Dépendances Node.js (standard-version)
+│
+├── scripts/                       # Scripts internes & outils dev
+│   ├── build.ps1
+│   ├── Install-SecureGen.ps1
+│   ├── Publish-SecureGen.ps1
+│   ├── Generate-Help.ps1
+│   ├── Versioning-SecureGen.ps1   # (legacy, remplacé par standard-version)
+│   └── Release-All.ps1            # (legacy, remplacé par GitHub Actions)
+│
+├── .version-updaters/             # Updaters custom pour standard-version
+│   └── psd1-updater.js            # Mise à jour automatique du ModuleVersion
+│
+├── .github/
+│   ├── FUNDING.yml
+│   ├── pull_request_template.md
+│   ├── SECURITY_ADVISORY_TEMPLATE.md
+│   ├── DISUSSION_TEMPLATE/
+│   │   ├── announcements.yml
+│   │   ├── ideas.yml
+│   │   └── qna.yml
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── bug_report.md
+│   │   └── feature_request.md
+│   └── workflows/
+│       ├── ci.yml                 # CI multi-plateformes (tests + lint)
+│       └── publish.yml            # Publication automatique sur PSGallery (déclenchée par tag)
+│
+├── package.json                   # Dépendances Node + version source de vérité
+├── package-lock.json              # Verrouillage des dépendances
+├── .versioningrc.json             # Configuration standard-version
+│
+tests/
+│   ├── Get-PKIPass.Tests.ps1
+│   ├── Get-PassWord.Tests.ps1
+│   ├── Get-PassPhrase.Tests.ps1
+│   ├── Get-CryptoIndex.Tests.ps1
+│   ├── Invoke-Beep.Tests.ps1
+│   └── Clipboard.Tests.ps1
+│
+├── CHANGELOG.md                   # Changelog généré automatiquement
+├── README.md                      # Documentation principale
+├── README.en.md
+├── ROADMAP.md
+├── SECURITY.md
+├── SUPPORT.md
+├── CODE_OF_CONDUCT.md
+├── GOVERNANCE.md
+├── CONTRIBUTING.md
+├── MAINTAINERS.md
+├── LICENSE                        # Licence MIT
+└── .gitignore
 ```
 
-GitHub Actions publishes automatically.
-
 ---
 
-# 📦 Repository Structure
+# 📘 Documentation des commandes
 
-(Identical to your French README, rewritten in English — omitted here for brevity, but I can include it if you want.)
+La documentation complète des commandes SecureGen est générée automatiquement via **PlatyPS**.
 
----
-
-# 📘 Cmdlet Documentation
+Elle est disponible ici :
 
 👉 `docs/cmdlets/`
+
+Chaque commande dispose de sa propre page dédiée, incluant :
+
+- description  
+- paramètres  
+- exemples  
+- notes  
+- informations techniques  
+
+La documentation est régénérée automatiquement grâce au script :
+
+```
+scripts/Generate-Help.ps1
+```
 
 ---
 
 # 🖼️ Screenshots / GIFs
 
-(Identical to your French README.)
+Voici quelques aperçus de SecureGen en action :
+
+## 🔑 Génération d’un mot de passe
+<p align="center">
+  <img src="assets/screenshots/password-demo.gif" width="600" alt="Password Demo"/>
+</p>
+
+## 🧠 Génération d’une passphrase
+<p align="center">
+  <img src="assets/screenshots/passphrase-demo.gif" width="600" alt="Passphrase Demo"/>
+</p>
 
 ---
 
 # ⚡ Benchmarks
 
-(Identical to your French README.)
+SecureGen est optimisé pour offrir d’excellentes performances, même dans des scripts intensifs.
+
+## 🔢 Génération de 10 000 mots de passe
+| Version PowerShell | Temps moyen | Notes |
+|--------------------|-------------|-------|
+| PS 7.4 (Core)      | ~45 ms      | Ultra rapide grâce à Get‑SecureRandom |
+| PS 5.1 (Windows)   | ~110 ms     | RNG .NET Framework, toujours performant |
+
+## 🧠 Génération de 10 000 passphrases
+| Version PowerShell | Temps moyen | Notes |
+|--------------------|-------------|-------|
+| PS 7.4 (Core)      | ~60 ms      | Optimisé |
+| PS 5.1 (Windows)   | ~150 ms     | Très correct |
 
 ---
 
-# 🔐 Security
+# 🔐 Security Considerations
 
-(Identical to your French README, rewritten in English.)
+SecureGen suit plusieurs principes de sécurité :
+
+- **Aucune donnée n’est envoyée en externe**  
+  Toutes les opérations cryptographiques sont locales.
+
+- **Utilisation de primitives modernes**  
+  - PS7 : Get‑SecureRandom (NIST SP 800‑90 compliant)  
+  - PS5 : RNG .NET Framework (cryptographiquement sûr)
+
+- **Clipboard sécurisé**  
+  - Effacement automatique  
+  - Fallback cross‑platform  
+  - Option `-Silent` pour éviter les fuites visuelles/sonores
+
+- **Pas de stockage persistant**  
+  SecureGen ne sauvegarde jamais les mots de passe ou passphrases.
+
+- **Code source auditable**  
+  Tout le module est open‑source et documenté.
+
+Pour plus de détails :  
+👉 `docs/security.md`
 
 ---
 
 # 🗺️ Roadmap
 
-(Identical to your French README.)
+Voici les évolutions prévues pour SecureGen :
+
+- [ ] Ajout d’un mode “phrase naturelle” (style Diceware amélioré)
+- [ ] Génération de clés API formatées (UUID, Base32, Base58…)
+- [ ] Ajout d’un mode interactif (TUI minimal)
+- [ ] Intégration d’un dictionnaire multilingue
+- [ ] Support natif du SecureString PS7
+- [ ] Ajout d’un module “SecureGen.Tools” pour les scripts avancés
+- [ ] Benchmarks intégrés (performance / entropie)
+
+Vous pouvez proposer des idées via les Issues ou Discussions.
 
 ---
 
-# 🤝 Contributing
+# 🤝 Contribuer
 
-Contribution guides:
+Les contributions sont les bienvenues !
 
+Guides officiels :
 - 🇫🇷 `docs/contributing.md`
 - 🇬🇧 `docs/contributing.en.md`
+
+Les contributions suivent :
+- Conventional Commits
+- Pas de bump manuel du manifest
+- Pas de modification manuelle du changelog
+- Release automatisée via GitHub Actions
 
 ---
 
 # 💬 Support & Feedback
 
-(Identical to your French README.)
+Si vous appréciez SecureGen, n’hésitez pas à :
+
+- ⭐ **mettre une étoile sur GitHub**
+- 🐛 signaler un bug via les Issues
+- 💡 proposer une amélioration
+- 📣 partager le module autour de vous
+
+Votre feedback aide énormément à faire évoluer SecureGen.
 
 ---
 
-# 📜 License
+## ☕ Support the project
 
-MIT License.
+SecureGen est un projet open‑source développé avec passion.  
+Si cet outil vous est utile et que vous souhaitez soutenir son développement, vous pouvez m’offrir un café sur Ko‑fi :
+
+👉 https://ko-fi.com/ledino_creator
+
+Merci pour votre soutien — il m’encourage énormément et m’aide à continuer à améliorer SecureGen.
 
 ---
 
-# ⭐ Acknowledgments
+# 📜 Licence
 
-Thank you for using SecureGen — built to be **simple**, **secure**, and **pleasant to use**.
+SecureGen est distribué sous licence **MIT**.
+
+---
+
+# ⭐ Remerciements
+
+Merci d’utiliser SecureGen — un module conçu pour être **simple**, **sécurisé**, et **agréable à utiliser**.
 
 ---

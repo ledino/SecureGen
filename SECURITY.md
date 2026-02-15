@@ -31,8 +31,8 @@ If you discover a security issue, **do not open a public GitHub Issue**.
 Instead, please report it privately using one of the following methods:
 
 ### 📧 Private email  
-security@ledino.dev  
-*(replace with your preferred address if needed)*
+logiciel75013@gmail.com  
+
 
 ### 🔒 GitHub Security Advisories  
 `https://github.com/ledino/SecureGen/security/advisories` [(github.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fgithub.com%2Fledino%2FSecureGen%2Fsecurity%2Fadvisories")

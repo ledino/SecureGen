@@ -115,11 +115,11 @@ dans des scripts, DSC, ou des modules nécessitant ce format.
 
 .EXAMPLE
 Get-PKIPass
-Génère un mot de passe PKI de 24 caractères.
+Génère un mot de passe PKI de 32 caractères.
 
 .EXAMPLE
 Get-PKIPass -Type Passphrase
-Génère une passphrase de 5×5 lettres.
+Génère une passphrase de 6×6 lettres.
 
 .EXAMPLE
 Get-PKIPass -AsSecureString
@@ -130,7 +130,7 @@ Get-PKIPass -NoClipboard
 Génère un secret sans copie dans le presse‑papier.
 
 .PARAMETER Type
-Type de secret à générer : Password (24 chars) ou Passphrase (5×5 lettres).
+Type de secret à générer : Password (32 chars) ou Passphrase (6×6 lettres).
 
 .PARAMETER AsSecureString
 Retourne le secret sous forme de SecureString.
@@ -153,9 +153,9 @@ Utilise Get-PassWord et Get-PassPhrase du module SecureGen.
 
         [int]$Length = 32,
 
-        [int]$Words = 5,
+        [int]$Words = 6,
         [Alias('MotsParBloc','WordsCount','NbWords')]
-        [int]$Len = 5,
+        [int]$Len = 6,
 
         [switch]$AsSecureString,
         [switch]$NoClipboard

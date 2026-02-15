@@ -146,6 +146,8 @@ SecureGen/
 │       ├── pipeline-ci-cd.md
 │       └── sequence-get-password.md
 │
+├── node_modules                   # Dépendances Node.js (standard-version)
+│
 ├── scripts/                       # Scripts internes & outils dev
 │   ├── build.ps1
 │   ├── Install-SecureGen.ps1
@@ -158,6 +160,16 @@ SecureGen/
 │   └── psd1-updater.js            # Mise à jour automatique du ModuleVersion
 │
 ├── .github/
+│   ├── FUNDING.yml
+│   ├── pull_request_template.md
+│   ├── SECURITY_ADVISORY_TEMPLATE.md
+│   ├── DISUSSION_TEMPLATE/
+│   │   ├── announcements.yml
+│   │   ├── ideas.yml
+│   │   └── qna.yml
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── bug_report.md
+│   │   └── feature_request.md
 │   └── workflows/
 │       ├── ci.yml                 # CI multi-plateformes (tests + lint)
 │       └── publish.yml            # Publication automatique sur PSGallery (déclenchée par tag)
@@ -176,6 +188,14 @@ tests/
 │
 ├── CHANGELOG.md                   # Changelog généré automatiquement
 ├── README.md                      # Documentation principale
+├── README.en.md
+├── ROADMAP.md
+├── SECURITY.md
+├── SUPPORT.md
+├── CODE_OF_CONDUCT.md
+├── GOVERNANCE.md
+├── CONTRIBUTING.md
+├── MAINTAINERS.md
 ├── LICENSE                        # Licence MIT
 └── .gitignore
 ```

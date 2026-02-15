@@ -7,7 +7,7 @@ This document lists the maintainers of the SecureGen project and explains how ma
 # 👥 Current Maintainers
 
 ## **Primary Maintainer**
-- **Saddek (ledino)**  
+- **Ledino**  
   Role: Project creator, lead maintainer, architecture owner  
   Responsibilities:
   - Reviewing Pull Requests  
