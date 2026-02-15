@@ -1,41 +1,30 @@
+<!-- Header centré -->
 <div style="text-align:center;">
-
-  <!-- Logo -->
-  <div style="font-size:48px; margin-bottom:10px;">
-    🔒
-  </div>
-
-  <!-- Titre -->
-  <h1 style="margin:0; padding:0;">SecureGen</h1>
-
-  <!-- Sous-titre -->
-  <p style="margin-top:5px; color:#666;">
+  <div style="font-size:48px;">🔒</div>
+  <h1 style="margin:0;">SecureGen</h1>
+  <p style="color:#666; margin-top:5px;">
     <em>Modern, secure & ergonomic password generation for PowerShell</em>
   </p>
-
 </div>
 
-<!-- Barre Ko-fi à gauche / Langues à droite -->
-<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:20px;">
-
-  <!-- Ko-fi -->
-  <div>
-    <a href="https://ko-fi.com/tonprofil" target="_blank">
-      <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Ko-fi">
-    </a>
-  </div>
-
-  <!-- Langues -->
-  <div>
-    <a href="README.fr.md">
-      <img src="https://img.shields.io/badge/FRANÇAIS-1E88E5?style=for-the-badge&logo=github&logoColor=white">
-    </a>
-    <a href="README.md">
-      <img src="https://img.shields.io/badge/ENGLISH-000000?style=for-the-badge&logo=github&logoColor=white">
-    </a>
-  </div>
-
-</div>
+<!-- Ko-fi + Langues : TABLE GitHub-safe -->
+<table style="width:100%; margin-top:20px;">
+  <tr>
+    <td style="text-align:left; width:50%;">
+      <a href="https://ko-fi.com/tonprofil">
+        <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi">
+      </a>
+    </td>
+    <td style="text-align:right;">
+      <a href="README.fr.md">
+        <img src="https://img.shields.io/badge/FRANÇAIS-1E88E5?style=for-the-badge&logo=github&logoColor=white">
+      </a>
+      <a href="README.md">
+        <img src="https://img.shields.io/badge/ENGLISH-000000?style=for-the-badge&logo=github&logoColor=white">
+      </a>
+    </td>
+  </tr>
+</table>
 
 ---
 
