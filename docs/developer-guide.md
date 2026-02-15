@@ -36,6 +36,10 @@ Le loader `SecureGen.psm1` :
 
 Le manifest `SecureGen.psd1` est mis à jour automatiquement via `standard-version`.
 
+## Diagramme
+
+👉 `assets/diagrams/architecture-interne.svg`
+
 ---
 
 # 🧭 2. Naviguer dans le dépôt
@@ -299,8 +303,11 @@ Voici une représentation simplifiée du pipeline CI/CD de SecureGen :
                  └──────────────────────────┘
 ```
 
----
+## Diagramme
 
+👉 `assets/diagrams/pipeline-ci-cd.svg`
+
+---
 
 # 🧱 9. Ajouter une nouvelle fonctionnalité
 
@@ -350,6 +357,13 @@ Voir :
 👉 `MAINTAINERS.md`
 
 ---
+
+# 🧩 Workflow de contribution (diagramme)
+
+Voir : assets/diagrams/contribution-workflow.svg
+
+---
+
 
 # 🔐 11. Sécurité & bonnes pratiques
 

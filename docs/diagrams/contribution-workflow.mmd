@@ -1,0 +1,49 @@
+flowchart LR
+
+    %% Styles
+    classDef stepClass fill:#0A2A4F,stroke:#0A2A4F,color:#fff
+    classDef actionClass fill:#00BCD4,stroke:#008BA3,color:#fff
+    classDef decisionClass fill:#4FC3F7,stroke:#0288D1,color:#000
+    classDef endClass fill:#4CAF50,stroke:#2E7D32,color:#fff
+
+    START["Début contribution<br/>Fork ou clone du repo"]:::stepClass
+
+    BRANCH["Créer une branche<br/>feature/xxx ou fix/xxx"]:::actionClass
+
+    DEV["Développement<br/>• Code<br/>• Tests<br/>• Documentation"]:::actionClass
+
+    LINT["Analyse statique<br/>PSScriptAnalyzer"]:::actionClass
+    TESTS["Tests unitaires<br/>Pester"]:::actionClass
+
+    DOC["Mise à jour documentation<br/>PlatyPS + docs/"]:::actionClass
+
+    COMMIT["Commits<br/>Conventional Commits"]:::actionClass
+
+    PUSH["Push vers GitHub<br/>feature/xxx"]:::stepClass
+
+    PR["Pull Request<br/>vers main"]:::actionClass
+
+    REVIEW{"Revue de code<br/>Maintainers"}:::decisionClass
+
+    CHANGES["Modifications demandées"]:::actionClass
+
+    MERGE["Merge PR<br/>dans main"]:::endClass
+
+    CI["CI GitHub Actions<br/>Lint + Tests + Matrix PS"]:::actionClass
+
+    %% Relations
+    START --> BRANCH
+    BRANCH --> DEV
+    DEV --> LINT
+    LINT --> TESTS
+    TESTS --> DOC
+    DOC --> COMMIT
+    COMMIT --> PUSH
+    PUSH --> PR
+    PR --> REVIEW
+
+    REVIEW -->|Non approuvé| CHANGES
+    CHANGES --> DEV
+
+    REVIEW -->|Approuvé| CI
+    CI --> MERGE

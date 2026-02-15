@@ -528,7 +528,7 @@ SecureGen/
 │       ├── clipboard-demo.gif
 │       ├── script-demo.png
 │       └── github-actions-demo.png
-│
+│   
 ├── docs/                          # Documentations complètes
 │   ├── index.md
 │   ├── installation.md
@@ -556,7 +556,9 @@ SecureGen/
 │       ├── deployment.md
 │       ├── overview.md
 │       ├── pipeline-ci-cd.md
-│       └── sequence-get-password.md
+│       ├── sequence-get-password.md
+│       ├── architecture-interne.mmd
+│       └── ...
 │
 ├── node_modules                   # Dépendances Node.js (standard-version)
 │

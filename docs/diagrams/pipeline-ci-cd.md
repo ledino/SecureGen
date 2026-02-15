@@ -169,56 +169,55 @@ stop
 flowchart TD
 
      %% Styles
-     classDef stepClass fill:#0A2A4F,stroke:#0A2A4F,color:#fff
-     classDef actionClass fill:#00BCD4,stroke:#008BA3,color:#fff
-     classDef decisionClass fill:#4FC3F7,stroke:#0288D1,color:#000
-     classDef endClass fill:#4CAF50,stroke:#2E7D32,color:#fff
+    classDef stepClass fill:#0A2A4F,stroke:#0A2A4F,color:#fff
+    classDef actionClass fill:#00BCD4,stroke:#008BA3,color:#fff
+    classDef decisionClass fill:#4FC3F7,stroke:#0288D1,color:#000
+    classDef endClass fill:#4CAF50,stroke:#2E7D32,color:#fff
 
+    A["Développement local<br/>• Modifications du code<br/>• Tests manuels<br/>• Commits Conventional"]:::stepClass
 
-     A[Développement local<br/>• Modifications du code<br/>• Tests manuels<br/>• Commits Conventional]:::step
+    A --> B["standard-version<br/>Versioning automatisé"]:::actionClass
 
-     A --> B[standard-version<br/>Versioning automatisé]:::action
+    B --> B1["Analyse des commits"]:::actionClass
+    B1 --> B2["Détermination du bump"]:::actionClass
+    B2 --> B3["Mise à jour package.json<br/>+ SecureGen.psd1"]:::actionClass
+    B3 --> B4["Génération CHANGELOG.md"]:::actionClass
+    B4 --> B5["Commit auto<br/>chore(release): X.Y.Z"]:::actionClass
+    B5 --> B6["Création du tag vX.Y.Z"]:::actionClass
 
-     B --> B1[Analyse des commits]:::action
-     B1 --> B2[Détermination du bump]:::action
-     B2 --> B3[Mise à jour package.json<br/>+ SecureGen.psd1]:::action
-     B3 --> B4[Génération CHANGELOG.md]:::action
-     B4 --> B5[Commit auto<br/>chore(release): X.Y.Z]:::action
-     B5 --> B6[Création du tag vX.Y.Z]:::action
+    B6 --> C["Push vers GitHub<br/>main + tag"]:::stepClass
 
-     B6 --> C[Push vers GitHub<br/>main + tag]:::step
+    C --> D["CI GitHub Actions<br/>(ci.yml)"]:::actionClass
 
-     C --> D[CI GitHub Actions<br/>(ci.yml)]:::action
+    D --> D1["Installation PowerShell"]:::actionClass
+    D1 --> D2["Analyse statique<br/>PSScriptAnalyzer"]:::actionClass
+    D2 --> D3["Import du module"]:::actionClass
+    D3 --> D4["Tests Pester"]:::actionClass
+    D4 --> D5["Validation du manifest"]:::actionClass
 
-     D --> D1[Installation PowerShell]:::action
-     D1 --> D2[Analyse statique<br/>PSScriptAnalyzer]:::action
-     D2 --> D3[Import du module]:::action
-     D3 --> D4[Tests Pester]:::action
-     D4 --> D5[Validation du manifest]:::action
+    D5 --> M{"Matrice PS5 / PS7"}:::decisionClass
+    M --> M1["Windows PowerShell 5.1"]:::actionClass
+    M --> M2["PowerShell 7 (Windows)"]:::actionClass
+    M --> M3["PowerShell 7 (Linux)"]:::actionClass
 
-     D5 --> M{Matrice PS5 / PS7}:::decision
-     M --> M1[Windows PowerShell 5.1]:::action
-     M --> M2[PowerShell 7 (Windows)]:::action
-     M --> M3[PowerShell 7 (Linux)]:::action
+    M1 --> E
+    M2 --> E
+    M3 --> E
 
-     M1 --> E
-     M2 --> E
-     M3 --> E
+    E{"CI réussie ?"}:::decisionClass
 
-     E{CI réussie ?}:::decision
+    E -->|Non| F["Retour développeur<br/>Corrections locales"]:::stepClass
+    F --> A
 
-     E -->|Non| F[Retour développeur<br/>Corrections locales]:::step
-     F --> A
+    E -->|Oui| G["Pipeline de publication<br/>(publish.yml)"]:::actionClass
 
-     E -->|Oui| G[Pipeline de publication<br/>(publish.yml)]:::action
+    G --> G1["Déclencheur : push tag v*"]:::actionClass
+    G1 --> G2["Reconstruction du module"]:::actionClass
+    G2 --> G3["Validation du manifest"]:::actionClass
+    G3 --> G4["Publication PSGallery"]:::actionClass
+    G4 --> G5["Création Release GitHub"]:::actionClass
 
-     G --> G1[Déclencheur : push tag v*]:::action
-     G1 --> G2[Reconstruction du module]:::action
-     G2 --> G3[Validation du manifest]:::action
-     G3 --> G4[Publication PSGallery]:::action
-     G4 --> G5[Création Release GitHub]:::action
-
-     G5 --> H[Module publié<br/>PSGallery + Release GitHub]:::end
+    G5 --> H["Module publié<br/>PSGallery + Release GitHub"]:::endClass
 ```
 
 ---

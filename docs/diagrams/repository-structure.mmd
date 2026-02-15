@@ -1,0 +1,75 @@
+flowchart TD
+
+    %% Styles
+    classDef root fill:#0A2A4F,stroke:#0A2A4F,color:#fff
+    classDef folder fill:#00BCD4,stroke:#008BA3,color:#fff
+    classDef file fill:#4FC3F7,stroke:#0288D1,color:#000
+    classDef special fill:#4CAF50,stroke:#2E7D32,color:#fff
+
+    ROOT["SecureGen/ (racine du dépôt)"]:::root
+
+    %% Dossiers principaux
+    SRC["SecureGen/<br/>Code source du module"]:::folder
+    DOCS["docs/<br/>Documentation complète"]:::folder
+    DIAG["assets/diagrams/<br/>Diagrammes UML / Mermaid / SVG"]:::folder
+    SCRIPTS["scripts/<br/>Scripts développeurs"]:::folder
+    TESTS["tests/<br/>Tests Pester"]:::folder
+    GITHUB[".github/<br/>Workflows + Community Standards"]:::folder
+    VERSION[".version-updaters/<br/>Updaters standard-version"]:::folder
+
+    %% Fichiers racine
+    README["README.md"]:::file
+    CHANGELOG["CHANGELOG.md"]:::file
+    LICENSE["LICENSE (MIT)"]:::file
+    MANIFEST["SecureGen.psd1<br/>Manifest du module"]:::special
+    PACKAGE["package.json<br/>Versioning standard-version"]:::special
+
+    %% Relations
+    ROOT --> SRC
+    ROOT --> DOCS
+    ROOT --> DIAG
+    ROOT --> SCRIPTS
+    ROOT --> TESTS
+    ROOT --> GITHUB
+    ROOT --> VERSION
+
+    ROOT --> README
+    ROOT --> CHANGELOG
+    ROOT --> LICENSE
+    ROOT --> MANIFEST
+    ROOT --> PACKAGE
+
+    %% Sous-dossiers docs
+    DOCS --> DOCS_CMD["cmdlets/<br/>Documentation PlatyPS"]:::folder
+    DOCS --> DOCS_ADV["advanced.md"]:::file
+    DOCS --> DOCS_ARCH["architecture.md"]:::file
+    DOCS --> DOCS_SEC["security.md"]:::file
+    DOCS --> DOCS_EX["examples.md"]:::file
+    DOCS --> DOCS_INSTALL["installation.md"]:::file
+    DOCS --> DOCS_FAQ["faq.md"]:::file
+    DOCS --> DOCS_REL["release-process.md"]:::file
+
+    %% Sous-dossiers source
+    SRC --> CORE["Core.PS7.ps1"]:::file
+    SRC --> LEGACY["Legacy.PS5.ps1"]:::file
+    SRC --> PSM1["SecureGen.psm1"]:::file
+
+    %% Scripts
+    SCRIPTS --> BUILD["build.ps1"]:::file
+    SCRIPTS --> INSTALL["Install-SecureGen.ps1"]:::file
+    SCRIPTS --> PUBLISH["Publish-SecureGen.ps1"]:::file
+    SCRIPTS --> HELP["Generate-Help.ps1"]:::file
+
+    %% Tests
+    TESTS --> T1["Get-PassWord.Tests.ps1"]:::file
+    TESTS --> T2["Get-PassPhrase.Tests.ps1"]:::file
+    TESTS --> T3["Get-PKIPass.Tests.ps1"]:::file
+    TESTS --> T4["Get-CryptoIndex.Tests.ps1"]:::file
+    TESTS --> T5["Clipboard.Tests.ps1"]:::file
+    TESTS --> T6["Invoke-Beep.Tests.ps1"]:::file
+
+    %% GitHub
+    GITHUB --> WF["workflows/<br/>ci.yml + publish.yml"]:::folder
+    GITHUB --> ISSUE["ISSUE_TEMPLATE/"]:::folder
+    GITHUB --> PR["PULL_REQUEST_TEMPLATE.md"]:::file
+    GITHUB --> FUND["FUNDING.yml"]:::file

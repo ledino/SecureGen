@@ -1,0 +1,34 @@
+flowchart LR
+
+    %% Styles
+    classDef module fill:#0A2A4F,stroke:#0A2A4F,color:#fff
+    classDef impl fill:#00BCD4,stroke:#008BA3,color:#fff
+    classDef helper fill:#4FC3F7,stroke:#0288D1,color:#000
+    classDef external fill:#4CAF50,stroke:#2E7D32,color:#fff
+
+    SG["SecureGen.psm1<br/>Loader principal"]:::module
+
+    PSVER["Détection version PowerShell<br/>PS 5.1 / PS 7+"]:::helper
+
+    CORE["Core.PS7.ps1<br/>Implémentation moderne"]:::impl
+    LEGACY["Legacy.PS5.ps1<br/>Implémentation fallback"]:::impl
+
+    CMDS["Cmdlets publiques<br/>Get-PassWord / Get-PassPhrase / Get-PKIPass / Get-CryptoIndex / Invoke-Beep"]:::helper
+    ALIASES["Aliases<br/>sgw / sgp / sgpki"]:::helper
+
+    CLIP["Clipboard helpers<br/>Set-ClipboardSafe / Clear-ClipboardSafe"]:::helper
+    RNG["Crypto RNG<br/>Get-SecureRandom / RNGCryptoServiceProvider"]:::helper
+
+    PSD1["SecureGen.psd1<br/>Manifest (ModuleVersion auto)"]:::external
+
+    %% Relations
+    SG --> PSVER
+    PSVER --> CORE
+    PSVER --> LEGACY
+
+    SG --> CMDS
+    SG --> ALIASES
+    SG --> CLIP
+    SG --> RNG
+
+    SG --> PSD1
