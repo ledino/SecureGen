@@ -4,27 +4,18 @@
   <em>Modern, secure & ergonomic password generation for PowerShell</em>
 </p>
 
-<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
-  <div>
-    <a href="https://ko-fi.com/ledino_creator">
-      <img src="https://img.shields.io/badge/Ko--fi-Support%20me-FF5E5B?style=for-the-badge&logo=kofi&logoColor=white" />
-    </a>
-  </div>
-
-  <div>
-    <a href="README.md">
-      <img src="https://img.shields.io/badge/Français-0055A4?style=for-the-badge&logo=github&logoColor=white" />
-    </a>
-    <a href="README.en.md">
-      <img src="https://img.shields.io/badge/English-000000?style=for-the-badge&logo=github&logoColor=white" />
-    </a>
-  </div>
-</div>
-
 ---
 
 <p align="center">
+    <a href="README.md">
+        <img src="https://img.shields.io/badge/FRANÇAIS-1E88E5?style=for-the-badge&logo=github&logoColor=white">
+    </a>
+    <a href="README.en.md">
+        <img src="https://img.shields.io/badge/ENGLISH-000000?style=for-the-badge&logo=github&logoColor=white">
+    </a>
+</p>
 
+<p align="center">
   <!-- PSGallery -->
   <a href="https://www.powershellgallery.com/packages/SecureGen">
     <img src="https://img.shields.io/powershellgallery/v/SecureGen.svg?style=flat-square&label=PSGallery&color=0A2A4F" />
@@ -45,7 +36,6 @@
   <a href="https://github.com/ledino/SecureGen/releases">
     <img src="https://img.shields.io/github/v/release/ledino/SecureGen?style=flat-square&label=Release&color=0A2A4F" />
   </a>
-
 </p>
 
 ---
@@ -56,6 +46,12 @@
 
 <p align="center">
   <img src="assets/banner.png" alt="SecureGen Banner"/>
+</p>
+
+<p align="center">
+    <a href="https://ko-fi.com/ledino_creator">
+        <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Ko-fi">
+    </a>
 </p>
 
 ---
