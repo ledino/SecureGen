@@ -1,4 +1,6 @@
-<h1 align="center">🔐 SecureGen</h1>
+<div align="center">
+  <h1 style="font-size:72px;">🔐 SecureGen</h1>
+</div>
 
 <p align="center">
   <em>Modern, secure & ergonomic password generation for PowerShell</em>
@@ -7,20 +9,20 @@
 ---
 
 <p align="center">
-    <a href="README.md">
+    <a href="README.md" style="text-decoration: none;">
         <img src="https://img.shields.io/badge/FRANÇAIS-1E88E5?style=for-the-badge&logo=github&logoColor=white">
     </a>
-    <a href="README.en.md">
+    <a href="README.en.md" style="text-decoration: none;">
         <img src="https://img.shields.io/badge/ENGLISH-000000?style=for-the-badge&logo=github&logoColor=white">
     </a>
 </p>
 
 <p align="center">
   <!-- PSGallery -->
-  <a href="https://www.powershellgallery.com/packages/SecureGen">
+  <a href="https://www.powershellgallery.com/packages/SecureGen" style="text-decoration: none;">
     <img src="https://img.shields.io/powershellgallery/v/SecureGen.svg?style=flat-square&label=PSGallery&color=0A2A4F" />
   </a>
-  <a href="https://www.powershellgallery.com/packages/SecureGen">
+  <a href="https://www.powershellgallery.com/packages/SecureGen" style="text-decoration: none;">
     <img src="https://img.shields.io/powershellgallery/dt/SecureGen.svg?style=flat-square&label=Downloads&color=00BCD4" />
   </a>
 
@@ -28,12 +30,12 @@
   <img src="https://img.shields.io/badge/PowerShell-5.1%20%7C%207.x-4FC3F7?style=flat-square" />
 
   <!-- CI -->
-  <a href="https://github.com/ledino/SecureGen/actions/workflows/ci.yml">
+  <a href="https://github.com/ledino/SecureGen/actions/workflows/ci.yml" style="text-decoration: none;">
     <img src="https://img.shields.io/github/actions/workflow/status/ledino/SecureGen/ci.yml?style=flat-square&label=CI&color=4FC3F7" />
   </a>
 
   <!-- Release -->
-  <a href="https://github.com/ledino/SecureGen/releases">
+  <a href="https://github.com/ledino/SecureGen/releases" style="text-decoration: none;">
     <img src="https://img.shields.io/github/v/release/ledino/SecureGen?style=flat-square&label=Release&color=0A2A4F" />
   </a>
 </p>

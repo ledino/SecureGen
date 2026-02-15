@@ -2,12 +2,12 @@
 <div align="center">
 
   <!-- Logo -->
-  <div style="font-size:48px; margin-bottom:10px;">
+  <div style="font-size:92px; margin-bottom:10px;">
     🔒
   </div>
 
   <!-- Titre -->
-  <h1 style="margin:0; padding:0;">SecureGen</h1>
+  <h1 style="margin:0; padding:0; font-size:72px;">SecureGen</h1>
 
   <!-- Sous-titre -->
   <p style="margin-top:6px; color:#666;">
@@ -31,7 +31,7 @@
 
 <!-- Ko-fi SEULE (ligne du dessus, centré) -->
 <p align="center" style="margin:20px 0;">
-  <a href="https://ko-fi.com/ledino_creator">
+  <a href="https://ko-fi.com/ledino_creator" style="text-decoration: none;" >
     <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi">
   </a>
 </p>
@@ -41,10 +41,10 @@
 <p align="center">
 
   <!-- PSGallery -->
-  <a href="https://www.powershellgallery.com/packages/SecureGen">
+  <a href="https://www.powershellgallery.com/packages/SecureGen" style="text-decoration: none;">
     <img src="https://img.shields.io/powershellgallery/v/SecureGen.svg?style=flat-square&label=PSGallery&color=0A2A4F" />
   </a>
-  <a href="https://www.powershellgallery.com/packages/SecureGen">
+  <a href="https://www.powershellgallery.com/packages/SecureGen" style="text-decoration: none;">
     <img src="https://img.shields.io/powershellgallery/dt/SecureGen.svg?style=flat-square&label=Downloads&color=00BCD4" />
   </a>
 
@@ -52,12 +52,12 @@
   <img src="https://img.shields.io/badge/PowerShell-5.1%20%7C%207.x-4FC3F7?style=flat-square" />
 
   <!-- CI -->
-  <a href="https://github.com/ledino/SecureGen/actions/workflows/ci.yml">
+  <a href="https://github.com/ledino/SecureGen/actions/workflows/ci.yml" style="text-decoration: none;">
     <img src="https://img.shields.io/github/actions/workflow/status/ledino/SecureGen/ci.yml?style=flat-square&label=CI&color=4FC3F7" />
   </a>
 
   <!-- Release -->
-  <a href="https://github.com/ledino/SecureGen/releases">
+  <a href="https://github.com/ledino/SecureGen/releases" style="text-decoration: none;">
     <img src="https://img.shields.io/github/v/release/ledino/SecureGen?style=flat-square&label=Release&color=0A2A4F" />
   </a>
 
