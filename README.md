@@ -1,24 +1,40 @@
-<h1 align="center">🔐 SecureGen</h1>
+<div style="text-align:center;">
 
-<p align="center">
-  <em>Modern, secure & ergonomic password generation for PowerShell</em>
-</p>
+  <!-- Logo -->
+  <div style="font-size:48px; margin-bottom:10px;">
+    🔒
+  </div>
 
-<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+  <!-- Titre -->
+  <h1 style="margin:0; padding:0;">SecureGen</h1>
+
+  <!-- Sous-titre -->
+  <p style="margin-top:5px; color:#666;">
+    <em>Modern, secure & ergonomic password generation for PowerShell</em>
+  </p>
+
+</div>
+
+<!-- Barre Ko-fi à gauche / Langues à droite -->
+<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:20px;">
+
+  <!-- Ko-fi -->
   <div>
-    <a href="https://ko-fi.com/ledino_creator">
-      <img src="https://img.shields.io/badge/Ko--fi-Support%20me-FF5E5B?style=for-the-badge&logo=kofi&logoColor=white" />
+    <a href="https://ko-fi.com/tonprofil" target="_blank">
+      <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Ko-fi">
     </a>
   </div>
 
+  <!-- Langues -->
   <div>
+    <a href="README.fr.md">
+      <img src="https://img.shields.io/badge/FRANÇAIS-1E88E5?style=for-the-badge&logo=github&logoColor=white">
+    </a>
     <a href="README.md">
-      <img src="https://img.shields.io/badge/Français-0055A4?style=for-the-badge&logo=github&logoColor=white" />
-    </a>
-    <a href="README.en.md">
-      <img src="https://img.shields.io/badge/English-000000?style=for-the-badge&logo=github&logoColor=white" />
+      <img src="https://img.shields.io/badge/ENGLISH-000000?style=for-the-badge&logo=github&logoColor=white">
     </a>
   </div>
+
 </div>
 
 ---
