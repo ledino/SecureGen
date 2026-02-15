@@ -169,10 +169,11 @@ stop
 flowchart TD
 
      %% Styles
-     classDef step fill:#0A2A4F stroke:#0A2A4F color:#fff
-     classDef action fill:#00BCD4 stroke:#008BA3 color:#fff
-     classDef decision fill:#4FC3F7 stroke:#0288D1 color:#000
-     classDef end fill:#4CAF50 stroke:#2E7D32 color:#fff
+     classDef stepClass fill:#0A2A4F,stroke:#0A2A4F,color:#fff
+     classDef actionClass fill:#00BCD4,stroke:#008BA3,color:#fff
+     classDef decisionClass fill:#4FC3F7,stroke:#0288D1,color:#000
+     classDef endClass fill:#4CAF50,stroke:#2E7D32,color:#fff
+
 
      A[Développement local<br/>• Modifications du code<br/>• Tests manuels<br/>• Commits Conventional]:::step
 
