@@ -4,19 +4,16 @@
   <em>Modern, secure & ergonomic password generation for PowerShell</em>
 </p>
 
-<p style="text-align:center; margin-top:20px;">
-  <a href="https://ko-fi.com/ledino_creator" style="float:left;">
+<p style="text-align:center; margin-top:20px; line-height:1.5;">
+  <a href="https://ko-fi.com/ledino_creator" style="margin-right:60%;">
     <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Ko-fi" style="vertical-align:middle;">
   </a>
-  <span style="float:right;">
-    <a href="README.md">
-      <img src="https://img.shields.io/badge/FRANÇAIS-1E88E5?style=for-the-badge&logo=github&logoColor=white" style="vertical-align:middle;">
-    </a>
-    <a href="README.en.md">
-      <img src="https://img.shields.io/badge/ENGLISH-000000?style=for-the-badge&logo=github&logoColor=white" style="vertical-align:middle;">
-    </a>
-  </span>
-  <div style="clear:both;"></div>
+  <a href="README.fr.md" style="margin-right:10px;">
+    <img src="https://img.shields.io/badge/FRANÇAIS-1E88E5?style=for-the-badge&logo=github&logoColor=white" style="vertical-align:middle;">
+  </a>
+  <a href="README.md">
+    <img src="https://img.shields.io/badge/ENGLISH-000000?style=for-the-badge&logo=github&logoColor=white" style="vertical-align:middle;">
+  </a>
 </p>
 
 ---
