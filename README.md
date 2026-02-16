@@ -1,35 +1,28 @@
-<!-- Header centré -->
+<!-- Titre -->
 <div align="center">
-
-  <h1>🔒 SecureGen</h1>
-
-  <p><em>Modern, secure & ergonomic password generation for PowerShell</em></p>
-
+  <h1 style="font-size:72px;">🔐 SecureGen</h1>
 </div>
 
-<!-- Barre d'actions GitHub-compatible -->
-<table width="100%">
-  <tr>
-    <!-- Ko-fi à gauche -->
-    <td align="left">
-      <a href="https://ko-fi.com/tonprofil">
-        <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Ko-fi">
-      </a>
-    </td>
-    <!-- Langues à droite -->
-    <td align="right">
-      <a href="README.fr.md">
+<!-- Sous-titre -->
+<p align="center">
+  <em>Modern, secure & ergonomic password generation for PowerShell</em>
+</p>
+
+<br>
+
+<!-- Langues -->
+<p align="center">
+    <a href="README.md" style="text-decoration: none;">
         <img src="https://img.shields.io/badge/FRANÇAIS-1E88E5?style=for-the-badge&logo=github&logoColor=white">
-      </a>
-      <a href="README.md">
+    </a>
+    <a href="README.en.md" style="text-decoration: none;">
         <img src="https://img.shields.io/badge/ENGLISH-000000?style=for-the-badge&logo=github&logoColor=white">
-      </a>
-    </td>
-  </tr>
-</table>
+    </a>
+</p>
 
----
+<br>
 
+<!-- Badges PSGallery / CI / Release -->
 <p align="center">
 
   <!-- PSGallery -->
@@ -55,14 +48,25 @@
 
 </p>
 
----
+<br>
 
+<!-- Logo -->
 <p align="center">
   <img src="assets/logo.png" width="140" alt="SecureGen Logo"/>
 </p>
 
+<!-- Bannière -->
 <p align="center">
   <img src="assets/banner.png" alt="SecureGen Banner"/>
+</p>
+
+<br>
+
+<!-- Ko-fi -->
+<p align="center">
+    <a href="https://ko-fi.com/ledino_creator">
+        <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Ko-fi">
+    </a>
 </p>
 
 ---
