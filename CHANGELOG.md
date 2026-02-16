@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/ledino/SecureGen/compare/v1.4.0...v1.5.0) (2026-02-16)
+
+
+### ✨ Features
+
+* add Pester tests + PlatyPS docs v1.4.0 ([b960e1f](https://github.com/ledino/SecureGen/commit/b960e1f78c90d17965c4e8e52c55acc2654b8fab)), closes [#12](https://github.com/ledino/SecureGen/issues/12)
+* release 1.5.0 with PKIPass, SecureStringSafe and clipboard improvements ([5bbe32c](https://github.com/ledino/SecureGen/commit/5bbe32c358b44d4edb709afd485e0e0b66b9dd31))
+
+
+### 🐛 Fixes
+
+*  release pipeline ([8be1b10](https://github.com/ledino/SecureGen/commit/8be1b1061325ca6fc90e89dd21f0805cea7d463c))
+* clean release pipeline ([0067a27](https://github.com/ledino/SecureGen/commit/0067a27f71523d0a947424f16d103047ef4cfd58))
+* configure git identity before everything ([fc82cbb](https://github.com/ledino/SecureGen/commit/fc82cbbd4139d9ceb3265db20d8f295663061a9e))
+* configure git identity before standard-version ([3f8e3cc](https://github.com/ledino/SecureGen/commit/3f8e3cc0a2604a51340a5997c3b65bc6c35b3d4f))
+* enable release workflow by removing paths-ignore ([ee4fbb6](https://github.com/ledino/SecureGen/commit/ee4fbb60b2c1cc2c833dd5c567b84fe7d2e38284))
+* first clean release ([44aae67](https://github.com/ledino/SecureGen/commit/44aae670addc0f501692c8c581e0518077d50575))
+* test release pipeline ([43030ea](https://github.com/ledino/SecureGen/commit/43030ea050804bbe14fd0c4249a9f5e3ff713d97))
+* test release pipeline ([2c956ff](https://github.com/ledino/SecureGen/commit/2c956ffefc47710d9611072505c0d407f5f700f5))
+* test release pipeline ([8fc283b](https://github.com/ledino/SecureGen/commit/8fc283b44382f9d3c6744912210fe498f64434d1))
+* test release pipeline ([10391ff](https://github.com/ledino/SecureGen/commit/10391ff8d202d4d0c3cdac7c8587b075e26f57be))
+
 ### [1.4.1](https://github.com/ledino/SecureGen/compare/v1.5.0...v1.4.1) (2026-02-16)
 
 
