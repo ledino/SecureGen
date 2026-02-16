@@ -300,4 +300,4 @@ Set-Alias -Name sgpki -Value Get-PKIPass
 # Export public
 # ---------------------------------------------------------------------------
 
-Export-ModuleMember -Function * -Alias * 
+Export-ModuleMember -Function * -Alias *
