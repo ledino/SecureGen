@@ -1,13 +1,16 @@
+<!-- Titre -->
 <div align="center">
   <h1 style="font-size:72px;">🔐 SecureGen</h1>
 </div>
 
+<!-- Sous-titre -->
 <p align="center">
   <em>Modern, secure & ergonomic password generation for PowerShell</em>
 </p>
 
----
+<br>
 
+<!-- Langues -->
 <p align="center">
     <a href="README.md" style="text-decoration: none;">
         <img src="https://img.shields.io/badge/FRANÇAIS-1E88E5?style=for-the-badge&logo=github&logoColor=white">
@@ -17,7 +20,11 @@
     </a>
 </p>
 
+<br>
+
+<!-- Badges PSGallery / CI / Release -->
 <p align="center">
+
   <!-- PSGallery -->
   <a href="https://www.powershellgallery.com/packages/SecureGen" style="text-decoration: none;">
     <img src="https://img.shields.io/powershellgallery/v/SecureGen.svg?style=flat-square&label=PSGallery&color=0A2A4F" />
@@ -38,18 +45,24 @@
   <a href="https://github.com/ledino/SecureGen/releases" style="text-decoration: none;">
     <img src="https://img.shields.io/github/v/release/ledino/SecureGen?style=flat-square&label=Release&color=0A2A4F" />
   </a>
+
 </p>
 
----
+<br>
 
+<!-- Logo -->
 <p align="center">
   <img src="assets/logo.png" width="140" alt="SecureGen Logo"/>
 </p>
 
+<!-- Bannière -->
 <p align="center">
   <img src="assets/banner.png" alt="SecureGen Banner"/>
 </p>
 
+<br>
+
+<!-- Ko-fi -->
 <p align="center">
     <a href="https://ko-fi.com/ledino_creator">
         <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Ko-fi">
