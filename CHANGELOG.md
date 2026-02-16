@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/ledino/SecureGen/compare/v1.4.0...v1.5.0) (2026-02-16)
+
+
+### ✨ Features
+
+* add Pester tests + PlatyPS docs v1.4.0 ([b960e1f](https://github.com/ledino/SecureGen/commit/b960e1f78c90d17965c4e8e52c55acc2654b8fab)), closes [#12](https://github.com/ledino/SecureGen/issues/12)
+* release 1.5.0 with PKIPass, SecureStringSafe and clipboard improvements ([5bbe32c](https://github.com/ledino/SecureGen/commit/5bbe32c358b44d4edb709afd485e0e0b66b9dd31))
+
+
+### 🐛 Fixes
+
+* configure git identity before standard-version ([3f8e3cc](https://github.com/ledino/SecureGen/commit/3f8e3cc0a2604a51340a5997c3b65bc6c35b3d4f))
+* enable release workflow by removing paths-ignore ([ee4fbb6](https://github.com/ledino/SecureGen/commit/ee4fbb60b2c1cc2c833dd5c567b84fe7d2e38284))
+
 ## [1.5.0](https://github.com/ledino/SecureGen/compare/v1.4.0...v1.5.0) (2026‑02‑14)
 
 # ✨ Nouveautés majeures
@@ -260,4 +274,3 @@ Toutes les modifications notables du projet sont documentées ici.
 - Structure initiale du projet  
 
 ---
-
