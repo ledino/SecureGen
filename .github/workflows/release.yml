@@ -1,6 +1,7 @@
 name: Release PSGallery
 
 on:
+  workflow_dispatch:
   push:
     tags: ['v*']  # SEULEMENT tags
 
