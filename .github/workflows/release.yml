@@ -38,10 +38,13 @@ jobs:
         env:
           HUSKY: 0
 
-      - name: Push changes
+      - name: Configure Git identity
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
+
+      - name: Push changes
+        run: |
           git push --follow-tags origin main
 
       - name: Create GitHub Release
