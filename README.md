@@ -1,20 +1,30 @@
-<!-- Header SecureGen (centré) -->
 <div align="center">
 
-  <!-- Logo -->
-  <div style="font-size:92px; margin-bottom:10px;">
-    🔒
-  </div>
+  <h1>🔒 SecureGen</h1>
 
-  <!-- Titre -->
-  <h1 style="margin:0; padding:0; font-size:72px;">SecureGen</h1>
-
-  <!-- Sous-titre -->
-  <p style="margin-top:6px; color:#666;">
-    <em>Modern, secure & ergonomic password generation for PowerShell</em>
-  </p>
+  <p><em>Modern, secure & ergonomic password generation for PowerShell</em></p>
 
 </div>
+
+<table width="100%">
+  <tr>
+    <td align="left">
+      <!-- Ko-fi -->
+      <a href="https://ko-fi.com/tonprofil">
+        <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Ko-fi">
+      </a>
+    </td>
+    <td align="right">
+      <!-- Langues -->
+      <a href="README.fr.md">
+        <img src="https://img.shields.io/badge/FRANÇAIS-1E88E5?style=for-the-badge&logo=github&logoColor=white">
+      </a>
+      <a href="README.md">
+        <img src="https://img.shields.io/badge/ENGLISH-000000?style=for-the-badge&logo=github&logoColor=white">
+      </a>
+    </td>
+  </tr>
+</table>
 
 ---
 
