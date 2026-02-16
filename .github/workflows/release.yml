@@ -29,4 +29,4 @@ jobs:
           PSGALLERY_KEY: ${{ secrets.PSGALLERY_KEY }}
         run: |
           Install-Module PowerShellGet -Force -Scope CurrentUser
-          Publish-Module -Path . -NuGetApiKey $env:PSGALLERY_KEY
+          Publish-Module -Path ./SecureGen -NuGetApiKey $env:PSGALLERY_KEY
