@@ -489,7 +489,7 @@ Pour les détails avancés, consultez :
 
 ---
 
-# ⚙️ Versioning & Releases (v1.4.0+)
+# ⚙️ Versioning & Releases (v1.5.0+)
 
 SecureGen utilise :
 
@@ -510,6 +510,61 @@ SecureGen utilise :
 6. Création de la Release GitHub (notes prêtes à coller)
 
 Ce processus est **simple, fiable et entièrement maîtrisé côté développeur**.  
+
+## 🆕 Nouveautés — Version 1.5.0
+
+SecureGen 1.5.0 est une version majeure qui apporte de nouvelles fonctionnalités professionnelles, une API modernisée et une gestion du clipboard entièrement sécurisée.
+
+### 🔐 Get‑PKIPass (nouveau)
+Une nouvelle commande dédiée aux environnements critiques (PKI, certificats, comptes de service, CI/CD).
+
+- Mode **Password** (32+ caractères)
+- Mode **Passphrase** (Words × Len)
+- Retour **SecureString** pour intégration dans PSCredential, DSC, KMS, etc.
+- Alias ergonomique : `sgpki`
+
+### 🔒 Get‑PassWord : nouveau paramètre `-RequireAllTypes`
+Garantit que chaque mot de passe contient au minimum :
+
+- 1 minuscule  
+- 1 majuscule  
+- 1 chiffre  
+- 1 caractère spécial  
+
+Idéal pour les politiques de sécurité strictes.
+
+### 🛡️ Convert-ToSecureStringSafe (nouveau)
+Conversion SecureString fiable et cross‑platform, même dans :
+
+- les environnements restreints  
+- les pipelines CI/CD  
+- Linux / macOS / Windows  
+- les contextes non interactifs  
+
+### 📋 Clipboard sécurisé : Set‑ClipboardSafe & Clear‑ClipboardSafe
+Deux nouvelles fonctions pour une gestion du presse‑papier :
+
+- fiable  
+- cross‑platform  
+- sécurisée  
+- compatible CI/CD  
+
+### 🧩 API modernisée
+- `Get-PassPhrase` utilise désormais **Words** et **Len**
+- `Get-PKIPass` suit la même logique
+- `Get-PassWord` reste cohérent avec `-Len`
+- Alias officiels : `sgw`, `sgp`, `sgpki`
+
+### 🧪 Tests & Qualité
+- Nouveaux tests Pester pour PKIPass  
+- Tests ClipboardSafe  
+- Harmonisation complète des tests existants  
+
+### 📚 Documentation entièrement mise à jour
+- Nouvelles pages PlatyPS  
+- Nouveaux exemples PKI  
+- README modernisé  
+- Guides avancés mis à jour  
 
 ---
 

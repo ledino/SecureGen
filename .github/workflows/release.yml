@@ -1,0 +1,60 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
+      - '.github/**'
+
+jobs:
+  release:
+    name: Generate Release & Publish to PSGallery
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install standard-version
+        run: npm install -g standard-version
+
+      - name: Run standard-version
+        run: standard-version
+        env:
+          HUSKY: 0
+
+      - name: Push changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git push --follow-tags origin main
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to PSGallery
+        shell: pwsh
+        env:
+          NUGET_KEY: ${{ secrets.PSGALLERY_KEY }}
+        run: |
+          Install-Module -Name PowerShellGet -Force -Scope CurrentUser
+          Publish-Module -Path . -NuGetApiKey $env:NUGET_KEY -Verbose

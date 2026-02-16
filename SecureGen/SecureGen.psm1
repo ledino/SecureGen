@@ -35,7 +35,7 @@ Invoke-Beep -Frequency 1200 -Duration 300
 .NOTES
 Auteur : Saddek
 Compatible Windows, Linux, macOS
-Version : 1.4.0
+Version : 1.5.0
 Site du projet : https://github.com/ledino/SecureGen
 
 .LINK
@@ -53,9 +53,9 @@ Invoke-Beep
 
 <#
     SecureGen.psm1
-    Version : 1.4.0
+    Version : 1.5.0
     Auteur  : Ledino
-    Date    : 2026-02-13
+    Date    : 2026-02-16
 
     Notes :
     - Chargement automatique PS7 / PS5
@@ -107,8 +107,8 @@ Génère un secret robuste (mot de passe ou passphrase) destiné aux usages PKI,
 .DESCRIPTION
 Get-PKIPass génère un secret hautement entropique adapté aux usages sensibles :
 
-- Mode Password : 24 caractères aléatoires cryptographiquement sûrs.
-- Mode Passphrase : 5 mots de 5 lettres, lisibles mais robustes.
+- Mode Password : 32 caractères aléatoires cryptographiquement sûrs.
+- Mode Passphrase : 6 mots de 6 lettres, lisibles mais robustes.
 
 L’utilisateur peut également demander un retour en SecureString pour intégration
 dans des scripts, DSC, ou des modules nécessitant ce format.

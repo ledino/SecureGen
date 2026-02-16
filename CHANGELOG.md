@@ -21,6 +21,47 @@ All notable changes to this project will be documented in this file. See [standa
 
 ---
 
+### 🔒 Amélioration : `Get-PassWord` avec `-RequireAllTypes`
+Ajout du paramètre **`-RequireAllTypes`** garantissant que chaque mot de passe contient au minimum :
+
+- 1 minuscule  
+- 1 majuscule  
+- 1 chiffre  
+- 1 caractère spécial  
+
+✔ Conforme aux politiques de sécurité strictes  
+✔ Renforce la robustesse des mots de passe  
+✔ Compatible avec toutes les options existantes
+
+---
+
+### 🛡️ Nouveau : Convert-ToSecureStringSafe
+Fonction dédiée à la conversion robuste en SecureString, permettant de :
+
+- contourner les limitations de `ConvertTo-SecureString`  
+- éviter les erreurs en environnement non interactif  
+- garantir une conversion fiable sur Windows, Linux et macOS  
+
+✔ Idéal pour les scripts automatisés  
+✔ Compatible PKI / CI/CD  
+✔ API simple et cohérente
+
+---
+
+### 📋 Nouveaux outils Clipboard : `Set-ClipboardSafe` & `Clear-ClipboardSafe`
+Ajout de deux fonctions sécurisées pour la gestion du presse‑papier :
+
+- **`Set-ClipboardSafe`** : copie fiable, cross‑platform, compatible CI/CD  
+- **`Clear-ClipboardSafe`** : effacement sécurisé du presse‑papier, même en environnement restreint  
+
+Ces fonctions remplacent les appels natifs instables (`Set-Clipboard`, `pbcopy`, `xclip`, etc.) et garantissent :
+
+✔ un comportement identique sur Windows / Linux / macOS  
+✔ une meilleure sécurité (effacement explicite)  
+✔ une intégration parfaite avec `Get-PassWord`, `Get-PassPhrase` et `Get-PKIPass`
+
+---
+
 # 🧪 Tests & Qualité
 
 ### ✔ Ajout des tests Pester pour Get‑PKIPass
@@ -32,6 +73,11 @@ All notable changes to this project will be documented in this file. See [standa
 - Mise à jour des tests Get‑PassWord, Get‑PassPhrase, Get‑CryptoIndex.
 - Nettoyage des mocks obsolètes.
 - Compatibilité PS7 / PS5.1 garantie.
+
+### ✔ Nouveaux tests ClipboardSafe  
+- Tests complets pour `Set-ClipboardSafe` et `Clear-ClipboardSafe`  
+- Mock du presse‑papier pour compatibilité Linux/macOS/CI  
+- Validation du comportement sécurisé (effacement, fallback, erreurs propres)
 
 ---
 
@@ -76,6 +122,12 @@ All notable changes to this project will be documented in this file. See [standa
 
 # 🧹 Nettoyage & Maintenance
 
+### ✔ Correction des paramètres & messages d’erreur
+- Correction des erreurs retournées lors de saisies invalides dans plusieurs fonctions.  
+- Validation des paramètres renforcée.  
+- Messages d’erreur plus clairs et cohérents.
+
+### ✔ Correction de la documentation
 - Suppression des paramètres obsolètes dans la documentation.
 - Nettoyage global des exemples, guides et sections CI/CD.
 - Mise à jour des chemins, scripts et conventions.
@@ -87,11 +139,12 @@ All notable changes to this project will be documented in this file. See [standa
 
 SecureGen 1.5.0 apporte :
 
-- une **nouvelle commande PKI professionnelle**  
-- une **API cohérente et modernisée**  
+- une **commande PKI professionnelle**  
+- une **API modernisée et cohérente**  
+- une **gestion du clipboard sécurisée et cross‑platform**  
 - une **documentation entièrement revue**  
 - des **tests robustes et complets**  
-- une **expérience utilisateur plus claire et plus fiable**  
+- une **expérience utilisateur plus fiable**  
 
 SecureGen devient un module **mature**, **professionnel**, et parfaitement adapté aux environnements modernes (PKI, CI/CD, automatisation, multi‑plateforme).
 

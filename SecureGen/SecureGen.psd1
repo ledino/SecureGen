@@ -12,7 +12,7 @@
 RootModule = 'SecureGen.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.4.0'
+ModuleVersion = '1.5.0'
 
 # Supported PSEditions
 CompatiblePSEditions = 'Desktop', 'Core'
@@ -70,7 +70,7 @@ NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = 'Get-PassWord', 'Get-PassPhrase', 'Get-CryptoIndex', 'Invoke-Beep', 
-               'Set-ClipboardSafe', 'Clear-ClipboardSafe', 'Get-PKIPass'
+               'Set-ClipboardSafe', 'Clear-ClipboardSafe', 'Get-PKIPass', 'Convert-ToSecureStringSafe'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
@@ -96,7 +96,7 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = 'Security','Password','Passphrase','Clipboard','PowerShell','CrossPlatform','Crypto'
+        Tags = 'Security','Password','Passphrase','Clipboard','PowerShell','CrossPlatform','Crypto','PKI','SecureString'
 
         # A URL to the license for this module.
         LicenseUri = 'https://opensource.org/licenses/MIT'
@@ -108,11 +108,17 @@ PrivateData = @{
         IconUri = 'https://raw.githubusercontent.com/ledino/SecureGen/main/assets/logo.png'
 
         # ReleaseNotes of this module
-        ReleaseNotes = 'Version 1.4.0 :
-- Compatibilité PowerShell 5 & 7
-- Clipboard cross-platform avec warnings propres
-- Beep encapsulé
-- Nettoyage du code et robustesse accrue'
+        ReleaseNotes = @'
+Version 1.5.0 :
+- Nouveau : Get-PKIPass (Password / Passphrase + SecureString)
+- Nouveau : Convert-ToSecureStringSafe
+- Nouveau : Set-ClipboardSafe & Clear-ClipboardSafe
+- Get-PassWord : ajout de -RequireAllTypes
+- Harmonisation API (Words / Len)
+- Documentation entièrement mise à jour
+- Tests Pester complets (PKIPass + ClipboardSafe)
+- Corrections de paramètres & messages d'erreur
+'@
 
         # Prerelease string of this module
         # Prerelease = ''
