@@ -1,29 +1,32 @@
-# 🤝 Contributing to SecureGen
+# 🤝 Contributing to SecureGen  
+*(Document harmonisé avec le pipeline moderne et la structure du projet)*
 
 Thank you for your interest in contributing to SecureGen!  
-This document explains how to contribute code, documentation, tests, or ideas in a way that keeps the project clean, secure, and maintainable.
+This guide explains how to contribute code, documentation, tests, or ideas in a way that keeps the project clean, secure, and maintainable.
 
 ---
 
 # 📚 Before You Start
 
-Please read:
+Please read the following documents to understand the project’s expectations and workflow:
 
-- `CODE_OF_CONDUCT.md`
-- `SECURITY.md`
-- `GOVERNANCE.md`
-- `SUPPORT.md`
-- `docs/contributing.md` (French version)
-- `docs/architecture.md`
-- `docs/versioning.md`
+- `CODE_OF_CONDUCT.md`  
+- `SECURITY.md`  
+- `GOVERNANCE.md`  
+- `SUPPORT.md`  
+- `docs/contributing.md` *(French version)*  
+- `docs/architecture.md`  
+- `docs/versioning.md`  
+- `docs/release-process.md`  
+- `docs/release.md`  
 
-These documents explain the project’s expectations, workflow, and structure.
+These documents explain the project’s structure, rules, and automated release pipeline.
 
 ---
 
 # 🐛 Reporting Bugs
 
-Please use the **Bug Report** template:
+Use the **Bug Report** template:
 
 👉 GitHub → Issues → *Bug Report*
 
@@ -35,7 +38,7 @@ Include:
 - OS details  
 - expected vs actual behavior  
 
-Do **not** report security issues publicly.  
+⚠️ **Do not report security issues publicly.**  
 See `SECURITY.md` for private disclosure instructions.
 
 ---
@@ -118,16 +121,16 @@ All code must work on both versions.
 SecureGen must remain self‑contained.
 
 ### ✔ No global variables  
-Use local scope or module scope only.
+Use local or module scope only.
 
 ### ✔ No Write-Host inside cmdlets  
 Use `Write-Verbose`, `Write-Error`, or return values.
 
-### ✔ No manual edits to:  
+### ✔ Do NOT manually edit  
 - `CHANGELOG.md`  
 - `ModuleVersion` in `SecureGen.psd1`  
 
-These are managed by the release process.
+These files are managed automatically by the release pipeline.
 
 ### ✔ Follow the existing architecture  
 - `Core.PS7.ps1` → modern implementation  
@@ -145,7 +148,7 @@ If you add or modify a cmdlet:
 3. Update documentation in `docs/cmdlets/`  
 4. Update examples if relevant  
 5. Ensure aliases remain consistent  
-6. Ensure parameters follow the naming conventions:
+6. Follow parameter naming conventions:
    - `-Words`
    - `-Len`
    - `-Length`
@@ -156,15 +159,22 @@ If you add or modify a cmdlet:
 
 # 📝 Commit Messages
 
-SecureGen uses **Conventional Commits**:
+SecureGen uses **Conventional Commits**.
+
+> **Important: the examples below are commit messages.**
 
 Examples:
 
-- `feat: add new PKI passphrase mode`
-- `fix: correct clipboard fallback on Linux`
-- `docs: update README with examples`
-- `refactor: simplify RNG selection logic`
-- `test: add Pester tests for Get-PKIPass`
+```
+feat: add new PKI passphrase mode
+fix: correct clipboard fallback on Linux
+docs: update README with examples
+refactor: simplify RNG selection logic
+test: add Pester tests for Get-PKIPass
+```
+
+These messages determine the version bump (patch/minor/major).  
+See `docs/versioning.md` for details.
 
 ---
 
@@ -185,16 +195,27 @@ PRs that break compatibility or introduce regressions will be rejected.
 
 # 🚀 Release Process
 
-Releases are handled by the maintainer using:
+Releases are **fully automated** and handled by the maintainer.
 
-- `standard-version`
-- Git tags
-- GitHub Actions for PSGallery publishing
+The pipeline uses:
+
+- **Conventional Commits**  
+- **standard-version (executed in GitHub Actions)**  
+- **automatic Git tags**  
+- **automatic GitHub Releases**  
+- **automatic PSGallery publishing**
 
 Contributors do **not** modify:
 
-- `CHANGELOG.md`
-- `ModuleVersion` in the manifest
+- `CHANGELOG.md`  
+- `ModuleVersion` in the manifest  
+- Git tags  
+- release notes  
+
+See:
+
+- `docs/release-process.md`  
+- `docs/release.md`  
 
 ---
 

@@ -1,8 +1,8 @@
 # 🤝 Contributing to SecureGen  
-*(Official Contributor Guide — v1.5.0+)*
+*(Official Contributor Guide — Automated Pipeline v1.5.0+)*
 
 Thank you for your interest in **SecureGen**!  
-This document explains how to contribute effectively, follow the project conventions, run tests, and participate in the release process.
+This document explains how to contribute effectively, follow project conventions, run tests, and work within SecureGen’s modern, automated development workflow.
 
 ---
 
@@ -11,13 +11,15 @@ This document explains how to contribute effectively, follow the project convent
 SecureGen is built on three pillars:
 
 1. **Modern security**  
-   Only approved cryptographic APIs are used (PS7: Get‑SecureRandom, PS5: RNGCryptoServiceProvider).
+   Only approved cryptographic APIs are used:  
+   - PS7: `Get-SecureRandom`  
+   - PS5: `RNGCryptoServiceProvider`
 
 2. **Maximum compatibility (PS5.1 + PS7+)**  
    Two internal implementations, unified through a smart loader.
 
 3. **Professional quality**  
-   Multi‑platform CI, Pester tests, PlatyPS documentation, automated versioning.
+   Multi‑platform CI, Pester tests, PlatyPS documentation, automated versioning and releases.
 
 All contributions must respect these principles.
 
@@ -32,11 +34,15 @@ git clone https://github.com/ledino/SecureGen.git
 cd SecureGen
 ```
 
-Install Node dependencies (required for standard-version):
+Install development dependencies:
 
 ```powershell
-npm ci
+Install-Module Pester -Scope CurrentUser
+Install-Module PSScriptAnalyzer -Scope CurrentUser
 ```
+
+No Node.js setup is required:  
+👉 **standard-version runs automatically inside GitHub Actions.**
 
 ---
 
@@ -59,9 +65,9 @@ The GitHub CI automatically runs:
 - PSScriptAnalyzer  
 - Pester  
 - Windows PowerShell 5.1 tests  
-- PowerShell 7 tests (Windows + Linux)  
+- PowerShell 7 tests (Windows + Linux + macOS)  
 
-Tests now include full coverage for **Get‑PKIPass**, including:
+Tests include full coverage for **Get‑PKIPass**, including:
 
 - Password / Passphrase modes  
 - SecureString output  
@@ -95,7 +101,7 @@ Any new feature must:
 - work on PS5.1  
 - leverage PS7+ when possible  
 - be wired through the loader `SecureGen.psm1`  
-- follow API consistency (Words / Len / Length / Type)  
+- follow API consistency (Words / Len / Length / Type / AsSecureString)  
 - include a Pester test  
 
 ---
@@ -106,7 +112,10 @@ SecureGen uses **Conventional Commits** to:
 
 - determine version bumps  
 - generate the changelog  
-- keep a clean history  
+- create Git tags  
+- trigger the automated release pipeline  
+
+> **Important: the examples below are commit messages.**
 
 Main types:
 
@@ -129,33 +138,26 @@ refactor: simplify PS7 loader logic
 
 ---
 
-# 🔄 5. Release Process (v1.4.0+)
+# 🔄 5. Release Process (Automated)
 
-Releases are generated **locally**, then published automatically via GitHub Actions.
+Since v1.5.0+, **releases are no longer generated locally**.
 
-## Steps:
+The modern pipeline:
 
-1. Ensure CI is green  
-2. Generate the version:
+1. A Conventional Commit is pushed to `main`  
+2. GitHub Actions runs **standard-version**  
+3. The version is bumped automatically  
+4. The changelog is updated  
+5. A `chore(release): X.Y.Z` commit is created  
+6. The tag `vX.Y.Z` is created  
+7. A GitHub Release is generated  
+8. The module is published to PowerShell Gallery  
 
-```powershell
-npm run release -- --release-as X.Y.Z
-```
+No local commands are required.
 
-3. Push the branch:
-
-```powershell
-git push
-```
-
-4. Push the tag:
-
-```powershell
-git push origin vX.Y.Z
-```
-
-5. GitHub Actions publishes the module to PowerShell Gallery  
-6. Create the GitHub Release (notes already generated in `CHANGELOG.md`)
+For details:  
+👉 `docs/release-process.md`  
+👉 `docs/release.md`
 
 ---
 
@@ -164,14 +166,13 @@ git push origin vX.Y.Z
 ## Mandatory Checklist:
 
 - [ ] Code compatible with PS5.1 and PS7+  
-- [ ] Pester tests added or updated (clipboard mocks if needed)  
+- [ ] Pester tests added or updated  
 - [ ] PSScriptAnalyzer passes  
-- [ ] Documentation updated (cmdlet + README if needed)  
+- [ ] Documentation updated (`docs/cmdlets/`)  
 - [ ] Commit messages follow Conventional Commits  
 - [ ] No manual edits to the manifest version  
 - [ ] No manual edits to the changelog  
 - [ ] API consistency respected (Words / Len / Length / Type / AsSecureString)  
-- [ ] For sensitive features → PKI + SecureString tests included  
 
 ## Process:
 
@@ -195,7 +196,7 @@ git checkout -b feat/my-new-feature
 |--------|---------|
 | `scripts/Generate-Help.ps1` | Generates PlatyPS documentation |
 | `scripts/Install-SecureGen.ps1` | Local installation |
-| `scripts/Publish-SecureGen.ps1` | Manual publish (rarely used) |
+| `scripts/Publish-SecureGen.ps1` | Manual publish (rare) |
 | `scripts/Versioning-SecureGen.ps1` | **Legacy — do not use** |
 
 ---
@@ -205,8 +206,8 @@ git checkout -b feat/my-new-feature
 - ❌ do not modify `ModuleVersion` manually  
 - ❌ do not modify `CHANGELOG.md` manually  
 - ❌ do not use `Release-All.ps1`  
-- ❌ do not create tags manually (except via local release)  
-- ❌ do not run standard-version inside GitHub Actions  
+- ❌ do not create tags manually  
+- ❌ do not run standard-version locally  
 - ❌ do not edit `SecureGen-help.xml` directly  
 - ❌ do not introduce parameters unsupported by PS5.1  
 
@@ -216,15 +217,9 @@ git checkout -b feat/my-new-feature
 
 - `docs/versioning.md`  
 - `docs/release-process.md`  
+- `docs/release.md`  
 - `docs/architecture.md`  
 - `docs/diagrams/overview.md`  
 - `README.md`  
-
----
-
-# 🎉 Thank You for Contributing to SecureGen!
-
-Your contributions make the module more robust, more modern, and more enjoyable to use.  
-Issues, discussions, and PRs are always welcome.
 
 ---

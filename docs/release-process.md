@@ -31,7 +31,9 @@ Avant de pousser un commit déclenchant une release :
 
 # 🧩 2. Déclenchement de la release
 
-La release est déclenchée automatiquement lorsqu’un commit Conventional Commit est poussé sur `main`.
+La release est déclenchée automatiquement lorsqu’un **message de commit** respectant Conventional Commits est poussé sur `main`.
+
+> **Important : les exemples ci‑dessous sont des messages de commit.**
 
 Exemples valides :
 
@@ -40,6 +42,14 @@ feat: ajout de Get-PKIPass
 fix: correction des paramètres invalides
 chore(release): préparation de la version 1.5.0
 ```
+
+### 📌 Rappel SemVer appliqué automatiquement
+
+| Type de commit | Effet sur la version |
+|----------------|----------------------|
+| `fix:` | bump **patch** (ex : 1.5.0 → 1.5.1) |
+| `feat:` | bump **minor** (ex : 1.5.0 → 1.6.0) |
+| `BREAKING CHANGE:` | bump **major** (ex : 1.5.0 → 2.0.0) |
 
 Dès que le commit est poussé :
 
@@ -113,7 +123,7 @@ Le bump, le changelog, le tag, la release GitHub et la publication PSGallery son
 # 🧪 7. Dépannage
 
 ### La version n’a pas été bumpée  
-→ Vérifier que le commit respecte Conventional Commits
+→ Vérifier que le **message de commit** respecte Conventional Commits
 
 ### Le changelog n’a pas été généré  
 → Vérifier que standard-version s’est exécuté dans le workflow
@@ -139,6 +149,6 @@ Grâce à GitHub Actions + standard-version, SecureGen bénéficie d’un pipeli
 ---
 
 # ⭐ Résultat  
-Ton `release-process.md` est maintenant **parfaitement aligné** avec ton nouveau workflow automatisé.
+Ton `release-process.md` est maintenant **parfaitement clair**, **sans ambiguïté**, et **aligné avec ton workflow réel**.
 
 ---

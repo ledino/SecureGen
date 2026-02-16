@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SecureGen — Documentation Hub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f7f9fc;
+        color: #0A2A4F;
+    }
+
+    header {
+        text-align: center;
+        padding: 60px 20px 40px;
+        background: white;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    header img.logo {
+        width: 140px;
+        margin-bottom: 20px;
+    }
+
+    header h1 {
+        font-size: 48px;
+        margin: 10px 0;
+    }
+
+    header p.subtitle {
+        font-size: 20px;
+        color: #555;
+        margin-top: 0;
+    }
+
+    .section {
+        max-width: 900px;
+        margin: 50px auto;
+        padding: 0 20px;
+    }
+
+    .section h2 {
+        font-size: 28px;
+        margin-bottom: 15px;
+        color: #0A2A4F;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .card {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #e0e0e0;
+        transition: 0.2s;
+    }
+
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    }
+
+    .card h3 {
+        margin-top: 0;
+        font-size: 20px;
+        color: #0A2A4F;
+    }
+
+    .card a {
+        text-decoration: none;
+        color: #00BCD4;
+        font-weight: 600;
+    }
+
+    footer {
+        text-align: center;
+        padding: 40px 20px;
+        margin-top: 60px;
+        background: #0A2A4F;
+        color: white;
+    }
+
+    footer a {
+        color: #4FC3F7;
+        text-decoration: none;
+        font-weight: 600;
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+    <img src="assets/logo.png" class="logo" alt="SecureGen Logo">
+    <h1>SecureGen Documentation Hub</h1>
+    <p class="subtitle">Modern cryptography • Cross‑platform • Professional developer experience</p>
+</header>
+
+<div class="section">
+    <h2>📘 User Guides</h2>
+    <div class="grid">
+        <div class="card"><h3>Installation</h3><a href="docs/installation.md">Open guide →</a></div>
+        <div class="card"><h3>Examples</h3><a href="docs/examples.md">Open guide →</a></div>
+        <div class="card"><h3>Advanced Usage</h3><a href="docs/advanced.md">Open guide →</a></div>
+        <div class="card"><h3>FAQ</h3><a href="docs/faq.md">Open guide →</a></div>
+        <div class="card"><h3>Troubleshooting</h3><a href="docs/troubleshooting.md">Open guide →</a></div>
+    </div>
+</div>
+
+<div class="section">
+    <h2>🧩 Cmdlet Documentation</h2>
+    <div class="grid">
+        <div class="card"><h3>Get-PassWord</h3><a href="docs/cmdlets/Get-PassWord.md">View doc →</a></div>
+        <div class="card"><h3>Get-PassPhrase</h3><a href="docs/cmdlets/Get-PassPhrase.md">View doc →</a></div>
+        <div class="card"><h3>Get-PKIPass</h3><a href="docs/cmdlets/Get-PKIPass.md">View doc →</a></div>
+        <div class="card"><h3>Get-CryptoIndex</h3><a href="docs/cmdlets/Get-CryptoIndex.md">View doc →</a></div>
+        <div class="card"><h3>Invoke-Beep</h3><a href="docs/cmdlets/Invoke-Beep.md">View doc →</a></div>
+    </div>
+</div>
+
+<div class="section">
+    <h2>🧱 Architecture & Technical Docs</h2>
+    <div class="grid">
+        <div class="card"><h3>Architecture</h3><a href="docs/architecture.md">Open →</a></div>
+        <div class="card"><h3>Security & Cryptography</h3><a href="docs/security.md">Open →</a></div>
+        <div class="card"><h3>Benchmarks</h3><a href="docs/benchmarks.md">Open →</a></div>
+        <div class="card"><h3>Developer Guide</h3><a href="docs/developer-guide.md">Open →</a></div>
+    </div>
+</div>
+
+<div class="section">
+    <h2>📊 UML & Diagrams</h2>
+    <div class="grid">
+        <div class="card"><h3>Overview</h3><a href="docs/diagrams/overview.md">Open →</a></div>
+        <div class="card"><h3>Components</h3><a href="docs/diagrams/components.md">Open →</a></div>
+        <div class="card"><h3>Deployment</h3><a href="docs/diagrams/deployment.md">Open →</a></div>
+        <div class="card"><h3>CI/CD Pipeline</h3><a href="docs/diagrams/pipeline-ci-cd.md">Open →</a></div>
+        <div class="card"><h3>Sequence: Get-PassWord</h3><a href="docs/diagrams/sequence-get-password.md">Open →</a></div>
+    </div>
+</div>
+
+<div class="section">
+    <h2>⚙️ Versioning & Release Pipeline</h2>
+    <div class="grid">
+        <div class="card"><h3>Versioning</h3><a href="docs/versioning.md">Open →</a></div>
+        <div class="card"><h3>Release Process</h3><a href="docs/release-process.md">Open →</a></div>
+        <div class="card"><h3>Release Guide</h3><a href="docs/release.md">Open →</a></div>
+    </div>
+</div>
+
+<div class="section">
+    <h2>🤝 Contributing</h2>
+    <div class="grid">
+        <div class="card"><h3>Contributing (FR)</h3><a href="docs/contributing.md">Open →</a></div>
+        <div class="card"><h3>Contributing (EN)</h3><a href="docs/contributing.en.md">Open →</a></div>
+        <div class="card"><h3>Code of Conduct</h3><a href="CODE_OF_CONDUCT.md">Open →</a></div>
+        <div class="card"><h3>Governance</h3><a href="GOVERNANCE.md">Open →</a></div>
+        <div class="card"><h3>Security Policy</h3><a href="SECURITY.md">Open →</a></div>
+    </div>
+</div>
+
+<footer>
+    <p>SecureGen — Open‑source, secure, and crafted with care.</p>
+    <p>Support the project on <a href="https://ko-fi.com/ledino_creator">Ko‑fi</a></p>
+</footer>
+
+</body>
+</html>

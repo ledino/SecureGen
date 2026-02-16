@@ -1,9 +1,9 @@
 # 🧱 Architecture interne — SecureGen  
-*(Version synchronisée avec SecureGen 1.5.0)*
+*(Version harmonisée — pipeline automatisé v1.5.0+)*
 
 Ce document présente l’architecture interne du module **SecureGen**, son fonctionnement, ses choix techniques et la manière dont il assure une compatibilité totale entre **PowerShell 7+** et **Windows PowerShell 5.1**.
 
-Il s’adresse aux développeurs, contributeurs et utilisateurs avancés souhaitant comprendre comment le module fonctionne en profondeur.
+Il s’adresse aux développeurs, contributeurs et utilisateurs avancés souhaitant comprendre le fonctionnement interne du module.
 
 ---
 
@@ -14,8 +14,8 @@ SecureGen repose sur trois principes fondamentaux :
 1. **Sécurité moderne**  
    Utilisation des meilleures API cryptographiques disponibles selon la version de PowerShell.
 
-2. **Compatibilité maximale**  
-   Architecture duale PS7 / PS5.1 avec implémentations séparées.
+2. **Compatibilité maximale (PS5.1 + PS7+)**  
+   Architecture duale avec implémentations séparées et un loader intelligent.
 
 3. **Expérience utilisateur fluide**  
    Clipboard cross‑platform, beep encapsulé, alias ergonomiques, documentation complète, SecureString pour les usages PKI.
@@ -98,6 +98,8 @@ else {
 
 # 📦 Structure complète du module
 
+*(Version harmonisée avec le pipeline automatisé)*
+
 ```text
 SecureGen/
 │
@@ -118,7 +120,7 @@ SecureGen/
 │       ├── script-demo.png
 │       └── github-actions-demo.png
 │
-├── docs/                          # Documentations complètes
+├── docs/                          # Documentation complète
 │   ├── index.md
 │   ├── installation.md
 │   ├── examples.md
@@ -130,6 +132,7 @@ SecureGen/
 │   ├── troubleshooting.md
 │   ├── versioning.md
 │   ├── release-process.md
+│   ├── release.md
 │   ├── faq.md
 │   ├── benchmarks.md
 │   ├── screenshots.md
@@ -139,7 +142,7 @@ SecureGen/
 │   │   ├── Get-PassPhrase.md
 │   │   ├── Get-CryptoIndex.md
 │   │   ├── Invoke-Beep.md
-│   │   └── SecureGen.md
+│   │   └── Get-PKIPass.md
 │   └── diagrams/
 │       ├── components.md
 │       ├── deployment.md
@@ -147,15 +150,13 @@ SecureGen/
 │       ├── pipeline-ci-cd.md
 │       └── sequence-get-password.md
 │
-├── node_modules                   # Dépendances Node.js (standard-version)
-│
 ├── scripts/                       # Scripts internes & outils dev
 │   ├── build.ps1
 │   ├── Install-SecureGen.ps1
 │   ├── Publish-SecureGen.ps1
 │   ├── Generate-Help.ps1
-│   ├── Versioning-SecureGen.ps1   # (legacy, remplacé par standard-version)
-│   └── Release-All.ps1            # (legacy, remplacé par GitHub Actions)
+│   ├── Versioning-SecureGen.ps1   # (legacy — ne plus utiliser)
+│   └── Release-All.ps1            # (legacy — remplacé par GitHub Actions)
 │
 ├── .version-updaters/             # Updaters custom pour standard-version
 │   └── psd1-updater.js            # Mise à jour automatique du ModuleVersion
@@ -163,23 +164,22 @@ SecureGen/
 ├── .github/
 │   ├── FUNDING.yml
 │   ├── pull_request_template.md
-│   ├── SECURITY_ADVISORY_TEMPLATE.md
-│   ├── DISUSSION_TEMPLATE/
-│   │   ├── announcements.yml
-│   │   ├── ideas.yml
-│   │   └── qna.yml
 │   ├── ISSUE_TEMPLATE/
 │   │   ├── bug_report.md
 │   │   └── feature_request.md
+│   ├── DISCUSSION_TEMPLATE/
+│   │   ├── announcements.yml
+│   │   ├── ideas.yml
+│   │   └── qna.yml
 │   └── workflows/
 │       ├── ci.yml                 # CI multi-plateformes (tests + lint)
-│       └── publish.yml            # Publication automatique sur PSGallery (déclenchée par tag)
+│       └── release.yml            # Pipeline de release automatisé (standard-version + PSGallery)
 │
 ├── package.json                   # Dépendances Node + version source de vérité
-├── package-lock.json              # Verrouillage des dépendances
+├── package-lock.json
 ├── .versioningrc.json             # Configuration standard-version
 │
-tests/
+├── tests/                         # Tests Pester
 │   ├── Get-PKIPass.Tests.ps1
 │   ├── Get-PassWord.Tests.ps1
 │   ├── Get-PassPhrase.Tests.ps1
@@ -187,8 +187,8 @@ tests/
 │   ├── Invoke-Beep.Tests.ps1
 │   └── Clipboard.Tests.ps1
 │
-├── CHANGELOG.md                   # Changelog généré automatiquement
-├── README.md                      # Documentation principale
+├── CHANGELOG.md                   # Généré automatiquement
+├── README.md
 ├── README.en.md
 ├── ROADMAP.md
 ├── SECURITY.md
@@ -197,7 +197,7 @@ tests/
 ├── GOVERNANCE.md
 ├── CONTRIBUTING.md
 ├── MAINTAINERS.md
-├── LICENSE                        # Licence MIT
+├── LICENSE
 └── .gitignore
 ```
 

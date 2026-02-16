@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SecureGen — Documentation TOC</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f7f9fc;
+        color: #0A2A4F;
+    }
+
+    header {
+        text-align: center;
+        padding: 50px 20px 30px;
+        background: white;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    header h1 {
+        font-size: 40px;
+        margin: 10px 0;
+    }
+
+    header p.subtitle {
+        font-size: 18px;
+        color: #555;
+        margin-top: 0;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 40px auto 60px;
+        padding: 0 20px;
+    }
+
+    h2 {
+        font-size: 26px;
+        margin-top: 40px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    h2 span.icon {
+        font-size: 24px;
+    }
+
+    ul {
+        list-style: none;
+        padding-left: 0;
+        margin-top: 8px;
+    }
+
+    li {
+        margin: 4px 0;
+    }
+
+    a {
+        color: #00BCD4;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .section {
+        background: white;
+        border-radius: 10px;
+        border: 1px solid #e0e0e0;
+        padding: 18px 20px 12px;
+        margin-top: 18px;
+    }
+
+    footer {
+        text-align: center;
+        padding: 30px 20px 40px;
+        background: #0A2A4F;
+        color: white;
+        margin-top: 40px;
+    }
+
+    footer a {
+        color: #4FC3F7;
+        text-decoration: none;
+        font-weight: 600;
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>SecureGen — Documentation TOC</h1>
+    <p class="subtitle">Complete index of all documentation files</p>
+</header>
+
+<div class="container">
+
+    <div class="section">
+        <h2><span class="icon">📘</span>User Guides</h2>
+        <ul>
+            <li><a href="installation.md">Installation</a></li>
+            <li><a href="examples.md">Examples</a></li>
+            <li><a href="advanced.md">Advanced Guide</a></li>
+            <li><a href="faq.md">FAQ</a></li>
+            <li><a href="troubleshooting.md">Troubleshooting</a></li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2><span class="icon">🧩</span>Cmdlet Documentation (PlatyPS)</h2>
+        <ul>
+            <li><a href="cmdlets/Get-PassWord.md">Get-PassWord</a></li>
+            <li><a href="cmdlets/Get-PassPhrase.md">Get-PassPhrase</a></li>
+            <li><a href="cmdlets/Get-PKIPass.md">Get-PKIPass</a></li>
+            <li><a href="cmdlets/Get-CryptoIndex.md">Get-CryptoIndex</a></li>
+            <li><a href="cmdlets/Invoke-Beep.md">Invoke-Beep</a></li>
+            <li><a href="cmdlets/SecureGen.md">SecureGen</a></li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2><span class="icon">🧱</span>Architecture & Technical Docs</h2>
+        <ul>
+            <li><a href="architecture.md">Architecture</a></li>
+            <li><a href="security.md">Security & Cryptography</a></li>
+            <li><a href="benchmarks.md">Benchmarks</a></li>
+            <li><a href="developer-guide.md">Developer Guide</a></li>
+            <li><a href="screenshots.md">Screenshots</a></li>
+            <li><a href="generate-help.md">Generate Help (PlatyPS)</a></li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2><span class="icon">📊</span>UML & Diagrams</h2>
+        <ul>
+            <li><a href="diagrams/overview.md">Overview</a></li>
+            <li><a href="diagrams/components.md">Components</a></li>
+            <li><a href="diagrams/deployment.md">Deployment</a></li>
+            <li><a href="diagrams/pipeline-ci-cd.md">CI/CD Pipeline</a></li>
+            <li><a href="diagrams/sequence-get-password.md">Sequence — Get-PassWord</a></li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2><span class="icon">⚙️</span>Versioning & Release Pipeline</h2>
+        <ul>
+            <li><a href="versioning.md">Versioning</a></li>
+            <li><a href="release-process.md">Release Process (internal)</a></li>
+            <li><a href="release.md">Release Guide (usage)</a></li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2><span class="icon">🤝</span>Contributing & Governance</h2>
+        <ul>
+            <li><a href="contributing.md">Contributing (FR)</a></li>
+            <li><a href="contributing.en.md">Contributing (EN)</a></li>
+            <li><a href="../CODE_OF_CONDUCT.md">Code of Conduct</a></li>
+            <li><a href="../GOVERNANCE.md">Governance</a></li>
+            <li><a href="../SECURITY.md">Security Policy</a></li>
+            <li><a href="../SUPPORT.md">Support</a></li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2><span class="icon">🧪</span>Tests & Quality</h2>
+        <ul>
+            <li>Pester tests → <code>../tests/</code></li>
+            <li>Static analysis → PSScriptAnalyzer</li>
+            <li>CI workflows → <code>.github/workflows/</code></li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2><span class="icon">📦</span>Repository & Roadmap</h2>
+        <ul>
+            <li><a href="../README.md">README (FR)</a></li>
+            <li><a href="../README.en.md">README (EN)</a></li>
+            <li><a href="../ROADMAP.md">ROADMAP</a></li>
+        </ul>
+    </div>
+
+</div>
+
+<footer>
+    <p>SecureGen — Open-source, secure, and crafted with care.</p>
+    <p>Support the project on <a href="https://ko-fi.com/ledino_creator">Ko‑fi</a></p>
+</footer>
+
+</body>
+</html>
