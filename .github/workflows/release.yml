@@ -2,8 +2,14 @@ name: Release PSGallery
 
 on:
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to release (ex: v1.5.0)'
+        required: true
+        type: string
   push:
-    tags: ['v*']  # SEULEMENT tags
+    tags:
+      - 'v*'
 
 permissions:
   contents: write
@@ -11,23 +17,61 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
 
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # -------------------------------
+      # Determine tag (manual or push)
+      # -------------------------------
+      - name: Determine tag
+        id: vars
+        shell: pwsh
+        run: |
+          $tag = '${{ github.event.inputs.tag }}'
+          if (-not $tag) { $tag = '${{ github.ref_name }}' }
+
+          # Remove refs/tags/ prefix if present
+          if ($tag.StartsWith('refs/tags/')) {
+            $tag = $tag.Substring(10)
+          }
+
+          # Remove leading "v"
+          if ($tag.StartsWith('v')) {
+            $tag = $tag.Substring(1)
+          }
+
+          echo "tag=$tag" >> $env:GITHUB_OUTPUT
+
+      # -------------------------------
+      # Sync PSD1 version to tag
+      # -------------------------------
+      - name: Sync version to tag
+        shell: pwsh
+        run: |
+          Update-ModuleManifest ./SecureGen/SecureGen.psd1 -ModuleVersion '${{ steps.vars.outputs.tag }}'
+
+      # -------------------------------
+      # Create GitHub Release
+      # -------------------------------
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: v${{ steps.vars.outputs.tag }}
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # -------------------------------
+      # Publish to PSGallery
+      # -------------------------------
       - name: Publish to PSGallery
         shell: pwsh
         env:
           PSGALLERY_KEY: ${{ secrets.PSGALLERY_KEY }}
         run: |
           Install-Module PowerShellGet -Force -Scope CurrentUser
-          Publish-Module -Path ./SecureGen -NuGetApiKey $env:PSGALLERY_KEY
+          Publish-Module -Path ./SecureGen -NuGetApiKey $env:PSGALLERY_KEY -Verbose
