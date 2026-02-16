@@ -1,18 +1,18 @@
-<!-- Titre -->
-<div align="center">
-  <h1 style="font-size:72px; margin-bottom: 10px;">🔐 SecureGen</h1>
+<!-- Titre principal -->
+<div align="center" style="margin-top: 40px;">
+  <h1 style="font-size:72px; margin-bottom: 5px;">🔐 SecureGen</h1>
 </div>
 
 <!-- Sous-titre -->
-<p align="center" style="margin-top: 0; margin-bottom: 25px;">
+<p align="center" style="font-size: 18px; margin-top: 0; margin-bottom: 35px; color: #555;">
   <em>Modern, secure & ergonomic password generation for PowerShell</em>
 </p>
 
-<!-- Séparateur léger -->
-<hr style="width: 60%; border: 0; border-top: 1px solid #ddd; margin: 30px auto;">
+<!-- Séparateur premium -->
+<hr style="width: 65%; border: 0; border-top: 1px solid #e0e0e0; margin: 40px auto;">
 
 <!-- Langues -->
-<p align="center" style="margin: 25px 0;">
+<p align="center" style="margin: 30px 0;">
     <a href="README.md" style="text-decoration: none;">
         <img src="https://img.shields.io/badge/FRANÇAIS-1E88E5?style=for-the-badge&logo=github&logoColor=white">
     </a>
@@ -22,7 +22,7 @@
 </p>
 
 <!-- Badges PSGallery / CI / Release -->
-<p align="center" style="margin: 35px 0;">
+<p align="center" style="margin: 45px 0;">
 
   <!-- PSGallery -->
   <a href="https://www.powershellgallery.com/packages/SecureGen" style="text-decoration: none;">
@@ -47,18 +47,18 @@
 
 </p>
 
-<!-- Logo -->
-<p align="center" style="margin: 40px 0 20px 0;">
-  <img src="assets/logo.png" width="140" alt="SecureGen Logo"/>
+<!-- Logo premium -->
+<p align="center" style="margin: 60px 0 25px 0;">
+  <img src="assets/logo.png" width="150" alt="SecureGen Logo"/>
 </p>
 
 <!-- Bannière -->
-<p align="center" style="margin: 10px 0 40px 0;">
+<p align="center" style="margin: 10px 0 55px 0;">
   <img src="assets/banner.png" alt="SecureGen Banner"/>
 </p>
 
 <!-- Ko-fi -->
-<p align="center" style="margin-top: 30px;">
+<p align="center" style="margin-top: 40px; margin-bottom: 60px;">
     <a href="https://ko-fi.com/ledino_creator">
         <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Ko-fi">
     </a>
