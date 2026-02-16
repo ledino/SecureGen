@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.1](https://github.com/ledino/SecureGen/compare/v1.5.0...v1.4.1) (2026-02-16)
+
+
+### 🐛 Fixes
+
+* configure git identity before everything ([fc82cbb](https://github.com/ledino/SecureGen/commit/fc82cbbd4139d9ceb3265db20d8f295663061a9e))
+* test release pipeline ([10391ff](https://github.com/ledino/SecureGen/commit/10391ff8d202d4d0c3cdac7c8587b075e26f57be))
+
 ## [1.5.0](https://github.com/ledino/SecureGen/compare/v1.4.0...v1.5.0) (2026-02-16)
 
 
