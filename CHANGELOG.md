@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.1](https://github.com/ledino/SecureGen/compare/v1.5.0...v1.4.1) (2026-02-16)
+
+
+### 🐛 Fixes
+
+* module path for PSGallery publish ([6dec3cd](https://github.com/ledino/SecureGen/commit/6dec3cd54b1782c1957fe7c5ce8ec696c3ffaec7))
+
 ## [1.5.0](https://github.com/ledino/SecureGen/compare/v1.4.0...v1.5.0) (2026-02-16)
 
 
