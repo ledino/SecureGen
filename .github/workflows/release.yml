@@ -33,15 +33,15 @@ jobs:
       - name: Install standard-version
         run: npm install -g standard-version
 
-      - name: Run standard-version
-        run: standard-version
-        env:
-          HUSKY: 0
-
       - name: Configure Git identity
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
+
+      - name: Run standard-version
+        run: standard-version
+        env:
+          HUSKY: 0
 
       - name: Push changes
         run: |
