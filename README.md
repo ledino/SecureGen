@@ -298,8 +298,13 @@ Guides officiels :
 
 Issues, discussions et PRs sont les bienvenues.
 
-Si vous souhaitez soutenir le projet :  
-👉 `https://ko-fi.com/ledino_creator` [(ko-fi.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fko-fi.com%2Fledino_creator")
+Si vous souhaitez soutenir le projet :
+
+<p>
+    <a href="https://ko-fi.com/ledino_creator">
+        <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Ko-fi">
+    </a>
+<p\>
 
 ---
 
