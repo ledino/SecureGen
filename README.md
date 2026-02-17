@@ -90,28 +90,6 @@
 
 ---
 
-Parfait Saddek — on va harmoniser **README.md** pour qu’il soit parfaitement aligné avec :
-
-- ton pipeline moderne (standard-version exécuté dans GitHub Actions)  
-- les documents `release-process.md`, `release.md`, `versioning.md`, `contributing`  
-- l’architecture harmonisée  
-- la structure réelle du repo  
-- ton identité visuelle  
-- ton style rédactionnel (clair, pro, premium)
-
-Ton README actuel est déjà très beau visuellement, mais il contient encore :
-
-- des traces de l’ancien workflow (standard-version local)  
-- des sections redondantes avec les nouveaux documents  
-- quelques incohérences mineures (scripts legacy, workflows anciens)  
-- des formulations qui ne reflètent plus ton pipeline automatisé  
-- des liens internes à mettre à jour  
-- des sections qui méritent d’être simplifiées ou clarifiées
-
-Je vais te proposer une **version complète, harmonisée, prête à remplacer ton README.md**, tout en conservant ton identité visuelle premium.
-
----
-
 # 📚 Table des matières
 
 - [📘 À propos](#-à-propos)
