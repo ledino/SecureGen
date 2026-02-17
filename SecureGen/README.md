@@ -1,69 +1,72 @@
-# SecureGen
+# 📦 SecureGen v1.5.0 — PowerShell Module  
+*(FR + EN — auto-generated)*
 
-SecureGen is a modern, secure, cross‑platform PowerShell module designed to generate strong passwords, passphrases, PKI secrets, and cryptographic indexes with a clean and ergonomic developer experience.
+<details>
+<summary><strong>🇫🇷 Français</strong></summary>
 
----
+## 🔐 SecureGen — Module PowerShell v1.5.0
 
-## 🚀 Features
+Module moderne et sécurisé pour générer mots de passe, passphrases, secrets PKI et index cryptographiques.
 
-- Generate strong passwords (`Get-PassWord`)
-- Create secure passphrases (`Get-PassPhrase`)
-- Produce PKI‑ready secrets (`Get-PKIPass`)
-- Generate cryptographic indexes (`Get-CryptoIndex`)
-- Cross‑platform (Windows, Linux, macOS)
-- Fully documented with PlatyPS
-- Fast, lightweight, no dependencies
+### 🚀 Cmdlets
+- `Clear-ClipboardSafe` — Cmdlet SecureGen
+- `Convert-ToSecureStringSafe` — Cmdlet SecureGen
+- `Get-CryptoIndex` — Cmdlet SecureGen
+- `Get-PassPhrase` — Cmdlet SecureGen
+- `Get-PassWord` — Cmdlet SecureGen
+- `Get-PKIPass` — Cmdlet SecureGen
+- `Invoke-Beep` — Cmdlet SecureGen
+- `Set-ClipboardSafe` — Cmdlet SecureGen
 
----
-
-## 📦 Installation
-
-```powershell
+### 📦 Installation
+\powershell
 Install-Module SecureGen -Scope CurrentUser
-```
+\
 
----
-
-## 🧪 Quick Examples
-
-### Generate a password
-
-```powershell
+### 🧪 Exemples
+\powershell
 Get-PassWord -Length 20
-```
-
-### Generate a passphrase
-
-```powershell
 Get-PassPhrase -Words 5
-```
-
-### Generate a PKI secret
-
-```powershell
 Get-PKIPass
-```
+\
+
+**Docs** : https://github.com/Ledino/SecureGen  
+**Licence** : MIT © Ledino 2026
+
+</details>
 
 ---
 
-## 📘 Documentation
+<details open>
+<summary><strong>🇬🇧 English</strong></summary>
 
-Full documentation, diagrams, examples, and developer guides are available on GitHub:
+## 🔐 SecureGen v1.5.0 — PowerShell Module
 
-https://github.com/Ledino/SecureGen
+Modern cross-platform module for secure passwords, passphrases, PKI secrets and crypto indexes.
 
----
+### 🚀 Cmdlets
+- `Clear-ClipboardSafe` — SecureGen cmdlet
+- `Convert-ToSecureStringSafe` — SecureGen cmdlet
+- `Get-CryptoIndex` — SecureGen cmdlet
+- `Get-PassPhrase` — SecureGen cmdlet
+- `Get-PassWord` — SecureGen cmdlet
+- `Get-PKIPass` — SecureGen cmdlet
+- `Invoke-Beep` — SecureGen cmdlet
+- `Set-ClipboardSafe` — SecureGen cmdlet
 
-## 🤝 Contributing
+### 📦 Install
+\powershell
+Install-Module SecureGen -Scope CurrentUser
+\
 
-Contributions, issues, and feature requests are welcome.  
-See the contributing guidelines on GitHub.
+### 🧪 Examples
+\powershell
+Get-PassWord -Length 20
+Get-PassPhrase -Words 5
+Get-PKIPass
+\
 
----
+**Docs** : https://github.com/Ledino/SecureGen  
+**License** : MIT © Ledino 2026
 
-## 📜 License
-
-MIT License  
-Copyright (c) 2026 Ledino
-
----
+</details>

@@ -65,6 +65,28 @@ Invoke-Beep
 #>
 
 # ---------------------------------------------------------------------------
+# Fonction & chemin pour Readme PSGallery
+# ---------------------------------------------------------------------------
+
+<#
+Lors de l'appel du script (Generate-PSGalleryReadme.ps1)
+La fct Get-NewCmdlet permet de valider que le pipeline détecte bien une nouvelle cmdlet ajoutée dans SecureGen.psm1
+Désactivé depuis le test concluant.
+
+
+function Get-NewCmdlet {
+    [CmdletBinding()]
+    param()
+    "Hello"
+}
+#>
+
+# Permet que toutes les fonctions de core.ps7 deviennent partie du module 
+# et prisent en compte dans le Readme PSGallery  
+. (Join-Path $PSScriptRoot "Core.PS7")
+
+
+# ---------------------------------------------------------------------------
 # Détection automatique PowerShell 7 / PowerShell 5
 # ---------------------------------------------------------------------------
 
@@ -300,4 +322,32 @@ Set-Alias -Name sgpki -Value Get-PKIPass
 # Export public
 # ---------------------------------------------------------------------------
 
-Export-ModuleMember -Function * -Alias * 
+# Export-ModuleMember -Function * -Alias * # Plus utile suite au rajout de la fonction suivante
+
+# pour que Export-ModuleMember automatique soit aligné sur le même filtre du script Generate-PSGalleryReadme.ps1
+$publicFunctions = Get-ChildItem $PSScriptRoot -Filter *.ps* -File -Recurse |
+    ForEach-Object {
+        $ast = [System.Management.Automation.Language.Parser]::ParseFile(
+            $_.FullName, [ref]$null, [ref]$null
+        )
+
+        $ast.FindAll({
+            param($node)
+
+            $isFunction = $node -is [System.Management.Automation.Language.FunctionDefinitionAst]
+            if (-not $isFunction) { return $false }
+
+            $name = $node.Name
+
+            $isPrivate =
+                $name.StartsWith('Internal-') -or
+                $name.StartsWith('_') -or
+                $name.StartsWith('Private-') -or
+                $name.StartsWith('Helper-')
+
+            return -not $isPrivate
+        }, $true)
+    } |
+    Select-Object -ExpandProperty Name -Unique
+
+Export-ModuleMember -Function $publicFunctions

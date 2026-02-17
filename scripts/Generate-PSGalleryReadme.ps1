@@ -1,97 +1,133 @@
-<#
-.SYNOPSIS
-    Génère automatiquement README.md pour PowerShell Gallery (FR+EN, collapsible),
-    avec extraction dynamique des cmdlets et synopsis depuis PlatyPS.
-#>
+[CmdletBinding()]
+param()
 
-# --- FUNCTIONS ---------------------------------------------------------------
+$ErrorActionPreference = 'Stop'
+
+Write-Verbose "🔧 Génération automatique du README PSGallery…"
+
+# Racine du module
+$moduleRoot = Join-Path $PSScriptRoot "..\SecureGen"
+$readmePath = Join-Path $moduleRoot "README.md"
+
+if (-not (Test-Path $moduleRoot)) {
+    throw "Module root not found: $moduleRoot"
+}
+
+# ---------------------------------------------------------------------------
+# Récupération des cmdlets publiques via AST
+# ---------------------------------------------------------------------------
 
 function Get-SecureGenCmdlets {
     param(
-        [string]$ModulePath = (Join-Path $PSScriptRoot "SecureGen.psm1")
+        [string]$ModuleRoot
     )
 
-    # Parse AST
-    $ast = [System.Management.Automation.Language.Parser]::ParseFile(
-        $ModulePath, [ref]$null, [ref]$null
-    )
+    $cmdlets = @()
 
-    # Gestion d’erreurs AST
-    if ($ast.Errors) {
-        Write-Warning "PSM1 parse errors: $($ast.Errors.Count)"
-        return @()
+    # Tous les fichiers .ps1 / .psm1 du module
+    $files = Get-ChildItem $ModuleRoot -Filter *.ps* -File -Recurse
+
+    foreach ($file in $files) {
+        $ast = [System.Management.Automation.Language.Parser]::ParseFile(
+            $file.FullName, [ref]$null, [ref]$null
+        )
+
+        if ($ast.Errors) {
+            Write-Warning "Parse errors in $($file.FullName)"
+            continue
+        }
+
+        $functions = $ast.FindAll({
+            param($node)
+
+            $isFunction = $node -is [System.Management.Automation.Language.FunctionDefinitionAst]
+            if (-not $isFunction) { return $false }
+
+            $name = $node.Name
+
+            # Conventions pour ignorer les helpers internes
+            $isPrivate =
+                $name.StartsWith('Internal-') -or
+                $name.StartsWith('_') -or
+                $name.StartsWith('Private-') -or
+                $name.StartsWith('Helper-')
+
+            return -not $isPrivate
+        }, $true)
+
+        if ($functions) {
+            $cmdlets += $functions.Name
+        }
     }
 
-    # Extraction des fonctions
-    $functions = $ast.FindAll({
-        param($node)
-        $node -is [System.Management.Automation.Language.FunctionDefinitionAst]
-    }, $true)
-
-    return $functions.Name
+    return $cmdlets | Sort-Object -Unique
 }
 
-function Get-CmdletSynopsis {
+# ---------------------------------------------------------------------------
+# Récupération des synopsis PlatyPS
+# ---------------------------------------------------------------------------
+
+function Get-PlatySynopsis {
     param(
-        [string]$DocsPath = (Join-Path $PSScriptRoot "docs/cmdlets")
+        [string]$ModuleRoot,
+        [string[]]$Cmdlets
     )
 
     $synopsis = @{}
 
-    if (-not (Test-Path $DocsPath)) {
+    $docsPath = Join-Path $ModuleRoot "docs"
+
+    if (-not (Test-Path $docsPath)) {
         return $synopsis
     }
 
-    Get-ChildItem $DocsPath -Filter *.md | ForEach-Object {
-        $name = $_.BaseName
-        $content = Get-Content $_.FullName -Raw
+    $mdFiles = Get-ChildItem $docsPath -Filter *.md -File -Recurse
 
-        # Regex synopsis robuste
-        if ($content -match '## SYNOPSIS\s*\r?\n\s*(.+?)(?=\r?\n##|\Z)') {
-            $synopsis[$name] = $matches[1].Trim()
+    foreach ($file in $mdFiles) {
+        $content = Get-Content $file.FullName -Raw
+
+        foreach ($cmdlet in $Cmdlets) {
+            if ($content -match "(?ms)^#\s*$cmdlet\s*$(.+?)(?=^#|\Z)") {
+                $block = $Matches[1]
+
+                if ($block -match "(?m)^\.SYNOPSIS\s*(.+)$") {
+                    $synopsis[$cmdlet] = $Matches[1].Trim()
+                }
+            }
         }
     }
 
     return $synopsis
 }
 
-# --- MAIN --------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# Génération des listes FR / EN
+# ---------------------------------------------------------------------------
 
-# Manifest
-$manifest = Import-PowerShellDataFile (Join-Path $PSScriptRoot "SecureGen.psd1")
-$version  = $manifest.ModuleVersion
-$author   = $manifest.Author
-$year     = (Get-Date).Year
+$cmdlets  = Get-SecureGenCmdlets -ModuleRoot $moduleRoot
+$synopsis = Get-PlatySynopsis -ModuleRoot $moduleRoot -Cmdlets $cmdlets
 
-# Cmdlets + synopsis
-$cmdlets  = Get-SecureGenCmdlets
-$synopsis = Get-CmdletSynopsis
-
-# Tri alphabétique
-$cmdlets = $cmdlets | Sort-Object
-
-# Formatage automatique FR
+# IMPORTANT : chaînes simples + concaténation pour éviter $(...) dans le README
 $cmdletsFr = ($cmdlets | ForEach-Object {
-    "- \`$_\` — $($synopsis[$_] ?? 'Cmdlet SecureGen')"
+    '- `' + $_ + '` — ' + ($synopsis[$_] ?? 'Cmdlet SecureGen')
 }) -join "`n"
 
-# Formatage automatique EN
 $cmdletsEn = ($cmdlets | ForEach-Object {
-    "- \`$_\` — $($synopsis[$_] ?? 'SecureGen cmdlet')"
+    '- `' + $_ + '` — ' + ($synopsis[$_] ?? 'SecureGen cmdlet')
 }) -join "`n"
 
-# Chemin README
-$readmePath = Join-Path $PSScriptRoot "SecureGen\README.md"
+# ---------------------------------------------------------------------------
+# Construction du README
+# ---------------------------------------------------------------------------
 
-# Contenu README
 $readmeContent = @"
-# 📦 SecureGen v$version — PowerShell Module  
+# 📦 SecureGen v1.5.0 — PowerShell Module  
 *(FR + EN — auto-generated)*
 
 <details>
 <summary><strong>🇫🇷 Français</strong></summary>
 
-## 🔐 SecureGen — Module PowerShell v$version
+## 🔐 SecureGen — Module PowerShell v1.5.0
 
 Module moderne et sécurisé pour générer mots de passe, passphrases, secrets PKI et index cryptographiques.
 
@@ -99,19 +135,19 @@ Module moderne et sécurisé pour générer mots de passe, passphrases, secrets 
 $cmdletsFr
 
 ### 📦 Installation
-```powershell
+\`powershell
 Install-Module SecureGen -Scope CurrentUser
-```
+\`
 
 ### 🧪 Exemples
-```powershell
+\`powershell
 Get-PassWord -Length 20
 Get-PassPhrase -Words 5
 Get-PKIPass
-```
+\`
 
 **Docs** : https://github.com/Ledino/SecureGen  
-**Licence** : MIT © $author $year
+**Licence** : MIT © Ledino 2026
 
 </details>
 
@@ -120,7 +156,7 @@ Get-PKIPass
 <details open>
 <summary><strong>🇬🇧 English</strong></summary>
 
-## 🔐 SecureGen v$version — PowerShell Module
+## 🔐 SecureGen v1.5.0 — PowerShell Module
 
 Modern cross-platform module for secure passwords, passphrases, PKI secrets and crypto indexes.
 
@@ -128,24 +164,23 @@ Modern cross-platform module for secure passwords, passphrases, PKI secrets and 
 $cmdletsEn
 
 ### 📦 Install
-```powershell
+\`powershell
 Install-Module SecureGen -Scope CurrentUser
-```
+\`
 
 ### 🧪 Examples
-```powershell
+\`powershell
 Get-PassWord -Length 20
 Get-PassPhrase -Words 5
 Get-PKIPass
-```
+\`
 
 **Docs** : https://github.com/Ledino/SecureGen  
-**License** : MIT © $author $year
+**License** : MIT © Ledino 2026
 
 </details>
 "@
 
-# Écriture du fichier
-Set-Content -Path $readmePath -Value $readmeContent -Encoding UTF8NoBOM -NoNewline
+Set-Content -Path $readmePath -Value $readmeContent -Encoding UTF8
 
-Write-Host "✅ README.md généré automatiquement : $readmePath (v$version)"
+Write-Host "✅ README.md généré automatiquement : $readmePath"
