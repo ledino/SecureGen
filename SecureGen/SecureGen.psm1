@@ -1,6 +1,6 @@
 Set-StrictMode -Version Latest
 
-<#
+<# 
 .SYNOPSIS
 Module PowerShell pour générer des mots de passe, passphrases et valeurs aléatoires cryptographiquement sûres.
 
@@ -9,6 +9,7 @@ SecureGen est un module PowerShell léger, multiplateforme et sécurisé, conçu
 
 - des mots de passe robustes et configurables
 - des passphrases lisibles et hautement entropiques
+- des secrets PKI (SecureString par défaut)
 - des index aléatoires cryptographiquement sûrs
 - un utilitaire sonore compatible Windows / Linux / macOS
 
@@ -19,335 +20,47 @@ Le module utilise automatiquement la meilleure source d’aléa disponible :
 
 SecureGen inclut également une gestion intelligente du presse‑papier, avec effacement automatique sécurisé, et des options de personnalisation avancées.
 
-.EXAMPLE
-Import-Module SecureGen
-Get-PassWord
-
-.EXAMPLE
-Get-PassPhrase -MotsParBloc 7 -LettresParMot 5
-
-.EXAMPLE
-Get-CryptoIndex -Max 10
-
-.EXAMPLE
-Invoke-Beep -Frequency 1200 -Duration 300
-
 .NOTES
-Auteur : Saddek
-Compatible Windows, Linux, macOS
+Auteur : Ledino
 Version : 1.5.0
 Site du projet : https://github.com/ledino/SecureGen
-
-.LINK
-Get-PassWord
-
-.LINK
-Get-PassPhrase
-
-.LINK
-Get-CryptoIndex
-
-.LINK
-Invoke-Beep
-#>
-
-<#
-    SecureGen.psm1
-    Version : 1.5.0
-    Auteur  : Ledino
-    Date    : 2026-02-16
-
-    Notes :
-    - Chargement automatique PS7 / PS5
-    - Architecture modulaire (Core.PS7.ps1 / Legacy.PS5.ps1)
-    - Compatible Windows, Linux, macOS
-    - Code propre, professionnel, PSGallery-ready
 #>
 
 # ---------------------------------------------------------------------------
-# Fonction & chemin pour Readme PSGallery
+# Chargement automatique des fonctions privées (non exportées)
 # ---------------------------------------------------------------------------
 
-<#
-Lors de l'appel du script (Generate-PSGalleryReadme.ps1)
-La fct Get-NewCmdlet permet de valider que le pipeline détecte bien une nouvelle cmdlet ajoutée dans SecureGen.psm1
-Désactivé depuis le test concluant.
-
-
-function Get-NewCmdlet {
-    [CmdletBinding()]
-    param()
-    "Hello"
-}
-#>
-
-# Permet que toutes les fonctions de core.ps7 deviennent partie du module 
-# et prisent en compte dans le Readme PSGallery  
-. (Join-Path $PSScriptRoot "Core.PS7")
-
-
-# ---------------------------------------------------------------------------
-# Détection automatique PowerShell 7 / PowerShell 5
-# ---------------------------------------------------------------------------
-
-if ($PSVersionTable.PSVersion.Major -ge 7) {
-    # Version moderne (RandomNumberGenerator.GetBytes, Get-SecureRandom)
-    . "$PSScriptRoot/Core.PS7.ps1"
-}
-else {
-    # Version fallback Windows PowerShell 5.1 (RNGCryptoServiceProvider)
-    . "$PSScriptRoot/Legacy.PS5.ps1"
+$privatePath = Join-Path $PSScriptRoot "Private"
+if (Test-Path $privatePath) {
+    Get-ChildItem -Path $privatePath -Filter *.ps1 -File | ForEach-Object {
+        . $_.FullName
+    }
 }
 
-
 # ---------------------------------------------------------------------------
-# Fonction pour by passer la règle : convertion de la chaîne en SecureString
+# Chargement automatique des fonctions publiques (exportées ensuite)
 # ---------------------------------------------------------------------------
 
-function Convert-ToSecureStringSafe {
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
-        "PSAvoidUsingConvertToSecureStringWithPlainText", ""
-    )]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Value
-    )
-
-    return ConvertTo-SecureString $Value -AsPlainText -Force
+$publicPath = Join-Path $PSScriptRoot "Public"
+if (Test-Path $publicPath) {
+    Get-ChildItem -Path $publicPath -Filter *.ps1 -File | ForEach-Object {
+        . $_.FullName
+    }
 }
 
-
 # ---------------------------------------------------------------------------
-# Fonction utilitaire pour PKI/SecureString
-# ---------------------------------------------------------------------------
-
-function Get-PKIPass {
-<#
-.SYNOPSIS
-Génère un secret robuste (mot de passe ou passphrase) destiné aux usages PKI, certificats, clés privées ou comptes de service.
-
-.DESCRIPTION
-Get-PKIPass génère un secret hautement entropique adapté aux usages sensibles :
-
-- Mode Password : 32 caractères aléatoires cryptographiquement sûrs.
-- Mode Passphrase : 6 mots de 6 lettres, lisibles mais robustes.
-
-L’utilisateur peut également demander un retour en SecureString pour intégration
-dans des scripts, DSC, ou des modules nécessitant ce format.
-
-.EXAMPLE
-Get-PKIPass
-Génère un mot de passe PKI de 32 caractères.
-
-.EXAMPLE
-Get-PKIPass -Type Passphrase
-Génère une passphrase de 6×6 lettres.
-
-.EXAMPLE
-Get-PKIPass -AsSecureString
-Retourne le secret sous forme de SecureString.
-
-.EXAMPLE
-Get-PKIPass -NoClipboard
-Génère un secret sans copie dans le presse‑papier.
-
-.PARAMETER Type
-Type de secret à générer : Password (32 chars) ou Passphrase (6×6 lettres).
-
-.PARAMETER AsSecureString
-Retourne le secret sous forme de SecureString.
-
-.PARAMETER NoClipboard
-Empêche la copie automatique dans le presse‑papier.
-
-.OUTPUTS
-System.String  
-System.Security.SecureString
-
-.NOTES
-Utilise Get-PassWord et Get-PassPhrase du module SecureGen.
-#>
-
-    [CmdletBinding()]
-    param(
-        [ValidateSet('Password','Passphrase')]
-        [string]$Type = 'Password',
-
-        [int]$Length = 32,
-
-        [int]$Words = 6,
-        [Alias('MotsParBloc','WordsCount','NbWords')]
-        [int]$Len = 6,
-
-        [switch]$AsSecureString,
-        [switch]$NoClipboard
-    )
-
-    # Génération du secret
-    if ($Type -eq 'Password') {
-        $secret = Get-PassWord -Len $Length -UseSpecial $true -NoClipboard:$NoClipboard
-    }
-    else {
-        $secret = Get-PassPhrase -Words $Words -Len $Len -NoClipboard:$NoClipboard
-    }
-
-    # Conversion SecureString si demandé
-    if ($AsSecureString) {
-        return Convert-ToSecureStringSafe $secret
-    }
-
-    return $secret
-}
-
-
-# ---------------------------------------------------------------------------
-# Fonction Set-ClipboardSafe
-# ---------------------------------------------------------------------------
-
-function Set-ClipboardSafe {
-<#
-.SYNOPSIS
-Copie du texte dans le presse‑papier de manière réellement cross‑platform.
-
-.DESCRIPTION
-Set-ClipboardSafe détecte automatiquement la plateforme et utilise la meilleure
-méthode disponible pour copier du texte dans le presse‑papier :
-
-- Windows : Set-Clipboard
-- macOS   : pbcopy
-- Linux   : xclip / xsel / wl-copy (selon disponibilité)
-
-En cas d’échec, la fonction reste silencieuse pour ne pas interrompre l’exécution.
-
-.PARAMETER Text
-Texte à copier dans le presse‑papier.
-#>
-
-    param(
-        [Parameter(Mandatory=$true)]
-        [string]$Text
-    )
-
-    try {
-        if ($IsWindows) {
-            Set-Clipboard -Value $Text -ErrorAction Stop
-            return
-        }
-
-        if ($IsMacOS) {
-            $Text | pbcopy 2>$null
-            return
-        }
-
-        if ($IsLinux) {
-            if (Get-Command wl-copy -ErrorAction SilentlyContinue) {
-                $Text | wl-copy 2>$null
-                return
-            }
-            if (Get-Command xclip -ErrorAction SilentlyContinue) {
-                $Text | xclip -selection clipboard 2>$null
-                return
-            }
-            if (Get-Command xsel -ErrorAction SilentlyContinue) {
-                $Text | xsel --clipboard --input 2>$null
-                return
-            }
-        }
-    }
-    catch {
-        # Silence volontaire
-    }
-
-    Write-Verbose "Clipboard non disponible sur cette plateforme."
-}
-
-
-# ---------------------------------------------------------------------------
-# Fonction Clear-ClipboardSafe
-# ---------------------------------------------------------------------------
-
-function Clear-ClipboardSafe {
-<#
-.SYNOPSIS
-Efface le presse‑papier de manière cross‑platform.
-
-.DESCRIPTION
-Efface le presse‑papier selon la plateforme :
-
-- Windows : Set-Clipboard $null
-- macOS   : pbcopy < /dev/null
-- Linux   : wl-copy / xclip / xsel selon disponibilité
-
-Reste silencieux en cas d’échec.
-#>
-
-    try {
-        if ($IsWindows) {
-            Set-Clipboard -Value $null -ErrorAction Stop
-            return
-        }
-
-        if ($IsMacOS) {
-            "" | pbcopy 2>$null
-            return
-        }
-
-        if ($IsLinux) {
-            if (Get-Command wl-copy -ErrorAction SilentlyContinue) {
-                "" | wl-copy 2>$null
-                return
-            }
-            if (Get-Command xclip -ErrorAction SilentlyContinue) {
-                "" | xclip -selection clipboard 2>$null
-                return
-            }
-            if (Get-Command xsel -ErrorAction SilentlyContinue) {
-                "" | xsel --clipboard --input 2>$null
-                return
-            }
-        }
-    }
-    catch {
-        # Silence volontaire
-    }
-
-    Write-Verbose "Impossible d'effacer le presse‑papier sur cette plateforme."
-}
-
-
 # Alias pratiques
-Set-Alias -Name sgpki -Value Get-PKIPass
-
-# ---------------------------------------------------------------------------
-# Export public
 # ---------------------------------------------------------------------------
 
-# Export-ModuleMember -Function * -Alias * # Plus utile suite au rajout de la fonction suivante
+Set-Alias -Name sgw   -Value Get-PassWord
+Set-Alias -Name sgp   -Value Get-PassPhrase
+Set-Alias -Name sgpki -Value Get-PkiPass
 
-# pour que Export-ModuleMember automatique soit aligné sur le même filtre du script Generate-PSGalleryReadme.ps1
-$publicFunctions = Get-ChildItem $PSScriptRoot -Filter *.ps* -File -Recurse |
-    ForEach-Object {
-        $ast = [System.Management.Automation.Language.Parser]::ParseFile(
-            $_.FullName, [ref]$null, [ref]$null
-        )
+# ---------------------------------------------------------------------------
+# Export automatique des fonctions publiques
+# ---------------------------------------------------------------------------
 
-        $ast.FindAll({
-            param($node)
+$publicFunctions = Get-ChildItem -Path $publicPath -Filter *.ps1 -File |
+    ForEach-Object { $_.BaseName }
 
-            $isFunction = $node -is [System.Management.Automation.Language.FunctionDefinitionAst]
-            if (-not $isFunction) { return $false }
-
-            $name = $node.Name
-
-            $isPrivate =
-                $name.StartsWith('Internal-') -or
-                $name.StartsWith('_') -or
-                $name.StartsWith('Private-') -or
-                $name.StartsWith('Helper-')
-
-            return -not $isPrivate
-        }, $true)
-    } |
-    Select-Object -ExpandProperty Name -Unique
-
-Export-ModuleMember -Function $publicFunctions
+Export-ModuleMember -Function $publicFunctions -Alias @('sgw','sgp','sgpki')

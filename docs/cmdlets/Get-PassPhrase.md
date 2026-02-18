@@ -8,143 +8,128 @@ schema: 2.0.0
 # Get-PassPhrase
 
 ## SYNOPSIS
-Génère une passphrase robuste, lisible et hautement entropique, composée de plusieurs mots aléatoires.
+Génère une passphrase robuste, lisible et conforme ANSSI/CNIL.
 
 ## SYNTAX
 
 ```
-Get-PassPhrase [-Words <Int32>] [-Len <Int32>] [-Separator <String>]
-               [-Charset <String>] [-NoClipboard] [-Silent]
-               [<CommonParameters>]
+Get-PassPhrase [[-Letters] <Int32>] [[-Words] <Int32>] [[-Separator] <String>] [[-Charset] <String>]
+ [-NoClipboard] [-NoClear] [-Silent] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-`Get-PassPhrase` génère une passphrase sécurisée composée de plusieurs mots aléatoires de longueur fixe.
+Get-PassPhrase est une façade publique qui délègue toute la logique interne
+à Internal-GeneratePassPhrase.
 
-Elle est idéale pour :
+La génération utilise automatiquement la meilleure source d'aléa selon la version
+de PowerShell (PS7 : NIST SP 800-90, PS5.1 : RNGCryptoServiceProvider).
 
-- les comptes utilisateurs  
-- les clés API  
-- les secrets d’automatisation  
-- les usages professionnels nécessitant lisibilité + sécurité  
-
-La génération utilise un générateur cryptographique sécurisé via `Get-CryptoIndex`.
-
-La passphrase peut être automatiquement copiée dans le presse‑papier, puis effacée après un délai sécurisé.  
-Le mode `-Silent` supprime l’affichage et le beep.
-
-### Valeurs par défaut
-- `Words` : **5**  
-- `Len` : **5**  
-- `Separator` : `-`
-
-### Alias disponibles
-- `Words` : `WordsCount`, `NbWords`
-- `Len` : `Length`
-
-### Entropie
-L’entropie est calculée selon :
-
-```
-entropy = Words × Len × log2(|Charset|)
-```
-
-Elle est affichée automatiquement (sauf en mode `-Silent`).
+Les recommandations ANSSI/CNIL (2021-2024) sont appliquées :
+- minimum 7 mots
+- longueur totale ≥ 30 caractères
+- priorité à la longueur
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
 Get-PassPhrase
+Génère une passphrase de 7 mots de 6 lettres.
 ```
-Génère une passphrase standard composée de 5 mots de 5 lettres.
 
 ### EXAMPLE 2
 ```
-Get-PassPhrase -Words 8 -Len 7
+Get-PassPhrase -Words 10 -Letters 5
+Génère une passphrase longue et très entropique.
 ```
-Génère une passphrase longue (8 mots × 7 lettres).
-
-### EXAMPLE 3
-```
-Get-PassPhrase -Separator ' ' -Words 4 -Len 5
-```
-Génère une passphrase avec des espaces comme séparateur.
-
-### EXAMPLE 4
-```
-Get-PassPhrase -Silent -NoClipboard
-```
-Génère une passphrase sans affichage et sans copie dans le presse‑papier.
 
 ## PARAMETERS
 
-### -Words
-Nombre de mots à générer.  
-Valeur par défaut : 5.
+### -Letters
+{{ Fill Letters Description }}
 
 ```yaml
 Type: Int32
 Parameter Sets: (All)
-Aliases: WordsCount, NbWords
+Aliases: Letter, ltrs, Let
+
 Required: False
-Position: Named
-Default value: 5
+Position: 1
+Default value: 6
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Len
-Longueur de chaque mot.  
-Valeur par défaut : 5.
+### -Words
+Nombre de mots.
+Par défaut : 7.
 
 ```yaml
 Type: Int32
 Parameter Sets: (All)
-Aliases: Length
+Aliases: word, wrd, wd
+
 Required: False
-Position: Named
-Default value: 5
+Position: 2
+Default value: 7
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -Separator
-Caractère utilisé pour séparer les mots.  
-Valeur par défaut : `-`.
+Séparateur entre les mots.
+Par défaut : "-".
 
 ```yaml
 Type: String
 Parameter Sets: (All)
 Aliases:
+
 Required: False
-Position: Named
+Position: 3
 Default value: -
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -Charset
-Jeu de caractères utilisé pour générer les mots.
+Ensemble des caractères utilisés pour générer les mots.
 
 ```yaml
 Type: String
 Parameter Sets: (All)
 Aliases:
+
 Required: False
-Position: Named
-Default value: abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+Position: 4
+Default value: AbcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -NoClipboard
-Empêche la copie automatique de la passphrase dans le presse‑papier.
+Désactive la copie automatique dans le presse-papier.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
 Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -NoClear
+Empêche l'effacement automatique du presse-papier.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
 Required: False
 Position: Named
 Default value: False
@@ -153,12 +138,13 @@ Accept wildcard characters: False
 ```
 
 ### -Silent
-Désactive l’affichage et le beep.
+Désactive tout affichage et tout bip.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
 Aliases:
+
 Required: False
 Position: Named
 Default value: False
@@ -166,22 +152,30 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
 ## OUTPUTS
 
 ### System.String
-Retourne la passphrase générée.
-
+### Retourne la passphrase générée.
 ## NOTES
-- Compatible Windows, Linux, macOS.  
-- Utilise `Get-CryptoIndex` pour garantir une distribution uniforme.  
-- Le presse‑papier utilise automatiquement la meilleure méthode selon la plateforme.  
-- Fonction centrale du module SecureGen.  
-- Cohérente avec `Get-PKIPass` (mode Passphrase).
 
 ## RELATED LINKS
-Get-PassWord  
-Get-PKIPass  
-Set-ClipboardSafe  
-Clear-ClipboardSafe  
-
----

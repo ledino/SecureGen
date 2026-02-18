@@ -8,120 +8,77 @@ schema: 2.0.0
 # Get-PassWord
 
 ## SYNOPSIS
-Génère un mot de passe sécurisé, configurable et compatible Windows, Linux et macOS.
+Génère un mot de passe sécurisé, configurable et cross-platform.
 
 ## SYNTAX
 
 ```
-Get-PassWord [-Len <Int32>] [-SpecialChars <String>] [-UseSpecial <Boolean>]
-             [-RequireAllTypes <Boolean>] [-NoClipboard] [-Silent]
-             [<CommonParameters>]
+Get-PassWord [[-Length] <Int32>] [[-SpecialChars] <String>] [-UseSpecial] [-RequireAllTypes] [-NoClipboard]
+ [-NoClear] [-Silent] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-`Get-PassWord` génère un mot de passe robuste en utilisant un générateur cryptographique sécurisé.
+Get-PassWord est une façade publique qui délègue toute la logique interne
+à Internal-GeneratePassword.
 
-### 🔐 Source d’aléa selon la version de PowerShell
-
-- **PowerShell 7+**  
-  Utilise `Get-SecureRandom`, conforme aux recommandations modernes (NIST SP 800‑90).  
-  Distribution uniforme, génération cryptographiquement forte.
-
-- **PowerShell 5.1**  
-  Utilise `RandomNumberGenerator` (.NET Framework).  
-  Cryptographiquement sûr, mais API plus ancienne.
-
-### 🔤 Composition du mot de passe
-Le mot de passe peut inclure :
-- minuscules  
-- majuscules  
-- chiffres  
-- caractères spéciaux (personnalisables)
-
-### 🎛️ Options avancées
-- `-RequireAllTypes` : impose la présence d’au moins une occurrence de chaque catégorie  
-- `-UseSpecial:$false` : désactive les caractères spéciaux  
-- `-NoClipboard` : désactive la copie automatique  
-- `-Silent` : désactive le bip de confirmation  
-
-### 🔢 Entropie
-L’entropie est calculée automatiquement :
-
-```
-entropy = Len × log2(|charset|)
-```
-
-Elle est affichée après génération (sauf en mode `-Silent`).
+La génération utilise automatiquement la meilleure source d'aléa selon la version
+de PowerShell (PS7 : NIST SP 800-90, PS5.1 : RNGCryptoServiceProvider).
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
 Get-PassWord
+Génère un mot de passe robuste de 20 caractères.
 ```
-Génère un mot de passe sécurisé de 16 caractères.
 
 ### EXAMPLE 2
 ```
-Get-PassWord -Len 32 -RequireAllTypes
+Get-PassWord -Length 32 -RequireAllTypes
+Génère un mot de passe long contenant toutes les catégories.
 ```
-Génère un mot de passe long contenant obligatoirement :
-- une minuscule  
-- une majuscule  
-- un chiffre  
-- un caractère spécial (si `-UseSpecial` est activé)
-
-### EXAMPLE 3
-```
-Get-PassWord -UseSpecial:$false
-```
-Génère un mot de passe alphanumérique uniquement.
-
-### EXAMPLE 4
-```
-Get-PassWord -Silent -NoClipboard
-```
-Génère un mot de passe sans bip et sans copie dans le presse‑papier.
 
 ## PARAMETERS
 
-### -Len
-Longueur du mot de passe à générer.  
-Valeur par défaut : 16.
+### -Length
+Longueur du mot de passe.
+Par défaut : 16 (Recommandation ANSSI).
 
 ```yaml
 Type: Int32
 Parameter Sets: (All)
-Aliases:
+Aliases: Len
+
 Required: False
-Position: Named
+Position: 1
 Default value: 16
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -SpecialChars
-Liste personnalisée de caractères spéciaux à utiliser.
+Liste des caractères spéciaux autorisés.
 
 ```yaml
 Type: String
 Parameter Sets: (All)
 Aliases:
+
 Required: False
-Position: Named
-Default value: !@#$%^&*()_+-=[]{}<>\/\\|;~
+Position: 2
+Default value: [!@#$%^&*()_+\-=\[\]{}<>\/\\|;~]
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -UseSpecial
-Active ou désactive l’utilisation de caractères spéciaux.  
-Valeur par défaut : True.
+Active ou désactive l'utilisation des caractères spéciaux.
 
 ```yaml
-Type: Boolean
+Type: SwitchParameter
 Parameter Sets: (All)
 Aliases:
+
 Required: False
 Position: Named
 Default value: True
@@ -130,16 +87,14 @@ Accept wildcard characters: False
 ```
 
 ### -RequireAllTypes
-Exige que le mot de passe contienne au moins :
-- une minuscule  
-- une majuscule  
-- un chiffre  
-- un caractère spécial (si `-UseSpecial` est activé)
+Exige la présence d'au moins une minuscule, une majuscule, un chiffre
+et un caractère spécial (si UseSpecial = $true).
 
 ```yaml
-Type: Boolean
+Type: SwitchParameter
 Parameter Sets: (All)
 Aliases:
+
 Required: False
 Position: Named
 Default value: False
@@ -148,12 +103,28 @@ Accept wildcard characters: False
 ```
 
 ### -NoClipboard
-Empêche la copie automatique du mot de passe dans le presse‑papier.
+Désactive la copie automatique dans le presse-papier.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
 Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -NoClear
+Empêche l'effacement automatique du presse-papier.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
 Required: False
 Position: Named
 Default value: False
@@ -162,12 +133,13 @@ Accept wildcard characters: False
 ```
 
 ### -Silent
-Désactive le bip de confirmation.
+Désactive tout affichage et tout bip.
 
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
 Aliases:
+
 Required: False
 Position: Named
 Default value: False
@@ -175,23 +147,30 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -ProgressAction
+{{ Fill ProgressAction Description }}
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
 ## OUTPUTS
 
 ### System.String
-Retourne le mot de passe généré.
-
+### Retourne le mot de passe généré.
 ## NOTES
-- Compatible Windows, Linux, macOS.  
-- Utilise `Get-SecureRandom` sous PS7+ et `RandomNumberGenerator` sous PS5.1.  
-- Le presse‑papier utilise automatiquement la meilleure méthode selon la plateforme.  
-- L’entropie est calculée en bits.  
-- Cohérent avec `Get-PKIPass` (mode Password).  
-- Fonction centrale du module SecureGen.
 
 ## RELATED LINKS
-Get-PassPhrase  
-Get-PKIPass  
-Set-ClipboardSafe  
-Clear-ClipboardSafe  
-
----
