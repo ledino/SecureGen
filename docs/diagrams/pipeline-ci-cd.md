@@ -4,6 +4,135 @@ Ce document décrit le pipeline complet de SecureGen, depuis le développement l
 
 ---
 
+# 🔄 Pipeline CI/CD — Diagramme UML (Activity Diagram)
+
+```uml
+@startuml
+title SecureGen CI/CD - Activity Diagram
+
+start
+
+:Développement local;
+:Modification du code;
+:Tests manuels;
+:Commits (Conventional Commits);
+
+--> "standard-version";
+
+partition "Versioning automatisé" {
+    :Analyse des commits;
+    :Détermination du bump (major/minor/patch);
+    :Mise à jour package.json;
+    :Mise à jour SecureGen.psd1 (updater custom);
+    :Génération CHANGELOG.md;
+    :Commit automatique "chore(release): X.Y.Z";
+    :Création du tag vX.Y.Z;
+}
+
+--> "Push GitHub";
+
+:git push origin main;
+:git push origin vX.Y.Z;
+
+--> "CI GitHub Actions";
+
+partition "CI (ci.yml)" {
+    :Installation PowerShell;
+    :Analyse statique (PSScriptAnalyzer);
+    :Import du module;
+    :Tests Pester;
+    :Validation du manifest;
+
+    fork
+        :PS 5.1 (Windows);
+    fork again
+        :PS 7 (Windows);
+    fork again
+        :PS 7 (Linux);
+    end fork
+
+    if ("CI réussie ?") then (Oui)
+        --> "Publish pipeline";
+    else (Non)
+        :Retour développeur;
+        :Corrections locales;
+        --> "Développement local";
+    endif
+}
+
+partition "Publication (publish.yml)" {
+    :Déclencheur : push tag v*;
+    :Reconstruction du module;
+    :Validation du manifest;
+    :Publication PSGallery (PSGALLERY_KEY);
+    :Création Release GitHub automatique;
+}
+
+:Module publié (PSGallery + GitHub Release);
+
+stop
+@enduml
+```
+
+---
+
+# 🔄 Pipeline CI/CD — Vue d’ensemble (ASCII)
+
+Voici une représentation simplifiée du pipeline CI/CD de SecureGen :
+
+```
+                 ┌───────────────────────────┐
+                 │        Commit / PR        │
+                 └─────────────┬─────────────┘
+                               │
+                               ▼
+                 ┌───────────────────────────┐
+                 │   GitHub Actions (CI)     │
+                 ├───────────────────────────┤
+                 │  • Lint (PSScriptAnalyzer)│
+                 │  • Import du module       │
+                 │  • Tests Pester           │
+                 │  • PS5 + PS7 matrix       │
+                 └─────────────┬─────────────┘
+                               │
+                               ▼
+                 ┌───────────────────────────┐
+                 │   Merge dans `main`       │
+                 └─────────────┬─────────────┘
+                               │
+                               ▼
+                 ┌──────────────────────────┐
+                 │   standard-version       │
+                 ├──────────────────────────┤
+                 │  • Bump version          │
+                 │  • Update manifest       │
+                 │  • Generate CHANGELOG    │
+                 │  • Commit + Tag          │
+                 └─────────────┬────────────┘
+                               │
+                               ▼
+                 ┌──────────────────────────┐
+                 │   Push + Push Tags       │
+                 └─────────────┬────────────┘
+                               │
+                               ▼
+                 ┌──────────────────────────┐
+                 │ GitHub Actions (Publish) │
+                 ├──────────────────────────┤
+                 │  • Build module          │
+                 │  • Publish PSGallery     │
+                 │  • Create GitHub Release │
+                 └─────────────┬────────────┘
+                               │
+                               ▼
+                 ┌──────────────────────────┐
+                 │   Release disponible     │
+                 │  (PSGallery + GitHub)    │
+                 └──────────────────────────┘
+```
+
+---
+
 # 📘 Diagramme du pipeline CI/CD
 
 ```

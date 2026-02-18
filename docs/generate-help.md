@@ -1,16 +1,27 @@
 # 📘 Génération automatique de la documentation — PlatyPS  
-*(Aligné avec l’architecture moderne et le pipeline CI/CD)*
+*(Aligné avec l’architecture SecureGen et le script Generate-Help.ps1)*
 
-SecureGen utilise **PlatyPS** pour générer automatiquement la documentation des commandes PowerShell du module.  
-Ce système garantit une documentation toujours synchronisée avec le code, propre, standardisée et facile à maintenir.
+SecureGen utilise **PlatyPS** pour générer automatiquement la documentation des cmdlets du module.  
+Ce système garantit une documentation :
 
-Ce guide explique comment générer, mettre à jour et maintenir la documentation des cmdlets.
+- toujours synchronisée avec le code  
+- propre et standardisée  
+- compatible PowerShell 5.1 et 7  
+- intégrée au workflow CI/CD  
+
+Ce guide explique comment générer, mettre à jour et valider la documentation.
 
 ---
 
 # 🧩 Prérequis
 
-Assurez-vous d’avoir installé **PlatyPS v3+** :
+SecureGen utilise **PlatyPS 0.14.2**, car :
+
+- c’est la version stable compatible PS5.1  
+- elle fonctionne avec `-Module` (et non `-ModulePath`)  
+- elle génère automatiquement les fichiers dans un dossier dédié  
+
+Installez-la si nécessaire :
 
 ```powershell
 Install-Module PlatyPS -Scope CurrentUser -Force
@@ -24,21 +35,32 @@ Get-Module PlatyPS -ListAvailable
 
 ---
 
+# 📁 Emplacement de la documentation générée
+
+Toute la documentation des cmdlets est stockée dans :
+
+```
+docs/cmdlets/
+```
+
+Ce dossier est **généré automatiquement** et ne doit jamais être modifié manuellement.
+
+---
+
 # 🚀 Générer la documentation initiale
 
 Depuis la racine du projet :
 
 ```powershell
-Import-Module ./SecureGen/SecureGen/SecureGen.psd1 -Force
+Import-Module ./SecureGen/SecureGen.psd1 -Force
 
 New-MarkdownHelp `
     -Module SecureGen `
     -OutputFolder ./docs/cmdlets `
-    -WithModulePage `
     -Force
 ```
 
-Cela génère automatiquement :
+Cela génère :
 
 ```
 docs/cmdlets/
@@ -46,6 +68,7 @@ docs/cmdlets/
 ├── Get-CryptoIndex.md
 ├── Get-PassPhrase.md
 ├── Get-PassWord.md
+├── Get-PKIPass.md
 ├── Invoke-Beep.md
 └── SecureGen.md
 ```
@@ -65,7 +88,7 @@ Chaque fichier contient :
 Après avoir modifié une fonction (paramètres, description, exemples…), regénérez la documentation :
 
 ```powershell
-Import-Module ./SecureGen/SecureGen/SecureGen.psd1 -Force
+Import-Module ./SecureGen/SecureGen.psd1 -Force
 
 Update-MarkdownHelp `
     -Module SecureGen `
@@ -79,51 +102,50 @@ PlatyPS mettra à jour uniquement les sections pertinentes.
 
 # 🧪 Vérifier la documentation
 
-Pour vérifier que la documentation est complète et conforme :
+Pour vérifier que la documentation est complète et cohérente :
 
 ```powershell
-Test-MarkdownHelp -Path ./docs/cmdlets
+Test-MarkdownHelp -Module SecureGen -HelpFilesPath ./docs/cmdlets
 ```
 
 ---
 
 # 🛠️ Script automatisé (recommandé)
 
-Le script dédié se trouve dans :
+Le script officiel se trouve dans :
 
 ```
 scripts/Generate-Help.ps1
 ```
 
-Contenu recommandé :
+Il :
+
+- détecte automatiquement PlatyPS  
+- importe le module SecureGen  
+- génère ou met à jour la documentation  
+- crée la page du module (`SecureGen.md`)  
+- valide la cohérence  
+- nettoie si nécessaire  
+
+Exécution :
 
 ```powershell
-Write-Host "🔧 Génération de la documentation PlatyPS..."
-
-Import-Module ./SecureGen/SecureGen/SecureGen.psd1 -Force
-
-New-MarkdownHelp `
-    -Module SecureGen `
-    -OutputFolder ./docs/cmdlets `
-    -WithModulePage `
-    -Force
-
-Write-Host "📘 Documentation générée dans docs/cmdlets/"
+pwsh ./scripts/Generate-Help.ps1
 ```
 
 ---
 
-# 🤖 Intégration CI/CD (optionnel)
+# 🤖 Intégration CI/CD
 
-Vous pouvez ajouter un job dans `ci.yml` pour vérifier que la documentation est à jour :
+La CI peut vérifier que la documentation est valide :
 
 ```yaml
 - name: Vérifier la documentation PlatyPS
   shell: pwsh
   run: |
     Install-Module PlatyPS -Force -Scope CurrentUser
-    Import-Module ./SecureGen/SecureGen/SecureGen.psd1 -Force
-    Test-MarkdownHelp -Path ./docs/cmdlets
+    Import-Module ./SecureGen/SecureGen.psd1 -Force
+    Test-MarkdownHelp -Module SecureGen -HelpFilesPath ./docs/cmdlets
 ```
 
 Cela garantit que :
@@ -144,6 +166,7 @@ docs/
 │   ├── Get-PassPhrase.md
 │   ├── Get-CryptoIndex.md
 │   ├── Invoke-Beep.md
+│   ├── Get-PKIPass.md
 │   └── SecureGen.md
 │
 ├── generate-help.md
@@ -154,7 +177,7 @@ docs/
 
 # 🎉 Documentation toujours à jour
 
-Grâce à PlatyPS, SecureGen bénéficie d’une documentation :
+Grâce à PlatyPS et au script `Generate-Help.ps1`, SecureGen bénéficie d’une documentation :
 
 - propre  
 - standardisée  
@@ -165,6 +188,5 @@ Grâce à PlatyPS, SecureGen bénéficie d’une documentation :
 Pour toute suggestion d’amélioration :  
 👉 Issues GitHub  
 👉 Pull Requests
-```
 
 ---

@@ -1,5 +1,5 @@
-# 🚀 Processus de release — SecureGen  
-*(Workflow moderne : release entièrement automatisée via GitHub Actions)*
+# 🚀 **Processus de release — SecureGen**  
+*(Pipeline moderne, automatisé, fiable et sans intervention humaine)*
 
 Ce document décrit le processus officiel pour générer et publier une nouvelle version de **SecureGen**.  
 Depuis la version **1.5.0+**, le pipeline est **entièrement automatisé**, basé sur :
@@ -17,7 +17,48 @@ Aucune modification manuelle du manifest ou du changelog n’est autorisée.
 
 ---
 
-# 🧱 1. Préparation de la release
+# 🧭 1. Vue d’ensemble du pipeline de release
+
+Voici le pipeline complet, du commit jusqu’à la publication :
+
+```
+Commit → Push → CI → standard-version → Commit release → Tag → Release GitHub → Publish PSGallery
+```
+
+### Diagramme ASCII
+
+```
+                 ┌───────────────────────────┐
+                 │   Commit Conventional     │
+                 │         Commits           │
+                 └─────────────┬─────────────┘
+                               │
+                               ▼
+                 ┌───────────────────────────┐
+                 │   GitHub Actions (CI)     │
+                 │  Lint + Tests + Import    │
+                 └─────────────┬─────────────┘
+                               │
+                               ▼
+                 ┌──────────────────────────┐
+                 │   standard-version       │
+                 │  Bump + Changelog + Tag  │
+                 └─────────────┬────────────┘
+                               │
+                               ▼
+                 ┌──────────────────────────┐
+                 │   Release GitHub         │
+                 └─────────────┬────────────┘
+                               │
+                               ▼
+                 ┌──────────────────────────┐
+                 │  Publish PSGallery       │
+                 └──────────────────────────┘
+```
+
+---
+
+# 🧱 2. Préparation de la release
 
 Avant de pousser un commit déclenchant une release :
 
@@ -25,15 +66,14 @@ Avant de pousser un commit déclenchant une release :
 - vérifier que la CI (`ci.yml`) est verte  
 - vérifier que la documentation PlatyPS est à jour  
 - vérifier que les tests Pester passent  
-- s’assurer que les commits respectent **Conventional Commits**
+- s’assurer que les commits respectent **Conventional Commits**  
+- s’assurer que le manifest n’a pas été modifié manuellement  
 
 ---
 
-# 🧩 2. Déclenchement de la release
+# 🧩 3. Déclenchement de la release
 
-La release est déclenchée automatiquement lorsqu’un **message de commit** respectant Conventional Commits est poussé sur `main`.
-
-> **Important : les exemples ci‑dessous sont des messages de commit.**
+La release est déclenchée automatiquement lorsqu’un **commit Conventional Commits** est poussé sur `main`.
 
 Exemples valides :
 
@@ -47,25 +87,13 @@ chore(release): préparation de la version 1.5.0
 
 | Type de commit | Effet sur la version |
 |----------------|----------------------|
-| `fix:` | bump **patch** (ex : 1.5.0 → 1.5.1) |
-| `feat:` | bump **minor** (ex : 1.5.0 → 1.6.0) |
-| `BREAKING CHANGE:` | bump **major** (ex : 1.5.0 → 2.0.0) |
-
-Dès que le commit est poussé :
-
-1. GitHub Actions exécute **standard-version**  
-2. La version est bumpée automatiquement  
-3. `CHANGELOG.md` est généré  
-4. Le tag `vX.Y.Z` est créé  
-5. Le commit + tag sont poussés automatiquement  
-6. Une release GitHub est créée  
-7. Le module est publié sur PSGallery
-
-Aucune action manuelle.
+| `fix:` | bump **patch** (1.5.0 → 1.5.1) |
+| `feat:` | bump **minor** (1.5.0 → 1.6.0) |
+| `BREAKING CHANGE:` | bump **major** (1.5.0 → 2.0.0) |
 
 ---
 
-# 🚀 3. Pipeline de release (automatique)
+# 🚀 4. Pipeline de release (automatique)
 
 Le workflow `release.yml` :
 
@@ -82,11 +110,11 @@ Le workflow `release.yml` :
 
 ---
 
-# 📦 4. Publication automatique sur PowerShell Gallery
+# 📦 5. Publication automatique sur PowerShell Gallery
 
 Aucune commande locale.
 
-Le workflow :
+Le workflow exécute :
 
 ```powershell
 Publish-Module -Path . -NuGetApiKey $env:PSGALLERY_KEY
@@ -96,7 +124,7 @@ La publication est automatique dès que le tag est créé.
 
 ---
 
-# 🔍 5. Vérification post‑publication
+# 🧪 6. Vérification post‑publication
 
 Après quelques secondes :
 
@@ -104,10 +132,67 @@ Après quelques secondes :
 - vérifier la release GitHub générée  
 - vérifier le changelog généré automatiquement  
 - vérifier la cohérence de la documentation PlatyPS  
+- vérifier que le manifest contient la bonne version  
 
 ---
 
-# 🚫 6. Ce qu’il ne faut plus faire (depuis la v1.5.0)
+# 🧰 7. Checklist avant release
+
+- [ ] Tests Pester OK  
+- [ ] PSScriptAnalyzer OK  
+- [ ] Documentation PlatyPS à jour  
+- [ ] Documentation utilisateur à jour  
+- [ ] Aucun changement manuel dans `SecureGen.psd1`  
+- [ ] Aucun changement manuel dans `CHANGELOG.md`  
+- [ ] Commit Conventional Commits  
+- [ ] CI verte  
+
+---
+
+# 🧰 8. Checklist après release
+
+- [ ] Vérifier la version sur PSGallery  
+- [ ] Vérifier la release GitHub  
+- [ ] Vérifier le changelog  
+- [ ] Vérifier que le tag est correct  
+- [ ] Vérifier que la documentation est cohérente  
+- [ ] Mettre à jour la roadmap si nécessaire  
+
+---
+
+# 🔥 9. Cas particuliers
+
+## ✔ Hotfix (patch urgent)
+
+Utiliser un commit :
+
+```
+fix: correction critique sur Get-PassWord
+```
+
+→ déclenche automatiquement un bump patch.
+
+## ✔ Breaking change
+
+Ajouter dans le commit :
+
+```
+BREAKING CHANGE: suppression du paramètre -LegacyMode
+```
+
+→ déclenche automatiquement un bump major.
+
+## ✔ Rollback d’une release
+
+1. Supprimer le tag  
+2. Supprimer la release GitHub  
+3. Revert du commit `chore(release)`  
+4. Pousser le revert  
+5. Laisser GitHub Actions reconstruire  
+
+---
+
+# 🚫 10. Ce qu’il ne faut plus faire (depuis la v1.5.0)
 
 - ❌ ne plus modifier `ModuleVersion` à la main  
 - ❌ ne plus modifier `CHANGELOG.md` à la main  
@@ -116,27 +201,26 @@ Après quelques secondes :
 - ❌ ne plus utiliser les anciens scripts de release  
 - ❌ ne plus utiliser `publish.yml` (remplacé par `release.yml`)  
 
-Le bump, le changelog, le tag, la release GitHub et la publication PSGallery sont **entièrement automatisés**.
+---
+
+# ❓ 11. FAQ Release
+
+### “Pourquoi standard-version n’est plus exécuté en local ?”  
+Pour éviter les divergences entre environnements et garantir un pipeline reproductible.
+
+### “Pourquoi ne pas modifier le manifest à la main ?”  
+Parce que l’updater custom gère la version automatiquement.
+
+### “Pourquoi la release est déclenchée par un commit ?”  
+Parce que c’est le workflow le plus fiable et le plus utilisé dans les projets modernes.
+
+### “Puis-je publier manuellement ?”  
+Oui, mais **fortement déconseillé**.  
+Le pipeline garantit la cohérence.
 
 ---
 
-# 🧪 7. Dépannage
-
-### La version n’a pas été bumpée  
-→ Vérifier que le **message de commit** respecte Conventional Commits
-
-### Le changelog n’a pas été généré  
-→ Vérifier que standard-version s’est exécuté dans le workflow
-
-### La publication PSGallery échoue  
-→ Vérifier le secret GitHub `PSGALLERY_KEY`
-
-### La release GitHub n’apparaît pas  
-→ Vérifier les permissions du workflow (`contents: write`)
-
----
-
-# 🎉 Un pipeline de release moderne, fiable et sans intervention humaine
+# 🎉 12. Un pipeline de release moderne, fiable et sans intervention humaine
 
 Grâce à GitHub Actions + standard-version, SecureGen bénéficie d’un pipeline :
 
@@ -145,10 +229,5 @@ Grâce à GitHub Actions + standard-version, SecureGen bénéficie d’un pipeli
 - professionnel  
 - sans erreur humaine  
 - parfaitement aligné avec SemVer  
-
----
-
-# ⭐ Résultat  
-Ton `release-process.md` est maintenant **parfaitement clair**, **sans ambiguïté**, et **aligné avec ton workflow réel**.
 
 ---

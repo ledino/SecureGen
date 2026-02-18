@@ -1,4 +1,4 @@
-# 📘 **Developer Guide — SecureGen**
+# 📘 **Developer Guide — SecureGen (Version enrichie)**
 
 ## 🔐 Introduction
 
@@ -10,8 +10,10 @@ Ce guide s’adresse aux développeurs souhaitant :
 - générer la documentation  
 - participer au processus de release  
 - maintenir le module dans le temps  
+- reprendre le projet après une longue pause  
 
-SecureGen est un module PowerShell moderne, modulaire et cross‑platform, conçu pour être maintenable, testable et extensible.
+SecureGen est un module PowerShell moderne, modulaire et cross‑platform, conçu pour être maintenable, testable et extensible.  
+Ce document constitue **la mémoire technique du projet**.
 
 ---
 
@@ -30,9 +32,10 @@ Le loader `SecureGen.psm1` :
 
 - détecte automatiquement PS5/PS7  
 - charge la bonne implémentation  
-- expose les cmdlets  
+- expose les cmdlets publiques  
 - gère les alias (`sgw`, `sgp`, `sgpki`)  
 - centralise clipboard, beep, SecureString et helpers  
+- applique les conventions d’export automatique  
 
 Le manifest `SecureGen.psd1` est mis à jour automatiquement via `standard-version`.
 
@@ -62,12 +65,47 @@ Résumé rapide :
 
 ---
 
-# 🛠️ 3. Environnement de développement
+# 🧠 3. Décisions techniques importantes (mémoire du projet)
+
+Cette section documente les choix structurants du projet.
+
+### ✔ Dual‑runtime PS5/PS7  
+- PS7 = implémentation moderne  
+- PS5 = fallback minimal  
+- Loader intelligent pour compatibilité maximale
+
+### ✔ Documentation dans `docs/cmdlets/`  
+- PlatyPS génère dans un sous‑dossier dédié  
+- Séparation claire entre doc utilisateur et doc API  
+- Structure scalable pour un futur site statique
+
+### ✔ Pas de dépendances externes  
+- Aucun module tiers  
+- 100% PowerShell natif + .NET intégré
+
+### ✔ API harmonisée  
+- `Words` / `Len`  
+- Paramètres cohérents entre cmdlets  
+- Messages d’erreur uniformisés
+
+### ✔ Clipboard cross‑platform  
+- Windows : `Set-Clipboard`  
+- Linux/macOS : `xclip`, `pbcopy`, fallback .NET  
+- Sécurisation via `Clear-ClipboardSafe`
+
+### ✔ Versioning automatisé  
+- standard‑version  
+- updater custom pour SecureGen.psd1  
+- CI/CD GitHub Actions
+
+---
+
+# 🛠️ 4. Environnement de développement
 
 ### ✔ Prérequis
 
 - PowerShell 7+ (recommandé)  
-- Windows PowerShell 5.1 (pour tests de compatibilité)  
+- Windows PowerShell 5.1 (pour compatibilité)  
 - Node.js (pour `standard-version`)  
 - Git  
 - Pester 5.x  
@@ -88,7 +126,7 @@ pwsh ./scripts/Install-SecureGen.ps1
 
 ---
 
-# 🧪 4. Tests & Qualité
+# 🧪 5. Tests & Qualité
 
 Les tests se trouvent dans :
 
@@ -124,7 +162,7 @@ La CI GitHub exécute automatiquement :
 
 ---
 
-# 🧩 5. Génération de la documentation (PlatyPS)
+# 📚 6. Génération de la documentation (PlatyPS)
 
 La documentation des cmdlets est générée via :
 
@@ -138,9 +176,17 @@ Elle met à jour :
 docs/cmdlets/
 ```
 
+Le script :
+
+- détecte PlatyPS  
+- génère ou met à jour la doc  
+- crée SecureGen.md  
+- valide la cohérence  
+- supporte `--Force` et `--Clean`
+
 ---
 
-# ⚙️ 6. Versioning & Release Workflow
+# ⚙️ 7. Versioning & Release Workflow
 
 SecureGen utilise :
 
@@ -176,136 +222,10 @@ GitHub Actions publie automatiquement sur PowerShell Gallery.
 
 ---
 
-# 🔄 7. Pipeline CI/CD — Diagramme UML (Activity Diagram)
+# 🔄 8. Pipeline CI/CD — Diagrammes
 
-```uml
-@startuml
-title SecureGen CI/CD - Activity Diagram
-
-start
-
-:Développement local;
-:Modification du code;
-:Tests manuels;
-:Commits (Conventional Commits);
-
---> "standard-version";
-
-partition "Versioning automatisé" {
-    :Analyse des commits;
-    :Détermination du bump (major/minor/patch);
-    :Mise à jour package.json;
-    :Mise à jour SecureGen.psd1 (updater custom);
-    :Génération CHANGELOG.md;
-    :Commit automatique "chore(release): X.Y.Z";
-    :Création du tag vX.Y.Z;
-}
-
---> "Push GitHub";
-
-:git push origin main;
-:git push origin vX.Y.Z;
-
---> "CI GitHub Actions";
-
-partition "CI (ci.yml)" {
-    :Installation PowerShell;
-    :Analyse statique (PSScriptAnalyzer);
-    :Import du module;
-    :Tests Pester;
-    :Validation du manifest;
-
-    fork
-        :PS 5.1 (Windows);
-    fork again
-        :PS 7 (Windows);
-    fork again
-        :PS 7 (Linux);
-    end fork
-
-    if ("CI réussie ?") then (Oui)
-        --> "Publish pipeline";
-    else (Non)
-        :Retour développeur;
-        :Corrections locales;
-        --> "Développement local";
-    endif
-}
-
-partition "Publication (publish.yml)" {
-    :Déclencheur : push tag v*;
-    :Reconstruction du module;
-    :Validation du manifest;
-    :Publication PSGallery (PSGALLERY_KEY);
-    :Création Release GitHub automatique;
-}
-
-:Module publié (PSGallery + GitHub Release);
-
-stop
-@enduml
-```
-
----
-
-# 🔄 8. Pipeline CI/CD — Vue d’ensemble (ASCII)
-
-Voici une représentation simplifiée du pipeline CI/CD de SecureGen :
-
-```
-                 ┌───────────────────────────┐
-                 │        Commit / PR        │
-                 └─────────────┬─────────────┘
-                               │
-                               ▼
-                 ┌───────────────────────────┐
-                 │   GitHub Actions (CI)     │
-                 ├───────────────────────────┤
-                 │  • Lint (PSScriptAnalyzer)│
-                 │  • Import du module       │
-                 │  • Tests Pester           │
-                 │  • PS5 + PS7 matrix       │
-                 └─────────────┬─────────────┘
-                               │
-                               ▼
-                 ┌───────────────────────────┐
-                 │   Merge dans `main`       │
-                 └─────────────┬─────────────┘
-                               │
-                               ▼
-                 ┌──────────────────────────┐
-                 │   standard-version       │
-                 ├──────────────────────────┤
-                 │  • Bump version          │
-                 │  • Update manifest       │
-                 │  • Generate CHANGELOG    │
-                 │  • Commit + Tag          │
-                 └─────────────┬────────────┘
-                               │
-                               ▼
-                 ┌──────────────────────────┐
-                 │   Push + Push Tags       │
-                 └─────────────┬────────────┘
-                               │
-                               ▼
-                 ┌──────────────────────────┐
-                 │ GitHub Actions (Publish) │
-                 ├──────────────────────────┤
-                 │  • Build module          │
-                 │  • Publish PSGallery     │
-                 │  • Create GitHub Release │
-                 └─────────────┬────────────┘
-                               │
-                               ▼
-                 ┌──────────────────────────┐
-                 │   Release disponible     │
-                 │  (PSGallery + GitHub)    │
-                 └──────────────────────────┘
-```
-
-## Diagramme
-
-👉 `assets/diagrams/pipeline-ci-cd.svg`
+👉 UML : `assets/diagrams/pipeline-ci-cd.svg`  
+👉 ASCII : `docs/pipeline.md`
 
 ---
 
@@ -313,73 +233,72 @@ Voici une représentation simplifiée du pipeline CI/CD de SecureGen :
 
 ### ✔ Étapes recommandées
 
-1. Créer une branche feature :  
-   ```powershell
-   git checkout -b feature/ma-fonction
-   ```
-
-2. Ajouter la fonctionnalité dans :  
-   - `Core.PS7.ps1`  
-   - `Legacy.PS5.ps1` (si nécessaire)  
-   - `SecureGen.psm1` (export + alias éventuels)
-
-3. Ajouter les tests dans `tests/`.
-
-4. Ajouter la documentation dans :  
-   - `docs/cmdlets/`  
-   - `docs/examples.md` (si pertinent)
-
-5. Lancer les tests + lint.
-
-6. Commit avec Conventional Commits :  
-   ```
-   feat: ajout de la commande Get-XYZ
-   ```
-
-7. Ouvrir une Pull Request.
+1. Créer une branche feature  
+2. Implémenter dans Core.PS7.ps1 / Legacy.PS5.ps1  
+3. Exporter dans SecureGen.psm1  
+4. Ajouter les tests  
+5. Ajouter la documentation  
+6. Lancer les tests + lint  
+7. Commit Conventional Commits  
+8. Ouvrir une PR  
 
 ---
 
-# 🤝 10. Contribution & Standards
+# 🧭 10. Reprendre le projet après une longue pause
 
-Les contributions suivent :
+Cette section est **cruciale** pour la continuité du projet.
 
-- Conventional Commits  
-- Pas de bump manuel du manifest  
-- Pas de modification manuelle du changelog  
-- Documentation obligatoire pour toute nouvelle commande  
-- Tests obligatoires pour toute nouvelle fonctionnalité  
-- Respect du style PowerShell (PSScriptAnalyzer)  
+### ✔ 1. Lire ces fichiers en priorité
 
-Voir :  
-👉 `CONTRIBUTING.md`  
-👉 `GOVERNANCE.md`  
-👉 `MAINTAINERS.md`
+- `docs/developer-guide.md` (ce fichier)  
+- `docs/architecture.md`  
+- `docs/workflow.md`  
+- `docs/release-process.md`  
+- `CHANGELOG.md`  
+
+### ✔ 2. Vérifier l’état du projet
+
+```powershell
+pwsh ./scripts/Setup-Dev.ps1
+```
+
+(à créer si tu veux)
+
+### ✔ 3. Lancer les tests
+
+```powershell
+Invoke-Pester
+```
+
+### ✔ 4. Regénérer la documentation
+
+```powershell
+pwsh ./scripts/Generate-Help.ps1
+```
+
+### ✔ 5. Vérifier la CI/CD
+
+- `.github/workflows/ci.yml`  
+- `.github/workflows/release.yml`  
+
+### ✔ 6. Lire la roadmap
+
+👉 `ROADMAP.md`
 
 ---
-
-# 🧩 Workflow de contribution (diagramme)
-
-Voir : assets/diagrams/contribution-workflow.svg
-
----
-
 
 # 🔐 11. Sécurité & bonnes pratiques
 
 - Ne jamais logguer de secrets  
 - Ne jamais stocker de mots de passe  
 - Utiliser `SecureString` pour les usages sensibles  
-- Utiliser `Get-SecureRandom` ou RNG .NET  
+- Utiliser RNG .NET  
 - Respecter la compatibilité PS5/PS7  
-- Ne jamais introduire de dépendances externes non nécessaires  
-
-Voir :  
-👉 `docs/security.md`
+- Pas de dépendances externes  
 
 ---
 
-# 🧭 12. Checklist avant PR
+# 🧩 12. Checklist avant PR
 
 - [ ] Tests Pester OK  
 - [ ] PSScriptAnalyzer OK  
@@ -394,7 +313,6 @@ Voir :
 
 # 🎉 Merci de contribuer à SecureGen !
 
-Chaque contribution améliore la qualité, la sécurité et l’expérience utilisateur du module.  
-N’hésitez pas à ouvrir une PR, une Issue ou une Discussion.
+Chaque contribution améliore la qualité, la sécurité et l’expérience utilisateur du module.
 
 ---
