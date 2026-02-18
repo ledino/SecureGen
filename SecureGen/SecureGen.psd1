@@ -7,6 +7,7 @@
 
 @{
 
+
 # Script module associated with this manifest
 RootModule = 'SecureGen.psm1'
 

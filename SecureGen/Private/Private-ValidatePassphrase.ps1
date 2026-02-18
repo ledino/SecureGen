@@ -3,22 +3,36 @@ function Private-ValidatePassphrase {
     param(
         [int]$Words,
         [int]$Letters,
-        [int]$MinWords = 7,
         [int]$MinTotalLength = 30
     )
 
-    if ($Words -lt 1 -or $LettersPerWord -lt 1) {
-        throw "Words et LettersPerWord doivent être ≥ 1."
+    # 🔐 Règle logique : minimum 2 mots
+    if ($Words -lt 2) {
+        Write-Host ""
+        Write-Host "ℹ Info — Une passphrase doit contenir au moins 2 mots." -ForegroundColor Yellow
+        Write-Host "   SecureGen génère automatiquement une passphrase robuste pour garantir votre sécurité." -ForegroundColor Yellow
+        Write-Host ""
+        return $false
     }
 
-    $totalLength = $Words * $LettersPerWord
+    # 🔐 Règle logique : au moins 1 lettre par mot
+    if ($Letters -lt 1) {
+        Write-Host ""
+        Write-Host "ℹ Info — Chaque mot doit contenir au moins 1 lettre." -ForegroundColor Yellow
+        Write-Host "   SecureGen génère automatiquement une passphrase robuste pour garantir votre sécurité." -ForegroundColor Yellow
+        Write-Host ""
+        return $false
+    }
 
+    $totalLength = $Words * $Letters
+
+    # 🔐 Règle ANSSI/CNIL : longueur minimale
     if ($totalLength -lt $MinTotalLength) {
-        throw "La passphrase doit contenir au moins $MinTotalLength caractères (ANSSI/CNIL). Longueur actuelle : $totalLength."
-    }
-
-    if ($Words -lt $MinWords) {
-        throw "La passphrase doit contenir au moins $MinWords mots (ANSSI/CNIL). Mots actuels : $Words."
+        Write-Host ""
+        Write-Host "ℹ Info — La passphrase demandée est trop courte (minimum $MinTotalLength caractères recommandés)." -ForegroundColor Yellow
+        Write-Host "   SecureGen génère automatiquement une passphrase robuste pour garantir votre sécurité." -ForegroundColor Yellow
+        Write-Host ""
+        return $false
     }
 
     return $true

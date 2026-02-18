@@ -24,8 +24,7 @@ function Internal-RandomString {
         [string]$Charset
     )
 
-    Private-ValidateLength -Length $Length -Min 1 -Max 256
-
+    # Génération simple d'une chaîne aléatoire
     $chars = New-Object System.Text.StringBuilder
     for ($i = 0; $i -lt $Length; $i++) {
         $idx = Internal-GetCryptoIndex -Max $Charset.Length
@@ -42,7 +41,7 @@ function Internal-RandomPassPhrase {
         [int]$Words,
 
         [Parameter(Mandatory)]
-        [int]$LettersPerWord,
+        [int]$Letters,
 
         [Parameter(Mandatory)]
         [string]$Charset,
@@ -51,11 +50,19 @@ function Internal-RandomPassPhrase {
         [string]$Separator
     )
 
-    Private-ValidatePassphrase -Words $Words -LettersPerWord $LettersPerWord
+    # Validation unique (pas de double validation)
+    $valid = Private-ValidatePassphrase -Words $Words -Letters $Letters
 
+    # Fallback robuste si validation échoue
+    if (-not $valid) {
+        $Words   = 6
+        $Letters = 6
+    }
+
+    # Génération
     $bloc = @()
     for ($i = 0; $i -lt $Words; $i++) {
-        $word = Internal-RandomString -Length $LettersPerWord -Charset $Charset
+        $word = Internal-RandomString -Length $Letters -Charset $Charset
         $bloc += $word
     }
 

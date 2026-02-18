@@ -1,31 +1,50 @@
 <#
-    Install-SecureGen.ps1
-    Installation intelligente pour SecureGen
-    Auteur : Ledino
-    Version : 1.0
+.SYNOPSIS
+    Installation locale intelligente du module SecureGen pour PS5.1 et PS7.
+
+.DESCRIPTION
+    Ce script :
+    - détecte automatiquement PowerShell 5.1 et PowerShell 7
+    - installe SecureGen dans les bons chemins utilisateurs
+    - crée les dossiers si nécessaire
+    - copie le module proprement
+    - permet un nettoyage optionnel
+    - affiche un résumé clair
+
+.NOTES
+    Auteur  : SecureGen Project
+    Version : 2.0
 #>
+
+[CmdletBinding()]
+param(
+    [switch]$Force,
+    [switch]$Clean
+)
 
 $ErrorActionPreference = "Stop"
 
-Set-Location (Split-Path $PSScriptRoot -Parent)
-
 Write-Host "🔐 Installation du module SecureGen..." -ForegroundColor Cyan
+Write-Host "──────────────────────────────────────────────`n"
 
 # ---------------------------------------------------------------------------
-# Détection des environnements PowerShell
+# 1. Détection des environnements PowerShell
 # ---------------------------------------------------------------------------
 
 $HasPS5 = Test-Path "$env:WINDIR\System32\WindowsPowerShell\v1.0\powershell.exe"
 $HasPS7 = Get-Command pwsh -ErrorAction SilentlyContinue
 
-Write-Host ""
 Write-Host "📦 Détection des environnements :" -ForegroundColor Cyan
 Write-Host " - PowerShell 5.1 : $HasPS5"
 Write-Host " - PowerShell 7.x : $([bool]$HasPS7)"
 Write-Host ""
 
+if (-not $HasPS5 -and -not $HasPS7) {
+    throw "❌ Aucun environnement PowerShell compatible détecté."
+}
+
 # ---------------------------------------------------------------------------
-# Définition des chemins d’installation
+# 2. Définition des chemins d’installation
 # ---------------------------------------------------------------------------
 
 $ModuleName = "SecureGen"
@@ -34,7 +53,7 @@ $PS5Path = Join-Path $env:USERPROFILE "Documents\WindowsPowerShell\Modules\$Modu
 $PS7Path = Join-Path $env:USERPROFILE "Documents\PowerShell\Modules\$ModuleName"
 
 # ---------------------------------------------------------------------------
-# Fonction d’installation
+# 3. Fonction d’installation
 # ---------------------------------------------------------------------------
 
 function Install-ToPath {
@@ -42,38 +61,40 @@ function Install-ToPath {
         [string]$TargetPath
     )
 
+    if ($Clean -and (Test-Path $TargetPath)) {
+        Write-Host "🧹 Nettoyage du dossier existant : $TargetPath" -ForegroundColor Yellow
+        Remove-Item $TargetPath -Recurse -Force
+    }
+
     if (-not (Test-Path $TargetPath)) {
         New-Item -ItemType Directory -Path $TargetPath -Force | Out-Null
     }
 
+    Write-Host "📦 Copie du module vers : $TargetPath" -ForegroundColor Yellow
     Copy-Item -Path "./SecureGen/*" -Destination $TargetPath -Recurse -Force
 }
 
 # ---------------------------------------------------------------------------
-# Installation selon les versions détectées
+# 4. Installation selon les versions détectées
 # ---------------------------------------------------------------------------
 
 if ($HasPS5) {
-    Write-Host "➡️ Installation dans PowerShell 5.1..." -ForegroundColor Yellow
+    Write-Host "➡️ Installation pour PowerShell 5.1..." -ForegroundColor Yellow
     Install-ToPath -TargetPath $PS5Path
 }
 
 if ($HasPS7) {
-    Write-Host "➡️ Installation dans PowerShell 7..." -ForegroundColor Yellow
+    Write-Host "➡️ Installation pour PowerShell 7..." -ForegroundColor Yellow
     Install-ToPath -TargetPath $PS7Path
 }
 
-if (-not $HasPS5 -and -not $HasPS7) {
-    Write-Error "❌ Aucune version de PowerShell compatible n'a été trouvée."
-    exit 1
-}
-
 # ---------------------------------------------------------------------------
-# Résumé
+# 5. Résumé final
 # ---------------------------------------------------------------------------
 
 Write-Host ""
 Write-Host "✅ Installation terminée !" -ForegroundColor Green
+Write-Host "──────────────────────────────────────────────"
 
 if ($HasPS5) {
     Write-Host " - Installé pour PowerShell 5.1 : $PS5Path"
@@ -83,4 +104,5 @@ if ($HasPS7) {
 }
 
 Write-Host ""
-Write-Host "Vous pouvez maintenant utiliser : Get-PassWord, Get-PassPhrase, sgw, sgp"
+Write-Host "Vous pouvez maintenant utiliser : Get-PassWord, Get-PassPhrase, Get-PKIPass, sgw, sgp"
+Write-Host "──────────────────────────────────────────────`n"

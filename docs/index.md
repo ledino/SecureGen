@@ -1,6 +1,35 @@
 # 🔐 SecureGen — Documentation officielle  
 *(Version alignée avec SecureGen 1.5.0, l’architecture moderne et le pipeline CI/CD)*
 
+<!-- TOC-START -->
+## 📑 Table des matières
+
+- [🚀 Installation rapide](#-installation-rapide)
+- [🧩 Fonctionnalités principales](#-fonctionnalités-principales)
+- [🧱 Architecture du module](#-architecture-du-module)
+- [🧭 How to Navigate the Repository](#-how-to-navigate-the-repository)
+  - [🔐 1. Code source du module](#-1-code-source-du-module)
+  - [🎨 2. Identité visuelle](#-2-identité-visuelle)
+  - [📚 3. Documentation complète](#-3-documentation-complète)
+  - [🛠️ 4. Scripts développeurs](#️-4-scripts-développeurs)
+  - [🔧 5. Versioning automatisé](#-5-versioning-automatisé)
+  - [🧩 6. GitHub Community Standards](#-6-github-community-standards)
+  - [🧪 7. Tests Pester](#-7-tests-pester)
+  - [📄 8. Fichiers racine](#-8-fichiers-racine)
+- [🎯 Résumé rapide](#-résumé-rapide)
+- [⚙️ Automatisation du versioning & des releases](#️-automatisation-du-versioning--des-releases)
+- [📚 Documentation](#-documentation)
+- [🛠️ Scripts intégrés](#-scripts-intégrés)
+- [🧪 Tests & qualité](#-tests--qualité)
+- [🎨 Identité visuelle](#-identité-visuelle)
+- [📜 Licence](#-licence)
+- [🤝 Contribuer](#-contribuer)
+- [📚 Documentations associées](#-documentations-associées)
+- [🎉 Merci d'utiliser SecureGen](#-merci-dutiliser-securegen)
+<!-- TOC-END -->
+
+---
+
 Bienvenue dans la documentation officielle de **SecureGen**, un module PowerShell moderne, sécurisé et cross‑platform conçu pour générer :
 
 - des **mots de passe sécurisés**

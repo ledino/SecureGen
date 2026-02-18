@@ -45,6 +45,16 @@
     <img src="https://img.shields.io/github/v/release/ledino/SecureGen?style=flat-square&label=Release&color=0A2A4F" />
   </a>
 
+  <!-- Dev & Quality Badges -->
+  <a style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/PSScriptAnalyzer-Clean-4CAF50?style=flat-square&logo=powershell" />
+    <img src="https://img.shields.io/badge/Docs-PlatyPS%20Auto--Generated-4FC3F7?style=flat-square&logo=readthedocs" />
+    <img src="https://img.shields.io/badge/TOC-Auto--Generated-00BCD4?style=flat-square&logo=markdown" />
+    <img src="https://img.shields.io/badge/Developer%20Tools-Ready-0A2A4F?style=flat-square&logo=github" />
+    <img src="https://img.shields.io/badge/PS5.1%20%7C%20PS7-Tested-4FC3F7?style=flat-square&logo=powershell" />
+    <img src="https://img.shields.io/badge/Versioning-standard--version-0A2A4F?style=flat-square&logo=npm" />
+  </a>
+
 </p>
 
 <!-- Logo premium -->
@@ -90,7 +100,8 @@
 
 ---
 
-# 📚 Table des matières
+<!-- TOC-START -->
+## 📑 Table des matières
 
 - [📘 À propos](#-à-propos)
 - [⚡ Quick Start](#-quick-start)
@@ -99,34 +110,36 @@
 - [🧩 Fonctions incluses](#-fonctions-incluses)
 - [📝 Exemples](#-exemples)
 - [🧱 Architecture du module](#-architecture-du-module)
-- [⚙️ Versioning & Releases](#-versioning--releases)
+- [⚙️ Versioning & Releases](#️-versioning--releases)
 - [📚 Documentation complète](#-documentation-complète)
 - [🖼️ Screenshots](#-screenshots)
 - [🗺️ Roadmap](#-roadmap)
 - [🤝 Contribuer](#-contribuer)
 - [💬 Support](#-support)
 - [📜 Licence](#-licence)
+- [⭐ Remerciements](#-remerciements)
+<!-- TOC-END -->
 
 ---
 
 # 📘 À propos
 
-**SecureGen** est un module PowerShell moderne, ergonomique et cross‑platform permettant de générer :
+SecureGen est un module PowerShell moderne, ergonomique et cross‑platform permettant de générer :
 
 - des **mots de passe sécurisés**
 - des **passphrases robustes**
-- des **secrets PKI** (avec SecureString)
+- des **secrets PKI** (Password / Passphrase + SecureString)
 - des **indices cryptographiques** (Get‑CryptoIndex)
 
-Il est compatible :
+Compatible :
 
 - **Windows PowerShell 5.1**  
 - **PowerShell 7+** (Windows, Linux, macOS)
 
-Grâce à une architecture intelligente, SecureGen charge automatiquement :
+Architecture intelligente :
 
-- une version **optimisée PS7** (`Core.PS7.ps1`)
-- une version **fallback PS5** (`Legacy.PS5.ps1`)
+- **Core.PS7.ps1** → version moderne  
+- **Legacy.PS5.ps1** → fallback Windows PowerShell  
 
 ---
 
@@ -144,15 +157,15 @@ Get-PKIPass
 
 # ✨ Fonctionnalités clés
 
-- 🔐 **Crypto moderne** (Get‑SecureRandom, RNGCryptoServiceProvider)
-- 🔑 **Mots de passe sécurisés** (longueur, caractères spéciaux)
-- 🧠 **Passphrases robustes** (Words × Len)
-- 🛡️ **Secrets PKI** (Password / Passphrase + SecureString)
-- 📋 **Clipboard intelligent** (Windows/macOS/Linux)
-- 🔊 **Beep discret**
-- 🧩 **Architecture modulaire PS5/PS7**
-- 🧪 **Tests Pester + PSScriptAnalyzer**
-- 🚀 **Pipeline de release automatisé**
+- 🔐 Crypto moderne (Get‑SecureRandom, RNGCryptoServiceProvider)
+- 🔑 Mots de passe sécurisés
+- 🧠 Passphrases robustes (Words × Len)
+- 🛡️ Secrets PKI (Password / Passphrase + SecureString)
+- 📋 Clipboard cross‑platform
+- 🔊 Beep discret
+- 🧩 Architecture modulaire PS5/PS7
+- 🧪 Tests Pester + PSScriptAnalyzer
+- 🚀 Pipeline de release automatisé
 
 ---
 
@@ -195,23 +208,23 @@ Alias :
 
 # 📝 Exemples
 
-## Mot de passe
+### Mot de passe
 
 ```powershell
 Get-PassWord
 Get-PassWord -UseSpecial:$false
 ```
 
-## Passphrase
+### Passphrase
 
 ```powershell
-Get-PassPhrase -Words 6 -Len 10
+Get-PassPhrase -Words 6 -Letters 10
 ```
 
-## PKIPass
+### PKIPass
 
 ```powershell
-Get-PKIPass -Type Passphrase -Words 8 -Len 10
+Get-PKIPass -Type Passphrase -Words 8 -Letters 10
 Get-PKIPass -AsSecureString
 ```
 
@@ -219,46 +232,37 @@ Get-PKIPass -AsSecureString
 
 # 🧱 Architecture du module
 
-SecureGen charge automatiquement la bonne implémentation :
-
 ```
 SecureGen/
 ├── Core.PS7.ps1
 └── Legacy.PS5.ps1
 ```
 
-Le loader `SecureGen.psm1` :
-
-- détecte PS5/PS7  
-- charge la bonne implémentation  
-- expose les cmdlets  
-- gère clipboard, beep, SecureString  
-
 Documentation complète :  
-👉 `docs/architecture.md`
+👉 `docs/architecture.md`  
+👉 `docs/structure.md`
 
 ---
 
 # ⚙️ Versioning & Releases
 
-SecureGen utilise :
-
 - **Conventional Commits**
-- **standard-version (automatisé dans GitHub Actions)**
+- **standard-version** (automatisé dans GitHub Actions)
 - **tags Git automatiques**
 - **publication PSGallery automatique**
 
-Pipeline complet :  
+Documentation :  
 👉 `docs/release-process.md`  
-👉 `docs/release.md`  
 👉 `docs/versioning.md`
 
 ---
 
 # 📚 Documentation complète
 
-Toute la documentation est disponible dans :  
-👉 `docs/index.md`
+👉 `docs/index.md`  
+👉 `docs/scripts.md`  
+👉 `docs/developer-guide.md`  
+👉 `docs/structure.md`
 
 ---
 
@@ -297,8 +301,6 @@ Guides officiels :
 # 💬 Support
 
 Issues, discussions et PRs sont les bienvenues.
-
-Si vous souhaitez soutenir le projet :
 
 <p>
     <a href="https://ko-fi.com/ledino_creator">

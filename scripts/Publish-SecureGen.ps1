@@ -1,100 +1,108 @@
 <#
-    Publish-SecureGen.ps1
-    Script officiel de publication pour SecureGen
-    Auteur : Ledino
+.SYNOPSIS
+    Installation locale intelligente du module SecureGen pour PS5.1 et PS7.
+
+.DESCRIPTION
+    Ce script :
+    - détecte automatiquement PowerShell 5.1 et PowerShell 7
+    - installe SecureGen dans les bons chemins utilisateurs
+    - crée les dossiers si nécessaire
+    - copie le module proprement
+    - permet un nettoyage optionnel
+    - affiche un résumé clair
+
+.NOTES
+    Auteur  : SecureGen Project
     Version : 2.0
 #>
 
-$ErrorActionPreference = "Stop"
-
-Set-Location (Split-Path $PSScriptRoot -Parent)
-
-<#
-Pour éviter l'erreur :
-```
-La demande a été abandonnée : Impossible de créer un canal sécurisé SSL/TLS.
-```
-Qui survient parce que :
-
-- PowerShellGet v1 utilise **TLS 1.0/1.1 par défaut**  
-- PSGallery **refuse tout sauf TLS 1.2+**  
-- PowerShell 7 n’active pas toujours TLS 1.2 pour les commandes PowerShellGet v1
-La commande suivante est recommandée
-#>
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-
-Write-Host "🚀 Publication du module SecureGen..." -ForegroundColor Cyan
-
-# ---------------------------------------------------------------------------
-# 1. Vérification de la clé API PSGallery
-# ---------------------------------------------------------------------------
-
-if (-not $env:PSGALLERY_KEY) {
-    Write-Error "❌ La variable d'environnement PSGALLERY_KEY n'est pas définie."
-    Write-Host ""
-    Write-Host "Définissez-la avec :" -ForegroundColor Yellow
-    Write-Host '$env:PSGALLERY_KEY = "votre_clef_api"' -ForegroundColor Yellow
-    exit 1
-}
-
-# ---------------------------------------------------------------------------
-# 2. Vérification de la structure du module
-# ---------------------------------------------------------------------------
-
-$RequiredFiles = @(
-    "./SecureGen/SecureGen.psm1",
-    "./SecureGen/SecureGen.psd1",
-    "./SecureGen/Core.PS7.ps1",
-    "./SecureGen/Legacy.PS5.ps1"
+[CmdletBinding()]
+param(
+    [switch]$Force,
+    [switch]$Clean
 )
 
-foreach ($file in $RequiredFiles) {
-    if (-not (Test-Path $file)) {
-        Write-Error "❌ Fichier manquant : $file"
-        exit 1
+$ErrorActionPreference = "Stop"
+
+Write-Host "🔐 Installation du module SecureGen..." -ForegroundColor Cyan
+Write-Host "──────────────────────────────────────────────`n"
+
+# ---------------------------------------------------------------------------
+# 1. Détection des environnements PowerShell
+# ---------------------------------------------------------------------------
+
+$HasPS5 = Test-Path "$env:WINDIR\System32\WindowsPowerShell\v1.0\powershell.exe"
+$HasPS7 = Get-Command pwsh -ErrorAction SilentlyContinue
+
+Write-Host "📦 Détection des environnements :" -ForegroundColor Cyan
+Write-Host " - PowerShell 5.1 : $HasPS5"
+Write-Host " - PowerShell 7.x : $([bool]$HasPS7)"
+Write-Host ""
+
+if (-not $HasPS5 -and -not $HasPS7) {
+    throw "❌ Aucun environnement PowerShell compatible détecté."
+}
+
+# ---------------------------------------------------------------------------
+# 2. Définition des chemins d’installation
+# ---------------------------------------------------------------------------
+
+$ModuleName = "SecureGen"
+
+$PS5Path = Join-Path $env:USERPROFILE "Documents\WindowsPowerShell\Modules\$ModuleName"
+$PS7Path = Join-Path $env:USERPROFILE "Documents\PowerShell\Modules\$ModuleName"
+
+# ---------------------------------------------------------------------------
+# 3. Fonction d’installation
+# ---------------------------------------------------------------------------
+
+function Install-ToPath {
+    param(
+        [string]$TargetPath
+    )
+
+    if ($Clean -and (Test-Path $TargetPath)) {
+        Write-Host "🧹 Nettoyage du dossier existant : $TargetPath" -ForegroundColor Yellow
+        Remove-Item $TargetPath -Recurse -Force
     }
+
+    if (-not (Test-Path $TargetPath)) {
+        New-Item -ItemType Directory -Path $TargetPath -Force | Out-Null
+    }
+
+    Write-Host "📦 Copie du module vers : $TargetPath" -ForegroundColor Yellow
+    Copy-Item -Path "./SecureGen/*" -Destination $TargetPath -Recurse -Force
 }
 
-Write-Host "✔ Structure valide" -ForegroundColor Green
-
 # ---------------------------------------------------------------------------
-# 3. Lecture de la version du module
+# 4. Installation selon les versions détectées
 # ---------------------------------------------------------------------------
 
-$Manifest = Import-PowerShellDataFile "./SecureGen/SecureGen.psd1"
-$Version = $Manifest.ModuleVersion
-
-Write-Host "📦 Version détectée : $Version" -ForegroundColor Cyan
-
-# ---------------------------------------------------------------------------
-# 4. Préparation du dossier temporaire
-# ---------------------------------------------------------------------------
-
-$Temp = "./out/publish"
-
-if (Test-Path $Temp) {
-    Remove-Item $Temp -Recurse -Force
+if ($HasPS5) {
+    Write-Host "➡️ Installation pour PowerShell 5.1..." -ForegroundColor Yellow
+    Install-ToPath -TargetPath $PS5Path
 }
 
-New-Item -ItemType Directory -Path $Temp | Out-Null
-
-Copy-Item -Path "./SecureGen/*" -Destination $Temp -Recurse -Force
-
-Write-Host "📁 Dossier de publication prêt" -ForegroundColor Green
+if ($HasPS7) {
+    Write-Host "➡️ Installation pour PowerShell 7..." -ForegroundColor Yellow
+    Install-ToPath -TargetPath $PS7Path
+}
 
 # ---------------------------------------------------------------------------
-# 5. Publication PSGallery
+# 5. Résumé final
 # ---------------------------------------------------------------------------
-
-Write-Host "🚀 Publication sur PowerShell Gallery..." -ForegroundColor Yellow
-
-Publish-Module `
-    -Path $Temp `
-    -Repository "PSGallery" `
-    -NuGetApiKey $env:PSGALLERY_KEY `
-    -Verbose
 
 Write-Host ""
-Write-Host "🎉 Publication réussie !" -ForegroundColor Green
-Write-Host "Module disponible sur :" -ForegroundColor Cyan
-Write-Host "➡ https://www.powershellgallery.com/packages/SecureGen"
+Write-Host "✅ Installation terminée !" -ForegroundColor Green
+Write-Host "──────────────────────────────────────────────"
+
+if ($HasPS5) {
+    Write-Host " - Installé pour PowerShell 5.1 : $PS5Path"
+}
+if ($HasPS7) {
+    Write-Host " - Installé pour PowerShell 7 : $PS7Path"
+}
+
+Write-Host ""
+Write-Host "Vous pouvez maintenant utiliser : Get-PassWord, Get-PassPhrase, Get-PKIPass, sgw, sgp"
+Write-Host "──────────────────────────────────────────────`n"

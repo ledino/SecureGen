@@ -4,6 +4,23 @@ Ce document décrit l’architecture complète du dépôt SecureGen.
 Il sert de référence pour les développeurs, contributeurs et mainteneurs souhaitant comprendre rapidement l’organisation interne du projet.
 
 ---
+# 📦 **Structure du dépôt SecureGen (Version enrichie)**
+
+## 📑 Table des matières
+
+- [🧱 Vue d’ensemble](#-vue-densemble)
+- [🔐 1. `SecureGen/` — Code source du module](#-1-securegen--code-source-du-module)
+- [🎨 2. `assets/` — Identité visuelle & médias](#-2-assets--identité-visuelle--médias)
+- [📚 3. `docs/` — Documentation complète](#-3-docs--documentation-complète)
+- [🛠️ 4. `scripts/` — Scripts développeurs](#️-4-scripts--scripts-développeurs)
+- [🔧 Documentation complète des scripts](#-documentation-complète-des-scripts)
+- [🔧 5. `.version-updaters/`](#-5-version-updaters)
+- [🧩 6. `.github/` — GitHub Community Standards](#-6-github--github-community-standards)
+- [🧪 7. `tests/` — Tests Pester](#-7-tests--tests-pester)
+- [📄 8. Fichiers racine](#-8-fichiers-racine)
+- [🎉 Structure prête pour un futur site statique](#-structure-prête-pour-un-futur-site-statique)
+
+---
 
 # 🧱 Vue d’ensemble
 
@@ -112,7 +129,7 @@ Diagrammes UML et documentation technique :
 
 ---
 
-# 🛠️ 4. `scripts/` — Scripts développeurs
+# 🛠️ 4. `scripts/` — Scripts développeurs *(version mise à jour)*
 
 Scripts internes pour automatiser le développement :
 
@@ -122,8 +139,16 @@ Scripts internes pour automatiser le développement :
 | `Install-SecureGen.ps1` | Installation locale du module |
 | `Publish-SecureGen.ps1` | Publication manuelle PSGallery |
 | `Generate-Help.ps1` | Génération de la documentation PlatyPS |
-| `Versioning-SecureGen.ps1` | Ancien système de versioning (legacy) |
-| `Release-All.ps1` | Ancien système de release (legacy) |
+| `Generate-PSGalleryReadme.ps1` | Génération du README pour PSGallery |
+| `Versioning-SecureGen.ps1` | Wrapper local autour de standard-version |
+| `Release-All.ps1` | Pipeline local de préparation de release |
+| `Generate-All.ps1` | Script maître (génération + build + tests + installation) |
+
+### 📘 Documentation complète des scripts
+
+Tous les scripts internes sont documentés en détail ici :
+
+👉 `docs/scripts.md`
 
 ---
 

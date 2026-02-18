@@ -45,7 +45,7 @@ Le manifest `SecureGen.psd1` est mis à jour automatiquement via `standard-versi
 
 ---
 
-# 🧭 2. Naviguer dans le dépôt
+# 🧭 2. Naviguer dans le dépôt *(version mise à jour)*
 
 Pour une vue complète :  
 👉 `docs/structure.md`
@@ -62,6 +62,12 @@ Résumé rapide :
 | Tests | `tests/` |
 | CI/CD | `.github/workflows/` |
 | Versioning | `.version-updaters/` |
+
+### 🔧 Scripts développeurs
+
+Tous les scripts internes (génération de documentation, build, installation locale, publication manuelle, versioning, etc.) sont documentés ici :
+
+👉 `docs/scripts.md`
 
 ---
 

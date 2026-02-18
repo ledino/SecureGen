@@ -1,15 +1,21 @@
 <#
     build.ps1
-    Script de build complet pour SecureGen
+    Script de build local complet pour SecureGen
     Auteur : Ledino
-    Version : 1.0
+    Version : 2.0
 #>
+
+[CmdletBinding()]
+param(
+    [switch]$SkipTests,
+    [switch]$SkipDocs,
+    [switch]$SkipReadme
+)
 
 $ErrorActionPreference = "Stop"
 
-Set-Location (Split-Path $PSScriptRoot -Parent)
-
 Write-Host "🔧 Build du module SecureGen..." -ForegroundColor Cyan
+Write-Host "──────────────────────────────────────────────`n"
 
 # ---------------------------------------------------------------------------
 # 1. Nettoyage
@@ -48,38 +54,65 @@ foreach ($file in $RequiredFiles) {
 Write-Host "✔ Structure valide" -ForegroundColor Green
 
 # ---------------------------------------------------------------------------
-# 3. Copie du module dans le dossier out/
+# 3. Génération documentation PlatyPS
 # ---------------------------------------------------------------------------
 
-Write-Host "📦 Préparation du module..." -ForegroundColor Yellow
+if (-not $SkipDocs) {
+    Write-Host "`n📚 Génération de la documentation PlatyPS..." -ForegroundColor Yellow
+    pwsh ./scripts/Generate-Help.ps1
+    Write-Host "✔ Documentation mise à jour" -ForegroundColor Green
+} else {
+    Write-Host "⏭ Documentation ignorée (--SkipDocs)" -ForegroundColor DarkYellow
+}
+
+# ---------------------------------------------------------------------------
+# 4. Génération du README PSGallery
+# ---------------------------------------------------------------------------
+
+if (-not $SkipReadme) {
+    Write-Host "`n📄 Génération du README PSGallery..." -ForegroundColor Yellow
+    pwsh ./scripts/Generate-PSGalleryReadme.ps1
+    Write-Host "✔ README généré" -ForegroundColor Green
+} else {
+    Write-Host "⏭ README ignoré (--SkipReadme)" -ForegroundColor DarkYellow
+}
+
+# ---------------------------------------------------------------------------
+# 5. Copie du module dans out/
+# ---------------------------------------------------------------------------
+
+Write-Host "`n📦 Préparation du module..." -ForegroundColor Yellow
 
 Copy-Item -Path "./SecureGen/*" -Destination "$OutputDir/SecureGen" -Recurse -Force
 
 # ---------------------------------------------------------------------------
-# 4. Tests Pester (optionnel)
+# 6. Tests Pester
 # ---------------------------------------------------------------------------
 
-$TestsPath = "./tests"
-
-if (Test-Path $TestsPath) {
-    Write-Host "🧪 Exécution des tests Pester..." -ForegroundColor Yellow
-    Invoke-Pester -Path $TestsPath -Output Detailed
-}
-else {
-    Write-Host "⚠ Aucun test Pester trouvé (dossier ./tests absent)" -ForegroundColor DarkYellow
+if (-not $SkipTests) {
+    Write-Host "`n🧪 Exécution des tests Pester..." -ForegroundColor Yellow
+    Invoke-Pester -Path "./tests" -Output Detailed
+    Write-Host "✔ Tests terminés" -ForegroundColor Green
+} else {
+    Write-Host "⏭ Tests ignorés (--SkipTests)" -ForegroundColor DarkYellow
 }
 
 # ---------------------------------------------------------------------------
-# 5. Packaging du module
+# 7. Validation du manifest
 # ---------------------------------------------------------------------------
 
-Write-Host "📦 Packaging du module..." -ForegroundColor Yellow
+Write-Host "`n🔍 Validation du manifest..." -ForegroundColor Yellow
 
 $Manifest = "./SecureGen/SecureGen.psd1"
 $ModuleVersion = (Import-PowerShellDataFile $Manifest).ModuleVersion
-Write-Host "📦 Version détectée : $ModuleVersion" -ForegroundColor Cyan
 
-$NupkgPath = "$OutputDir/SecureGen.$ModuleVersion.nupkg"
+Write-Host "✔ Version détectée : $ModuleVersion" -ForegroundColor Green
+
+# ---------------------------------------------------------------------------
+# 8. Packaging local (WhatIf)
+# ---------------------------------------------------------------------------
+
+Write-Host "`n📦 Packaging du module (simulation)..." -ForegroundColor Yellow
 
 Publish-Module `
     -Path "$OutputDir/SecureGen" `
@@ -88,45 +121,16 @@ Publish-Module `
     -WhatIf `
     -ErrorAction SilentlyContinue | Out-Null
 
-Write-Host "✔ Packaging terminé" -ForegroundColor Green
-
-# Vérification du package généré
-if (Test-Path $NupkgPath) {
-    Write-Host "📦 Package généré : $NupkgPath" -ForegroundColor Cyan
-} else {
-    Write-Warning "⚠ Le fichier .nupkg n'a pas été trouvé. Il sera généré lors de la publication réelle."
-}
+Write-Host "✔ Packaging simulé (réel effectué par GitHub Actions)" -ForegroundColor Green
 
 # ---------------------------------------------------------------------------
-# 6. Publication (optionnelle)
+# 9. Résumé final
 # ---------------------------------------------------------------------------
 
-param(
-    [switch]$Publish
-)
-
-if ($Publish) {
-
-    if (-not $env:PSGALLERY_KEY) {
-        Write-Error "❌ La variable d'environnement PSGALLERY_KEY n'est pas définie."
-        exit 1
-    }
-
-    Write-Host "🚀 Publication sur PSGallery..." -ForegroundColor Cyan
-
-    Publish-Module `
-        -Path "$OutputDir/SecureGen" `
-        -Repository "PSGallery" `
-        -NuGetApiKey $env:PSGALLERY_KEY `
-        -Verbose
-
-    Write-Host "🎉 Publication réussie !" -ForegroundColor Green
-
-    if (Test-Path $NupkgPath) {
-    Write-Host "📦 Package final disponible : $NupkgPath" -ForegroundColor Cyan
-    }
-}
-
-Write-Host ""
-Write-Host "🏁 Build terminé !" -ForegroundColor Green
-Write-Host "Module prêt dans : $OutputDir/SecureGen"
+Write-Host "`n🏁 Build terminé !" -ForegroundColor Green
+Write-Host "──────────────────────────────────────────────"
+Write-Host "📦 Module prêt dans : $OutputDir/SecureGen"
+Write-Host "📄 README généré : $OutputDir/SecureGen/README.md"
+Write-Host "📚 Docs PlatyPS : ./docs/cmdlets/"
+Write-Host "🧪 Tests : $(Get-ChildItem ./tests/*.ps1 | Measure-Object).Count fichiers"
+Write-Host "──────────────────────────────────────────────`n"

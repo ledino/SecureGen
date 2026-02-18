@@ -19,7 +19,13 @@ function Internal-GeneratePassPhrase {
     )
 
     # --- Validation ANSSI/CNIL ---
-    Private-ValidatePassphrase -Words $Words -Letters $Letters
+    $valid = Private-ValidatePassphrase -Words $Words -Letters $Letters
+
+    # --- Fallback robuste si validation échoue ---
+    if (-not $valid) {
+        $Words   = 6
+        $Letters = 6
+    }
 
     # --- Génération de la passphrase ---
     $phrase = Internal-RandomPassPhrase `

@@ -15,12 +15,14 @@ function Internal-DisplaySecret {
         [switch]$Silent
     )
 
+    # Mode silencieux : aucun affichage
     if ($Silent) { return }
 
     Write-Host "🔐 $Secret" -ForegroundColor Green
     Write-Host "----------------------------"
 
     Write-Host "🧠 Entropie ($Entropy bits) : " -NoNewline -ForegroundColor Cyan
+
     if (-not $NoClipboard) {
         Write-Host "📋 Copié !"
     }

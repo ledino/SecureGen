@@ -8,5 +8,6 @@ function Internal-ComputeEntropy {
         [int]$CharsetSize
     )
 
+    # Entropie = N * log2(|charset|)
     return [math]::Round($SymbolCount * [math]::Log($CharsetSize, 2))
 }

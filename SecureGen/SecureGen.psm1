@@ -27,7 +27,18 @@ Site du projet : https://github.com/ledino/SecureGen
 #>
 
 # ---------------------------------------------------------------------------
-# Chargement automatique des fonctions privées (non exportées)
+# Chargement des fonctions internes (Internal)
+# ---------------------------------------------------------------------------
+
+$internalPath = Join-Path $PSScriptRoot "Internal"
+if (Test-Path $internalPath) {
+    Get-ChildItem -Path $internalPath -Filter *.ps1 -File | ForEach-Object {
+        . $_.FullName
+    }
+}
+
+# ---------------------------------------------------------------------------
+# Chargement des fonctions privées (Private)
 # ---------------------------------------------------------------------------
 
 $privatePath = Join-Path $PSScriptRoot "Private"
@@ -38,7 +49,7 @@ if (Test-Path $privatePath) {
 }
 
 # ---------------------------------------------------------------------------
-# Chargement automatique des fonctions publiques (exportées ensuite)
+# Chargement des fonctions publiques (Public)
 # ---------------------------------------------------------------------------
 
 $publicPath = Join-Path $PSScriptRoot "Public"
@@ -54,12 +65,13 @@ if (Test-Path $publicPath) {
 
 Set-Alias -Name sgw   -Value Get-PassWord
 Set-Alias -Name sgp   -Value Get-PassPhrase
-Set-Alias -Name sgpki -Value Get-PkiPass
+Set-Alias -Name sgpki -Value Get-PKIPass
 
 # ---------------------------------------------------------------------------
 # Export automatique des fonctions publiques
 # ---------------------------------------------------------------------------
 
+# Export des fonctions publiques
 $publicFunctions = Get-ChildItem -Path $publicPath -Filter *.ps1 -File |
     ForEach-Object { $_.BaseName }
 

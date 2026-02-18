@@ -10,6 +10,7 @@ function Internal-Beep {
             [Console]::Beep($Frequency, $Duration)
         }
         else {
+            # Caractère BEL compatible Linux/macOS
             printf "`a" 2>$null
         }
     }

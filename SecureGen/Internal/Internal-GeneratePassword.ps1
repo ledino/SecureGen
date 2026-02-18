@@ -7,7 +7,7 @@ function Internal-GeneratePassword {
         [Parameter(Mandatory)]
         [string]$SpecialChars,
 
-        [switch]$UseSpecial,
+        [bool]$UseSpecial = $true,
         [switch]$RequireAllTypes,
         [switch]$NoClipboard,
         [switch]$NoClear,
@@ -22,6 +22,8 @@ function Internal-GeneratePassword {
     $Upper  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     $Digits = '0123456789'
 
+    # ⚠️ SpecialChars doit être une liste brute, pas une regex
+    # Exemple recommandé : '!@#$%^&*()_+-=[]{}<>/\|;~'
     $Charset = $Lower + $Upper + $Digits
     if ($UseSpecial) {
         $Charset += $SpecialChars
@@ -62,11 +64,11 @@ function Internal-GeneratePassword {
         -NoClipboard:$NoClipboard `
         -NoClear:$NoClear `
         -Silent:$Silent
-    
-        # --- Gestion du cycle du presse-papier ---
+
+    # --- Gestion du cycle du presse-papier ---
     Internal-HandleClipboardLifecycle `
         -Secret $password `
-        --NoClipboard:$NoClipboard `
+        -NoClipboard:$NoClipboard `
         -NoClear:$NoClear `
         -Silent:$Silent
 

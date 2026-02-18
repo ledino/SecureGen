@@ -1,10 +1,25 @@
 <#
-    Versioning-SecureGen.ps1
-    Script d’incrémentation automatique de version pour SecureGen
+.SYNOPSIS
+    Wrapper local pour standard-version (bump de version).
+
+.DESCRIPTION
+    ⚠️ IMPORTANT :
+    Depuis SecureGen 1.5+, le versioning officiel est automatisé via GitHub Actions.
+    Ce script sert uniquement à déclencher un bump local (rarement nécessaire).
+
+    Il NE modifie PAS :
+    - SecureGen.psd1
+    - CHANGELOG.md
+    - les tags Git
+
+    Il se contente d’appeler standard-version avec le bon paramètre.
+
+.NOTES
+    Auteur  : SecureGen Project
+    Version : 3.0
 #>
 
-Set-Location (Split-Path $PSScriptRoot -Parent)
-
+[CmdletBinding()]
 param(
     [switch]$Major,
     [switch]$Minor,
@@ -13,98 +28,42 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "🔢 Versioning automatique — SecureGen" -ForegroundColor Cyan
+Write-Host "🔢 Versioning local — SecureGen" -ForegroundColor Cyan
+Write-Host "──────────────────────────────────────────────`n"
 
 # ---------------------------------------------------------------------------
-# 1. Charger le manifest
+# 1. Détermination du type de bump
 # ---------------------------------------------------------------------------
 
-$ManifestPath = "./src/SecureGen.psd1"
-
-if (-not (Test-Path $ManifestPath)) {
-    Write-Error "❌ Impossible de trouver SecureGen.psd1"
-    exit 1
-}
-
-$Manifest = Import-PowerShellDataFile $ManifestPath
-$OldVersion = [version]$Manifest.ModuleVersion
-
-Write-Host "📦 Version actuelle : $OldVersion" -ForegroundColor Yellow
-
-# ---------------------------------------------------------------------------
-# 2. Calcul de la nouvelle version
-# ---------------------------------------------------------------------------
+$releaseArgs = @()
 
 if ($Major) {
-    $NewVersion = [version]::new($OldVersion.Major + 1, 0, 0)
+    $releaseArgs += "--release-as major"
 }
 elseif ($Minor) {
-    $NewVersion = [version]::new($OldVersion.Major, $OldVersion.Minor + 1, 0)
+    $releaseArgs += "--release-as minor"
 }
 else {
-    # Patch par défaut
-    $NewVersion = [version]::new($OldVersion.Major, $OldVersion.Minor, $OldVersion.Build + 1)
+    $releaseArgs += "--release-as patch"
 }
 
-Write-Host "➡️ Nouvelle version : $NewVersion" -ForegroundColor Green
+Write-Host "➡️ Type de bump : $($releaseArgs -join ' ')" -ForegroundColor Yellow
 
 # ---------------------------------------------------------------------------
-# 3. Mise à jour du manifest
+# 2. Exécution de standard-version
 # ---------------------------------------------------------------------------
 
-$Content = Get-Content $ManifestPath -Raw
-$Replacement = "ModuleVersion = '$NewVersion'"
-$Updated = $Content -replace "ModuleVersion\s*=\s*'[^']+'", $Replacement
+Write-Host "`n🚀 Exécution de standard-version..." -ForegroundColor Cyan
 
-Set-Content -Path $ManifestPath -Value $Updated -Encoding UTF8
+npm exec standard-version -- $releaseArgs
 
-Write-Host "✔ Manifest mis à jour" -ForegroundColor Green
+Write-Host "`n✔ standard-version exécuté" -ForegroundColor Green
 
 # ---------------------------------------------------------------------------
-# 4. Mise à jour du CHANGELOG
+# 3. Résumé
 # ---------------------------------------------------------------------------
-
-$ChangelogPath = "./CHANGELOG.md"
-
-if (-not (Test-Path $ChangelogPath)) {
-    Write-Error "❌ CHANGELOG.md introuvable"
-    exit 1
-}
-
-$Date = (Get-Date).ToString("yyyy-MM-dd")
-
-$NewEntry = @"
-## 🚀 $NewVersion — $Date
-### Nouveautés
-- (À compléter)
-
-### Améliorations
-- (À compléter)
-
-### Corrections
-- (À compléter)
-
----
-"@
-
-$OldChangelog = Get-Content $ChangelogPath -Raw
-Set-Content -Path $ChangelogPath -Value ($NewEntry + "`n" + $OldChangelog) -Encoding UTF8
-
-Write-Host "✔ CHANGELOG mis à jour" -ForegroundColor Green
-
-# ---------------------------------------------------------------------------
-# 5. Commit Git + Tag
-# ---------------------------------------------------------------------------
-
-Write-Host "📌 Création du commit Git..." -ForegroundColor Cyan
-
-git add .
-git commit -m "🔖 Release $NewVersion"
-git tag "v$NewVersion"
-
-Write-Host "✔ Commit et tag créés" -ForegroundColor Green
 
 Write-Host ""
-Write-Host "🎉 Version $NewVersion prête !" -ForegroundColor Cyan
-Write-Host "Vous pouvez maintenant publier avec :" -ForegroundColor Yellow
-Write-Host "  .\build.ps1 -Publish"
+Write-Host "📦 Version locale mise à jour (manifest & changelog seront gérés par la CI)" -ForegroundColor Cyan
+Write-Host "🎉 Versioning local terminé !" -ForegroundColor Green
+Write-Host "──────────────────────────────────────────────`n"

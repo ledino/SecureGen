@@ -46,6 +46,16 @@
     <img src="https://img.shields.io/github/v/release/ledino/SecureGen?style=flat-square&label=Release&color=0A2A4F" />
   </a>
 
+  <!-- Dev & Quality Badges -->
+  <a style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/PSScriptAnalyzer-Clean-4CAF50?style=flat-square&logo=powershell" />
+    <img src="https://img.shields.io/badge/Docs-PlatyPS%20Auto--Generated-4FC3F7?style=flat-square&logo=readthedocs" />
+    <img src="https://img.shields.io/badge/TOC-Auto--Generated-00BCD4?style=flat-square&logo=markdown" />
+    <img src="https://img.shields.io/badge/Developer%20Tools-Ready-0A2A4F?style=flat-square&logo=github" />
+    <img src="https://img.shields.io/badge/PS5.1%20%7C%20PS7-Tested-4FC3F7?style=flat-square&logo=powershell" />
+    <img src="https://img.shields.io/badge/Versioning-standard--version-0A2A4F?style=flat-square&logo=npm" />
+  </a>
+
 </p>
 
 <br>
@@ -95,7 +105,8 @@
 
 ---
 
-# 📚 Table of Contents
+<!-- TOC-START -->
+## 📑 Table of Contents
 
 - [📘 About](#-about)
 - [⚡ Quick Start](#-quick-start)
@@ -104,13 +115,15 @@
 - [🧩 Included Functions](#-included-functions)
 - [📝 Usage Examples](#-usage-examples)
 - [🧱 Module Architecture](#-module-architecture)
-- [⚙️ Versioning & Releases](#-versioning--releases)
+- [⚙️ Versioning & Releases](#️-versioning--releases)
 - [📚 Full Documentation](#-full-documentation)
 - [🖼️ Screenshots](#-screenshots)
 - [🗺️ Roadmap](#-roadmap)
 - [🤝 Contributing](#-contributing)
 - [💬 Support](#-support)
 - [📜 License](#-license)
+- [⭐ Acknowledgments](#-acknowledgments)
+<!-- TOC-END -->
 
 ---
 
@@ -206,23 +219,23 @@ Aliases:
 
 # 📝 Usage Examples
 
-## Passwords
+### Passwords
 
 ```powershell
 Get-PassWord
 Get-PassWord -UseSpecial:$false
 ```
 
-## Passphrases
+### Passphrases
 
 ```powershell
-Get-PassPhrase -Words 6 -Len 10
+Get-PassPhrase -Words 6 -Letters 10
 ```
 
-## PKI Secrets
+### PKI Secrets
 
 ```powershell
-Get-PKIPass -Type Passphrase -Words 8 -Len 10
+Get-PKIPass -Type Passphrase -Words 8 -Letters 10
 Get-PKIPass -AsSecureString
 ```
 
@@ -244,7 +257,8 @@ The loader `SecureGen.psm1`:
 - manages clipboard, beep, SecureString helpers  
 
 Full technical documentation:  
-👉 `docs/architecture.md`
+👉 `docs/architecture.md`  
+👉 `docs/structure.md`
 
 ---
 
@@ -253,21 +267,22 @@ Full technical documentation:
 SecureGen uses:
 
 - **Conventional Commits**
-- **standard-version (automated in GitHub Actions)**
+- **standard-version** (automated in GitHub Actions)
 - **automatic Git tags**
 - **automatic PSGallery publishing**
 
 Full pipeline documentation:  
 👉 `docs/release-process.md`  
-👉 `docs/release.md`  
 👉 `docs/versioning.md`
 
 ---
 
 # 📚 Full Documentation
 
-All documentation is available here:  
-👉 `docs/index.md`
+👉 `docs/index.md`  
+👉 `docs/scripts.md`  
+👉 `docs/developer-guide.md`  
+👉 `docs/structure.md`
 
 ---
 
@@ -308,7 +323,12 @@ Contribution guides:
 Issues, discussions, and PRs are welcome.
 
 Support the project:  
-👉 `https://ko-fi.com/ledino_creator` [(ko-fi.com in Bing)](https://www.bing.com/search?q="https%3A%2F%2Fko-fi.com%2Fledino_creator")
+
+<p>
+    <a href="https://ko-fi.com/ledino_creator">
+        <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Ko-fi">
+    </a>
+<p\>
 
 ---
 

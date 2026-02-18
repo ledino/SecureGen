@@ -1,18 +1,25 @@
 <#
-    Release-All.ps1
-    Pipeline complet de release pour SecureGen
-    Auteur : Ledino
-    Version : 1.0
+.SYNOPSIS
+    Pipeline local de préparation de release pour SecureGen.
 
-    Usage :
-        .\Release-All.ps1 -Patch
-        .\Release-All.ps1 -Minor
-        .\Release-All.ps1 -Major
-        .\Release-All.ps1 -Publish
+.DESCRIPTION
+    ⚠️ IMPORTANT :
+    Depuis SecureGen 1.5+, la release officielle (versioning + tag + changelog + publication)
+    est entièrement automatisée via GitHub Actions.
+
+    Ce script sert uniquement à :
+    - préparer un build complet local
+    - regénérer la documentation
+    - valider le module
+    - effectuer un bump local OPTIONNEL (rarement nécessaire)
+    - tester la publication manuelle si besoin
+
+.NOTES
+    Auteur  : SecureGen Project
+    Version : 3.0
 #>
 
-Set-Location (Split-Path $PSScriptRoot -Parent)
-
+[CmdletBinding()]
 param(
     [switch]$Major,
     [switch]$Minor,
@@ -22,42 +29,58 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "🚀 Pipeline complet de release — SecureGen" -ForegroundColor Cyan
-Write-Host ""
+Write-Host "🚀 Pipeline local de préparation de release — SecureGen" -ForegroundColor Cyan
+Write-Host "──────────────────────────────────────────────`n"
 
 # ---------------------------------------------------------------------------
-# 1. Versioning automatique
+# 1. Versioning local (optionnel)
 # ---------------------------------------------------------------------------
 
-Write-Host "🔢 Étape 1 : Versioning automatique" -ForegroundColor Yellow
+if ($Major -or $Minor -or $Patch) {
 
-$VersioningArgs = @()
-if ($Major) { $VersioningArgs += "-Major" }
-elseif ($Minor) { $VersioningArgs += "-Minor" }
-else { $VersioningArgs += "-Patch" }
+    Write-Host "🔢 Étape 1 : Versioning local (optionnel)" -ForegroundColor Yellow
 
-.\Versioning-SecureGen.ps1 @VersioningArgs
+    $releaseArgs = @()
 
-Write-Host "✔ Versioning terminé" -ForegroundColor Green
-Write-Host ""
+    if ($Major) {
+    $releaseArgs += "--release-as major"
+    }
+    elseif ($Minor) {
+    $releaseArgs += "--release-as minor"
+    }
+    else {
+    $releaseArgs += "--release-as patch"
+    }
+
+    Write-Host "➡️ Exécution de standard-version local..." -ForegroundColor Cyan
+
+    npm exec standard-version -- $releaseArgs
+
+    Write-Host "✔ Versioning local terminé" -ForegroundColor Green
+    Write-Host ""
+}
+else {
+    Write-Host "⏭ Versioning ignoré (aucun paramètre -Major/-Minor/-Patch)" -ForegroundColor DarkYellow
+}
 
 # ---------------------------------------------------------------------------
 # 2. Build complet
 # ---------------------------------------------------------------------------
 
-Write-Host "🛠️ Étape 2 : Build du module" -ForegroundColor Yellow
+Write-Host "🛠️ Étape 2 : Build complet du module" -ForegroundColor Yellow
 
-.\build.ps1
+pwsh ./scripts/build.ps1
 
 Write-Host "✔ Build terminé" -ForegroundColor Green
 Write-Host ""
 
 # ---------------------------------------------------------------------------
-# 3. Publication PSGallery (optionnelle)
+# 3. Publication manuelle (optionnelle)
 # ---------------------------------------------------------------------------
 
 if ($Publish) {
-    Write-Host "📦 Étape 3 : Publication PSGallery" -ForegroundColor Yellow
+
+    Write-Host "📦 Étape 3 : Publication manuelle PSGallery" -ForegroundColor Yellow
 
     if (-not $env:PSGALLERY_KEY) {
         Write-Error "❌ La variable d'environnement PSGALLERY_KEY n'est pas définie."
@@ -66,18 +89,19 @@ if ($Publish) {
         exit 1
     }
 
-    .\Publish-SecureGen.ps1
+    pwsh ./scripts/Publish-SecureGen.ps1
 
-    Write-Host "✔ Publication terminée" -ForegroundColor Green
+    Write-Host "✔ Publication manuelle terminée" -ForegroundColor Green
     Write-Host ""
 }
 else {
-    Write-Host "⚠️ Publication PSGallery ignorée (utilisez -Publish pour activer)" -ForegroundColor DarkYellow
+    Write-Host "⏭ Publication manuelle ignorée (utilisez -Publish pour activer)" -ForegroundColor DarkYellow
 }
 
 # ---------------------------------------------------------------------------
 # 4. Fin
 # ---------------------------------------------------------------------------
 
-Write-Host "🎉 Release complète terminée !" -ForegroundColor Cyan
+Write-Host "🎉 Pipeline local terminé !" -ForegroundColor Cyan
 Write-Host "Votre module SecureGen est prêt."
+Write-Host "──────────────────────────────────────────────`n"
