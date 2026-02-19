@@ -106,6 +106,8 @@
 - [📘 À propos](#-à-propos)
 - [⚡ Quick Start](#-quick-start)
 - [✨ Fonctionnalités clés](#-fonctionnalités-clés)
+- [🧩 Modes d’exécution](#-modes-dexécution)
+- [🔤 Caractères spéciaux en PowerShell](#-caractères-spéciaux-en-powershell)
 - [🚀 Installation](#-installation)
 - [🧩 Fonctions incluses](#-fonctions-incluses)
 - [📝 Exemples](#-exemples)
@@ -169,17 +171,61 @@ Get-PKIPass
 
 ---
 
+# 🧩 Modes d’exécution
+
+SecureGen propose **4 modes d’exécution unifiés** pour :
+
+- `Get-PassWord`
+- `Get-PassPhrase`
+- `Get-PKIPass`
+
+| Mode | Affichage | Clipboard | Retour pipeline | Usage |
+|------|-----------|-----------|-----------------|-------|
+| **Default** | UX complète | oui | rien | interactif |
+| **Quiet** | secret seul | non | secret | minimaliste |
+| **Raw** | rien | non | secret | pipelines / API |
+| **Silent** | rien | non | secret | scripts / CI / PKI |
+
+### Exemples
+
+```powershell
+Get-PassWord -Quiet
+Get-PassPhrase -Raw
+Get-PKIPass -Silent -AsPlainText
+```
+
+---
+
+# 🔤 Caractères spéciaux en PowerShell
+
+PowerShell interprète certains caractères comme des opérateurs :
+
+- `/` → chemin  
+- `*` → wildcard  
+- `-` → début de paramètre  
+- `+` → opérateur  
+- `&` → invocation  
+- `_` → nom de commande  
+
+### ✔ Solution : toujours utiliser des guillemets
+
+```powershell
+Get-PassWord -SpecialChars "/*-+&_"
+```
+
+### ❌ Mauvais
+
+```powershell
+Get-PassWord -SpecialChars /*-+&_
+```
+
+---
+
 # 🚀 Installation
 
 ```powershell
 Install-Module SecureGen -Scope CurrentUser
 Update-Module SecureGen
-```
-
-Pour les développeurs :
-
-```powershell
-pwsh ./scripts/Install-SecureGen.ps1
 ```
 
 ---
@@ -208,24 +254,36 @@ Alias :
 
 # 📝 Exemples
 
+# 📝 Exemples
+
 ### Mot de passe
 
 ```powershell
 Get-PassWord
-Get-PassWord -UseSpecial:$false
+Get-PassWord -Length 32 -Quiet
+Get-PassWord -SpecialChars "/*-+&_"
 ```
 
 ### Passphrase
 
 ```powershell
 Get-PassPhrase -Words 6 -Letters 10
+Get-PassPhrase -Words 6 -Letters 10 -Separator "*"
 ```
 
 ### PKIPass
 
 ```powershell
-Get-PKIPass -Type Passphrase -Words 8 -Letters 10
-Get-PKIPass -AsSecureString
+# SecureString (par défaut)
+Get-PKIPass -Password -Length 32
+
+# Texte clair
+Get-PKIPass -Passphrase -Words 4 -Letters 8 -AsPlainText
+
+# Modes avancés
+Get-PKIPass -Raw
+Get-PKIPass -Quiet
+Get-PKIPass -Silent
 ```
 
 ---
@@ -238,10 +296,6 @@ SecureGen/
 └── Legacy.PS5.ps1
 ```
 
-Documentation complète :  
-👉 `docs/architecture.md`  
-👉 `docs/structure.md`
-
 ---
 
 # ⚙️ Versioning & Releases
@@ -250,10 +304,6 @@ Documentation complète :
 - **standard-version** (automatisé dans GitHub Actions)
 - **tags Git automatiques**
 - **publication PSGallery automatique**
-
-Documentation :  
-👉 `docs/release-process.md`  
-👉 `docs/versioning.md`
 
 ---
 
@@ -269,11 +319,11 @@ Documentation :
 # 🖼️ Screenshots
 
 <p align="center">
-  <img src="assets/screenshots/password-demo.gif" width="600"/>
+  <img src="assets/screenshots/password-demo.png" width="600"/>
 </p>
 
 <p align="center">
-  <img src="assets/screenshots/passphrase-demo.gif" width="600"/>
+  <img src="assets/screenshots/passphrase-demo.png" width="600"/>
 </p>
 
 ---

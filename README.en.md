@@ -111,6 +111,8 @@
 - [📘 About](#-about)
 - [⚡ Quick Start](#-quick-start)
 - [✨ Key Features](#-key-features)
+- [🧩 Execution Modes](#-execution-modes)
+- [🔤 Special Characters in PowerShell](#-special-characters-in-powershell)
 - [🚀 Installation](#-installation)
 - [🧩 Included Functions](#-included-functions)
 - [📝 Usage Examples](#-usage-examples)
@@ -136,7 +138,7 @@
 - PKI‑grade secrets (with optional SecureString)  
 - cryptographically safe random indices  
 
-It supports:
+Compatible with:
 
 - **Windows PowerShell 5.1**  
 - **PowerShell 7+** (Windows, Linux, macOS)
@@ -145,12 +147,6 @@ SecureGen automatically loads:
 
 - an optimized **PS7 implementation** (`Core.PS7.ps1`)  
 - a secure **PS5 fallback** (`Legacy.PS5.ps1`)
-
-It also includes:
-
-- a cross‑platform clipboard system  
-- a discreet beep utility  
-- ergonomic aliases (`sgw`, `sgp`, `sgpki`)
 
 ---
 
@@ -180,17 +176,57 @@ Get-PKIPass
 
 ---
 
+# 🧩 Execution Modes
+
+All SecureGen generators support **4 unified execution modes**:
+
+| Mode | Display | Clipboard | Pipeline Output | Usage |
+|------|---------|-----------|-----------------|-------|
+| **Default** | Full UX | yes | none | interactive |
+| **Quiet** | secret only | no | secret | minimal |
+| **Raw** | nothing | no | secret | pipelines / APIs |
+| **Silent** | nothing | no | secret | scripts / CI / PKI |
+
+### Examples
+
+```powershell
+Get-PassWord -Quiet
+Get-PassPhrase -Raw
+Get-PKIPass -Silent -AsPlainText
+```
+
+---
+
+# 🔤 Special Characters in PowerShell
+
+PowerShell interprets some characters as operators:
+
+- `/` → path  
+- `*` → wildcard  
+- `-` → parameter  
+- `+` → operator  
+- `&` → invocation  
+- `_` → command name  
+
+### ✔ Always wrap special characters in quotes
+
+```powershell
+Get-PassWord -SpecialChars "/*-+&_"
+```
+
+### ❌ Incorrect
+
+```powershell
+Get-PassWord -SpecialChars /*-+&_
+```
+
+---
+
 # 🚀 Installation
 
 ```powershell
 Install-Module SecureGen -Scope CurrentUser
 Update-Module SecureGen
-```
-
-For developers:
-
-```powershell
-pwsh ./scripts/Install-SecureGen.ps1
 ```
 
 ---
@@ -223,20 +259,30 @@ Aliases:
 
 ```powershell
 Get-PassWord
-Get-PassWord -UseSpecial:$false
+Get-PassWord -Length 32 -Quiet
+Get-PassWord -SpecialChars "/*-+&_"
 ```
 
 ### Passphrases
 
 ```powershell
 Get-PassPhrase -Words 6 -Letters 10
+Get-PassPhrase -Words 6 -Letters 10 -Separator "*"
 ```
 
 ### PKI Secrets
 
 ```powershell
-Get-PKIPass -Type Passphrase -Words 8 -Letters 10
-Get-PKIPass -AsSecureString
+# SecureString (default)
+Get-PKIPass -Password -Length 32
+
+# Plaintext
+Get-PKIPass -Passphrase -Words 4 -Letters 8 -AsPlainText
+
+# Advanced modes
+Get-PKIPass -Raw
+Get-PKIPass -Quiet
+Get-PKIPass -Silent
 ```
 
 ---
@@ -249,17 +295,6 @@ SecureGen/
 └── Legacy.PS5.ps1
 ```
 
-The loader `SecureGen.psm1`:
-
-- detects PS5/PS7  
-- loads the correct implementation  
-- exposes cmdlets  
-- manages clipboard, beep, SecureString helpers  
-
-Full technical documentation:  
-👉 `docs/architecture.md`  
-👉 `docs/structure.md`
-
 ---
 
 # ⚙️ Versioning & Releases
@@ -267,13 +302,9 @@ Full technical documentation:
 SecureGen uses:
 
 - **Conventional Commits**
-- **standard-version** (automated in GitHub Actions)
+- **standard-version** (automated)
 - **automatic Git tags**
 - **automatic PSGallery publishing**
-
-Full pipeline documentation:  
-👉 `docs/release-process.md`  
-👉 `docs/versioning.md`
 
 ---
 
@@ -289,11 +320,11 @@ Full pipeline documentation:
 # 🖼️ Screenshots
 
 <p align="center">
-  <img src="assets/screenshots/password-demo.gif" width="600"/>
+  <img src="assets/screenshots/password-demo.png" width="600"/>
 </p>
 
 <p align="center">
-  <img src="assets/screenshots/passphrase-demo.gif" width="600"/>
+  <img src="assets/screenshots/passphrase-demo.png" width="600"/>
 </p>
 
 ---
