@@ -5,35 +5,55 @@ function Internal-GeneratePKIPass {
         [ValidateSet('Password','Passphrase')]
         [string]$Type,
 
-        [Parameter(Mandatory)]
-        [int]$Length,
+        # Password mode
+        [int]$Length = 20,
+        [string]$SpecialChars = '!@#$%^&*()_+-=[]{}<>/\|;~',
+        [bool]$UseSpecial = $true,
+        [switch]$RequireAllTypes,
 
-        [Parameter(Mandatory)]
-        [int]$Words,
+        # Passphrase mode
+        [int]$Words = 7,
+        [int]$Letters = 6,
+        [string]$Separator = '-',
+        [switch]$Uppercase,
+        [switch]$Digits,
 
-        [Parameter(Mandatory)]
-        [int]$Letters,
-
+        # Options
+        [switch]$AsPlainText,
+        [switch]$Silent,
         [switch]$NoClipboard,
-        [switch]$NoClear,
-        [switch]$Silent
+        [switch]$NoClear
     )
 
+    # --- 1) Génération du secret ---
     if ($Type -eq 'Password') {
-        $secret = Get-PassWord `
+
+        $secret = Internal-GeneratePassword `
             -Length $Length `
-            -UseSpecial `
+            -SpecialChars $SpecialChars `
+            -UseSpecial:$UseSpecial `
+            -RequireAllTypes:$RequireAllTypes `
+            -Silent:$Silent `
             -NoClipboard:$NoClipboard `
-            -NoClear:$NoClear `
-            -Silent:$Silent
+            -NoClear:$NoClear
     }
     else {
-        $secret = Get-PassPhrase `
+
+        $secret = Internal-GeneratePassPhrase `
             -Words $Words `
             -Letters $Letters `
+            -Separator $Separator `
+            -Uppercase:$Uppercase `
+            -Digits:$Digits `
+            -Silent:$Silent `
             -NoClipboard:$NoClipboard `
-            -NoClear:$NoClear `
-            -Silent:$Silent
+            -NoClear:$NoClear
+    }
+
+    # --- 2) Conversion en SecureString si demandé ---
+    if (-not $AsPlainText) {
+    $secret = Internal-GeneratePKIPass @params -Silent -NoClipboard -NoClear
+    return ($secret | ConvertTo-SecureString -AsPlainText -Force)
     }
 
     return $secret

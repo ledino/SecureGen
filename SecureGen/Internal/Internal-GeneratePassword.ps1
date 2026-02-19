@@ -9,68 +9,76 @@ function Internal-GeneratePassword {
 
         [bool]$UseSpecial = $true,
         [switch]$RequireAllTypes,
+
         [switch]$NoClipboard,
         [switch]$NoClear,
         [switch]$Silent
     )
 
-    # --- Validation ---
+    # --- 1) Validation de la longueur ---
     Private-ValidateLength -Length $Length -Min 16 -Max 256
 
-    # --- Définition des catégories ---
+    # --- 2) Validation des caractères spéciaux (si utilisés) ---
+    if ($UseSpecial) {
+        Private-ValidateCharset -Charset $SpecialChars -Separator '-'
+    }
+
+    # --- 3) Construction du charset final ---
     $Lower  = 'abcdefghijklmnopqrstuvwxyz'
     $Upper  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     $Digits = '0123456789'
 
-    # ⚠️ SpecialChars doit être une liste brute, pas une regex
-    # Exemple recommandé : '!@#$%^&*()_+-=[]{}<>/\|;~'
     $Charset = $Lower + $Upper + $Digits
+
     if ($UseSpecial) {
         $Charset += $SpecialChars
     }
 
-    # --- Génération du mot de passe ---
+    # --- 4) Génération du mot de passe ---
     if (-not $RequireAllTypes) {
+
+        # Génération simple
         $password = Internal-RandomString -Length $Length -Charset $Charset
     }
     else {
+
+        # Génération stricte : toutes les classes doivent apparaître
         do {
             $password = Internal-RandomString -Length $Length -Charset $Charset
 
             $hasLower   = $password -match '[a-z]'
             $hasUpper   = $password -match '[A-Z]'
             $hasDigit   = $password -match '\d'
-            $hasSpecial = $password -match "[$SpecialChars]"
+            $hasSpecial = $UseSpecial ? ($password -match "[$SpecialChars]") : $true
 
-            # Si UseSpecial = $false → on n’exige PAS de caractère spécial
-            $requireSpecial = $UseSpecial ? $hasSpecial : $true
-
-        } while (-not ($hasLower -and $hasUpper -and $hasDigit -and $requireSpecial))
+        } while (-not ($hasLower -and $hasUpper -and $hasDigit -and $hasSpecial))
     }
 
-    # --- Calcul entropie ---
+    # --- 5) Calcul entropie ---
     $entropy = Internal-ComputeEntropy `
         -SymbolCount $Length `
         -CharsetSize $Charset.Length
 
-    # --- Source d'aléa ---
+    # --- 6) Source d'aléa ---
     $alea = Internal-GetAleaSource
 
-    # --- Affichage factorisé ---
+    # --- 7) Affichage factorisé ---
     Internal-DisplaySecret `
         -Secret $password `
         -Entropy $entropy `
         -AleaSource $alea `
+        -Type 'Password' `
         -NoClipboard:$NoClipboard `
         -NoClear:$NoClear `
         -Silent:$Silent
 
-    # --- Gestion du cycle du presse-papier ---
+    # --- 8) Gestion du cycle du presse-papier ---
     Internal-HandleClipboardLifecycle `
         -Secret $password `
         -NoClipboard:$NoClipboard `
         -NoClear:$NoClear `
         -Silent:$Silent
 
-    return $password
+    if ($Silent) { return $password }
+    return
 }

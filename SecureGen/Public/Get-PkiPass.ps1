@@ -27,19 +27,25 @@ function Get-PKIPass {
         # Options
         [switch]$AsPlainText,
         [switch]$Silent,
+        [switch]$Quiet,
+        [switch]$Raw,
         [switch]$NoClipboard,
         [switch]$NoClear
     )
 
+    # --- Si : Raw / Quiet / Silent => forcent le retour en texte clair ---
+    $forcePlainText = $Raw -or $Quiet -or $Silent
+
+    # --- Construction dynamique des paramètres ---
+    $params = @{
+        Silent      = $Silent
+        Quiet       = $Quiet
+        Raw         = $Raw
+        NoClipboard = $NoClipboard
+        NoClear     = $NoClear
+    }
+
     if ($Passphrase) {
-
-        # On construit dynamiquement les paramètres
-        $params = @{
-            Silent      = $Silent
-            NoClipboard = $NoClipboard
-            NoClear     = $NoClear
-        }
-
         if ($Words)     { $params.Words     = $Words }
         if ($Letters)   { $params.Letters   = $Letters }
         if ($Separator) { $params.Separator = $Separator }
@@ -48,19 +54,13 @@ function Get-PKIPass {
         $secret = Get-PassPhrase @params
     }
     else {
-
-        $params = @{
-            Silent      = $Silent
-            NoClipboard = $NoClipboard
-            NoClear     = $NoClear
-        }
-
         if ($Length) { $params.Length = $Length }
 
         $secret = Get-PassWord @params
     }
 
-    if (-not $AsPlainText) {
+    # --- Gestion du retour SecureString / PlainText ---
+    if (-not $AsPlainText -and -not $forcePlainText) {
         return ($secret | ConvertTo-SecureString -AsPlainText -Force)
     }
 

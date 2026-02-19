@@ -33,38 +33,3 @@ function Internal-RandomString {
 
     return $chars.ToString()
 }
-
-function Internal-RandomPassPhrase {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [int]$Words,
-
-        [Parameter(Mandatory)]
-        [int]$Letters,
-
-        [Parameter(Mandatory)]
-        [string]$Charset,
-
-        [Parameter(Mandatory)]
-        [string]$Separator
-    )
-
-    # Validation unique (pas de double validation)
-    $valid = Private-ValidatePassphrase -Words $Words -Letters $Letters
-
-    # Fallback robuste si validation échoue
-    if (-not $valid) {
-        $Words   = 6
-        $Letters = 6
-    }
-
-    # Génération
-    $bloc = @()
-    for ($i = 0; $i -lt $Words; $i++) {
-        $word = Internal-RandomString -Length $Letters -Charset $Charset
-        $bloc += $word
-    }
-
-    return ($bloc -join $Separator)
-}
