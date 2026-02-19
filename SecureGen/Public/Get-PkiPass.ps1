@@ -1,5 +1,5 @@
 function Get-PKIPass {
-    <#
+<#
 .SYNOPSIS
 Génère un secret robuste destiné aux usages PKI, certificats, clés privées ou comptes de service.
 

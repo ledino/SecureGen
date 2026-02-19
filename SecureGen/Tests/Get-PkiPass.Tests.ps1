@@ -1,61 +1,119 @@
-# Tests/Get-PkiPass.Tests.ps1
+Describe "Get-PKIPass" {
 
-Import-Module "$PSScriptRoot/../SecureGen.psd1" -Force
+    BeforeAll {
+        Import-Module "$PSScriptRoot/../SecureGen.psd1" -Force
 
-Describe "Get-PkiPass" {
+        # Mock clipboard to avoid platform issues
+        Mock -CommandName Set-ClipboardSafe { }
+        Mock -CommandName Clear-ClipboardSafe { }
+    }
 
-    Context "Mode Password" {
-        It "génère un SecureString par défaut" {
-            $secret = Get-PkiPass -Type Password -Silent -NoClipboard
-            $secret | Should -BeOfType System.Security.SecureString
+    Context "Defaults" {
+
+        It "returns a 32-char password by default" {
+            $result = Get-PKIPass -NoClipboard
+            $result.Length | Should -Be 32
         }
 
-        It "génère un mot de passe de longueur personnalisée en mode texte" {
-            $secret = Get-PkiPass -Type Password -Length 40 -AsPlainText -Silent -NoClipboard
-            $secret.Length | Should -Be 40
+        It "returns a string by default (not SecureString)" {
+            $result = Get-PKIPass -NoClipboard
+            $result | Should -BeOfType "System.String"
         }
     }
 
-    Context "Mode Passphrase" {
-        It "génère une passphrase sous forme de SecureString par défaut" {
-            $secret = Get-PkiPass -Type Passphrase -Silent -NoClipboard
-            $secret | Should -BeOfType System.Security.SecureString
+    Context "Password mode" {
+
+        It "forwards -Length to Get-PassWord" {
+            Mock -CommandName Get-PassWord { "X" * 48 }
+
+            $result = Get-PKIPass -Password -Length 48 -NoClipboard
+
+            Assert-MockCalled Get-PassWord -Times 1 -ParameterFilter {
+                $Length -eq 48
+            }
+
+            $result.Length | Should -Be 48
         }
 
-        It "génère une passphrase en clair avec -AsPlainText" {
-            $secret = Get-PkiPass -Type Passphrase -AsPlainText -Silent -NoClipboard
-            $secret | Should -BeOfType System.String
-        }
+        It "uses default length 32 when none is provided" {
+            Mock -CommandName Get-PassWord { "Y" * 32 }
 
-        It "génère une passphrase avec le bon nombre de mots" {
-            $secret = Get-PkiPass -Type Passphrase -Words 8 -AsPlainText -Silent -NoClipboard
-            ($secret -split '-') | Should -HaveCount 8
-        }
-    }
+            $result = Get-PKIPass -Password -NoClipboard
 
-    Context "Délégation correcte" {
-        It "délègue à Get-PassWord en mode Password" {
-            $secret = Get-PkiPass -Type Password -AsPlainText -Silent -NoClipboard
-            # Vérification structurelle : un mot de passe n'a pas de séparateur
-            $secret | Should -Not -Match '-'
-        }
-
-        It "délègue à Get-PassPhrase en mode Passphrase" {
-            $secret = Get-PkiPass -Type Passphrase -AsPlainText -Silent -NoClipboard
-            # Vérification structurelle : une passphrase contient des séparateurs
-            $secret | Should -Match '-'
+            Assert-MockCalled Get-PassWord -Times 1 -ParameterFilter {
+                $Length -eq 32
+            }
         }
     }
 
-    Context "Options d'affichage" {
-        It "ne copie pas dans le presse-papier avec -NoClipboard" {
-            $secret = Get-PkiPass -NoClipboard -Silent
-            $secret | Should -Not -BeNullOrEmpty
+    Context "Passphrase mode" {
+
+        It "forwards Words and Letters to Get-PassPhrase" {
+            Mock -CommandName Get-PassPhrase { "aaa-bbb-ccc" }
+
+            $result = Get-PKIPass -Passphrase -Words 3 -Letters 3 -NoClipboard
+
+            Assert-MockCalled Get-PassPhrase -Times 1 -ParameterFilter {
+                $Words -eq 3 -and $Letters -eq 3
+            }
+
+            $result | Should -Be "aaa-bbb-ccc"
         }
 
-        It "fonctionne en mode Silent" {
-            $secret = Get-PkiPass -Silent -NoClipboard
-            $secret | Should -Not -BeNullOrEmpty
+        It "uses default Words=7 and Letters=6 when none are provided" {
+            Mock -CommandName Get-PassPhrase { "x y z" }
+
+            $result = Get-PKIPass -Passphrase -NoClipboard
+
+            Assert-MockCalled Get-PassPhrase -Times 1 -ParameterFilter {
+                $Words -eq 7 -and $Letters -eq 6
+            }
+        }
+
+        It "supports positional parameters (Type Words Letters)" {
+            Mock -CommandName Get-PassPhrase { "x-y-z" }
+
+            $result = Get-PKIPass Passphrase 3 1 -NoClipboard
+
+            Assert-MockCalled Get-PassPhrase -Times 1 -ParameterFilter {
+                $Words -eq 3 -and $Letters -eq 1
+            }
+        }
+    }
+
+    Context "SecureString output" {
+
+        It "returns a SecureString when -AsSecureString is used" {
+            $result = Get-PKIPass -AsSecureString -NoClipboard
+            $result | Should -BeOfType "System.Security.SecureString"
+        }
+    }
+
+    Context "Clipboard behavior" {
+
+        It "does not call clipboard when -NoClipboard is used" {
+            Get-PKIPass -NoClipboard
+
+            Assert-MockCalled Set-ClipboardSafe -Times 0
+            Assert-MockCalled Clear-ClipboardSafe -Times 0
+        }
+    }
+
+    Context "Pipeline behavior" {
+
+        It "Quiet returns only the secret" {
+            $result = Get-PKIPass -Quiet -NoClipboard
+            $result | Should -BeOfType "System.String"
+        }
+
+        It "Silent returns only the secret" {
+            $result = Get-PKIPass -Silent -NoClipboard
+            $result | Should -BeOfType "System.String"
+        }
+
+        It "Raw returns only the secret" {
+            $result = Get-PKIPass -Raw -NoClipboard
+            $result | Should -BeOfType "System.String"
         }
     }
 }
