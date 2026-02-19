@@ -48,6 +48,7 @@
   <!-- Dev & Quality Badges -->
   <a style="text-decoration: none;">
     <img src="https://img.shields.io/badge/PSScriptAnalyzer-Clean-4CAF50?style=flat-square&logo=powershell" />
+    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/ledino/SecureGen/main/.coverage/coverage.json&style=flat-square" />
     <img src="https://img.shields.io/badge/Docs-PlatyPS%20Auto--Generated-4FC3F7?style=flat-square&logo=readthedocs" />
     <img src="https://img.shields.io/badge/TOC-Auto--Generated-00BCD4?style=flat-square&logo=markdown" />
     <img src="https://img.shields.io/badge/Developer%20Tools-Ready-0A2A4F?style=flat-square&logo=github" />
@@ -76,25 +77,31 @@
 
 ---
 
-<p align="center">
+<!-- SECTION : Badges premium -->
+<p align="center"> 
 
   <!-- Qualité & Maintenance -->
   <img src="https://img.shields.io/badge/Maintained-Yes-0A2A4F?style=for-the-badge&logo=github" alt="Maintained"/>
   <img src="https://img.shields.io/badge/PRs-Welcome-0A2A4F?style=for-the-badge&logo=github" alt="PRs Welcome"/>
   <img src="https://img.shields.io/badge/Contributions-Welcome-4CAF50?style=for-the-badge&logo=github" alt="Contributions Welcome"/>
 
-  <!-- Technologies -->
+  <!-- Technologies & Docs -->
   <img src="https://img.shields.io/badge/Made%20with-PowerShell-00BCD4?style=for-the-badge&logo=powershell&logoColor=white" alt="Made with PowerShell"/>
   <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-00BCD4?style=for-the-badge&logo=windows-terminal&logoColor=white" alt="Platforms"/>
+  <img src="https://img.shields.io/badge/Docs-Complete-4FC3F7?style=for-the-badge&logo=readthedocs" alt="Docs"/>
 
   <!-- Sécurité & Qualité -->
   <img src="https://img.shields.io/badge/Security-Crypto%20Safe-00BCD4?style=for-the-badge&logo=shield" alt="Security"/>
-  <img src="https://img.shields.io/badge/Static%20Analysis-PSScriptAnalyzer-4FC3F7?style=for-the-badge&logo=codefactor" alt="PSScriptAnalyzer"/>
-  <img src="https://img.shields.io/badge/Tests-Pester-4FC3F7?style=for-the-badge&logo=testcafe" alt="Pester Tests"/>
 
-  <!-- Licence & Docs -->
+  <!-- Tests -->
+  <img src="https://img.shields.io/badge/Tests-Pester-4FC3F7?style=for-the-badge&logo=testcafe" alt="Pester Tests"/>
+  <img src="https://img.shields.io/badge/Status-Tests%20Passing-4CAF50?style=for-the-badge&logo=checkmarx" alt="Tests Passing"/>
+  <img src="https://img.shields.io/badge/CI-Pester-2196F3?style=for-the-badge&logo=githubactions" alt="CI Pester"/>
+
+  <!-- Licence & Analyse -->
   <img src="https://img.shields.io/badge/License-MIT-4FC3F7?style=for-the-badge&logo=open-source-initiative&logoColor=white" alt="MIT License"/>
-  <img src="https://img.shields.io/badge/Docs-Complete-4FC3F7?style=for-the-badge&logo=readthedocs" alt="Docs"/>
+  <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/ledino/SecureGen/main/.coverage/coverage.json&style=for-the-badge" alt="Coverage"/>
+  <img src="https://img.shields.io/badge/Static%20Analysis-PSScriptAnalyzer-4FC3F7?style=for-the-badge&logo=codefactor" alt="PSScriptAnalyzer"/>
 
 </p>
 

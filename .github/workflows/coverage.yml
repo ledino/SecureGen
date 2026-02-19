@@ -1,0 +1,43 @@
+name: Coverage
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  pester-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install PowerShell
+        uses: PowerShell/PowerShell-For-GitHub-Actions@v2
+
+      - name: Install Pester
+        run: pwsh -c "Install-Module Pester -Force -Scope CurrentUser"
+
+      - name: Run Pester with Coverage
+        run: |
+          pwsh -c "
+            Invoke-Pester -Path './tests' -CodeCoverage './SecureGen' -OutputFormat NUnitXml -OutputFile './.coverage/coverage.xml'
+          "
+
+      - name: Convert Coverage to JSON for Badge
+        run: |
+          pwsh -c "
+            \$xml = [xml](Get-Content './.coverage/coverage.xml');
+            \$total = (\$xml.'test-results'.'test-suite'.'results'.'test-suite'.'results'.'test-case').Count;
+            \$passed = (\$xml.'test-results'.'test-suite'.'results'.'test-suite'.'results'.'test-case' | Where-Object { \$_.result -eq 'Success' }).Count;
+            \$coverage = [math]::Round((\$passed / \$total) * 100);
+            \$json = @{ schemaVersion = 1; label = 'coverage'; message = \"\$coverage%\"; color = if (\$coverage -ge 90) { 'brightgreen' } elseif (\$coverage -ge 75) { 'yellowgreen' } else { 'orange' } } | ConvertTo-Json;
+            Set-Content -Path './.coverage/coverage.json' -Value \$json
+          "
+
+      - name: Upload Coverage Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: .coverage/

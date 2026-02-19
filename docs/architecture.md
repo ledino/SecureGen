@@ -179,13 +179,22 @@ SecureGen/
 ├── package-lock.json
 ├── .versioningrc.json             # Configuration standard-version
 │
-├── tests/                         # Tests Pester
-│   ├── Get-PKIPass.Tests.ps1
-│   ├── Get-PassWord.Tests.ps1
-│   ├── Get-PassPhrase.Tests.ps1
+├── tests/                         # Test Pester
+│   ├── Clipboard.Tests.ps1
 │   ├── Get-CryptoIndex.Tests.ps1
+│   ├── Get-PKIPass.Tests.ps1
+│   ├── Get-PassPhrase.Tests.ps1
+│   ├── Get-PassWord.Tests.ps1
 │   ├── Invoke-Beep.Tests.ps1
-│   └── Clipboard.Tests.ps1
+│   │
+│   ├── Internal-RandomString.Tests.ps1
+│   ├── Internal-GeneratePassword.Tests.ps1
+│   ├── Internal-GeneratePassPhrase.Tests.ps1
+│   ├── Private-ValidateLength.Tests.ps1
+│   ├── Private-ValidatePassphrase.Tests.ps1
+│   │
+│   ├── Pipeline.Tests.ps1
+│   └── Security.Tests.ps1
 │
 ├── CHANGELOG.md                   # Généré automatiquement
 ├── README.md
