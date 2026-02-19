@@ -17,30 +17,33 @@ function Get-PassWord {
     # Tous les caractères par défaut, sauf si -NoSpecial est présent
     $UseSpecial = -not $NoSpecial
 
+    # 🔥 Mode RAW
     if ($Raw) {
-    return (Internal-GeneratePassword `
-        -Length $Length `
-        -SpecialChars $SpecialChars `
-        -UseSpecial:$UseSpecial `
-        -RequireAllTypes:$RequireAllTypes `
-        -Silent `
-        -NoClipboard `
-        -NoClear)
+        return (Internal-GeneratePassword `
+            -Length $Length `
+            -SpecialChars $SpecialChars `
+            -UseSpecial:$UseSpecial `
+            -RequireAllTypes:$RequireAllTypes `
+            -Silent `
+            -NoClipboard `
+            -NoClear)
     }
 
+    # 🔥 Mode QUIET
     if ($Quiet) {
-    $secret = Internal-GeneratePassword `
-        -Length $Length `
-        -SpecialChars $SpecialChars `
-        -UseSpecial:$UseSpecial `
-        -RequireAllTypes:$RequireAllTypes `
-        -Silent `
-        -NoClipboard `
-        -NoClear
+        $secret = Internal-GeneratePassword `
+            -Length $Length `
+            -SpecialChars $SpecialChars `
+            -UseSpecial:$UseSpecial `
+            -RequireAllTypes:$RequireAllTypes `
+            -Silent `
+            -NoClipboard `
+            -NoClear
 
-    return $secret
+        return $secret
     }
 
+    # 🔥 Mode NORMAL (UX complète)
     return Internal-GeneratePassword `
         -Length $Length `
         -SpecialChars $SpecialChars `

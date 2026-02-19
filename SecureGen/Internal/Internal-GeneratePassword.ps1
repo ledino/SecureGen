@@ -16,9 +16,14 @@ function Internal-GeneratePassword {
     )
 
     # --- 1) Validation de la longueur ---
-    Private-ValidateLength -Length $Length -Min 16 -Max 256
+    $valid = Private-ValidateLength -Length $Length -Min 16 -Max 256
 
-    # --- 2) Validation des caractères spéciaux (si utilisés) ---
+    if (-not $valid) {
+        if ($Length -lt 16) { $Length = 16 }
+        if ($Length -gt 256) { $Length = 256 }
+    }
+
+    # --- 2) Validation des caractères spéciaux ---
     if ($UseSpecial) {
         Private-ValidateCharset -Charset $SpecialChars -Separator '-'
     }
@@ -36,13 +41,9 @@ function Internal-GeneratePassword {
 
     # --- 4) Génération du mot de passe ---
     if (-not $RequireAllTypes) {
-
-        # Génération simple
         $password = Internal-RandomString -Length $Length -Charset $Charset
     }
     else {
-
-        # Génération stricte : toutes les classes doivent apparaître
         do {
             $password = Internal-RandomString -Length $Length -Charset $Charset
 
@@ -62,7 +63,7 @@ function Internal-GeneratePassword {
     # --- 6) Source d'aléa ---
     $alea = Internal-GetAleaSource
 
-    # --- 7) Affichage factorisé ---
+    # --- 7) Affichage ---
     Internal-DisplaySecret `
         -Secret $password `
         -Entropy $entropy `
@@ -72,7 +73,7 @@ function Internal-GeneratePassword {
         -NoClear:$NoClear `
         -Silent:$Silent
 
-    # --- 8) Gestion du cycle du presse-papier ---
+    # --- 8) Clipboard ---
     Internal-HandleClipboardLifecycle `
         -Secret $password `
         -NoClipboard:$NoClipboard `
