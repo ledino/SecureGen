@@ -1,83 +1,75 @@
 function Internal-GeneratePassPhrase {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
         [int]$Words,
-
-        [Parameter(Mandatory)]
         [int]$Letters,
-
-        [Parameter(Mandatory)]
         [string]$Separator,
 
-        # Options d’enrichissement du charset
         [switch]$Uppercase,
         [switch]$Digits,
 
-        # Options d’affichage / clipboard
         [switch]$NoClipboard,
         [switch]$NoClear,
         [switch]$Silent
     )
 
-    # --- 1) Validation ANSSI/CNIL ---
-    $valid = Private-ValidatePassphrase -Words $Words -Letters $Letters
+    # --- 1) Validation ---
+    $valid = Private-ValidatePassphrase `
+        -Words $Words `
+        -Letters $Letters `
+        -Separator $Separator
 
-    # --- 2) Fallback robuste si validation échoue ---
     if (-not $valid) {
         $Words     = 7
         $Letters   = 6
         $Separator = '-'
-        $Uppercase = $false
-        $Digits    = $false
     }
 
-    # --- 3) Construction du charset final ---
+    # --- 2) Charset ---
     $charset = 'abcdefghijklmnopqrstuvwxyz'
+    if ($Uppercase) { $charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' }
+    if ($Digits)    { $charset += '0123456789' }
 
-    if ($Uppercase) {
-        $charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    }
-
-    if ($Digits) {
-        $charset += '0123456789'
-    }
-
-    # --- 4) Génération de la passphrase ---
+    # --- 3) Génération ---
     $bloc = @()
     for ($i = 0; $i -lt $Words; $i++) {
-        $word = Internal-RandomString -Length $Letters -Charset $charset
-        $bloc += $word
+        $bloc += (Internal-RandomString -Length $Letters -Charset $charset)
     }
 
     $phrase = ($bloc -join $Separator)
 
-    # --- 5) Calcul entropie ---
-    $symbolCount = $Words * $Letters
+    # --- 4) Entropie ---
     $entropy = Internal-ComputeEntropy `
-        -SymbolCount $symbolCount `
+        -SymbolCount ($Words * $Letters) `
         -CharsetSize $charset.Length
 
-    # --- 6) Source d'aléa ---
+    # --- 5) Source d’aléa ---
     $alea = Internal-GetAleaSource
 
-    # --- 7) Affichage factorisé ---
-    Internal-DisplaySecret `
-        -Secret $phrase `
-        -Entropy $entropy `
-        -AleaSource $alea `
-        -Type 'Passphrase' `
-        -NoClipboard:$NoClipboard `
-        -NoClear:$NoClear `
-        -Silent:$Silent
+    # --- 6) UX (désactivée si Silent) ---
+    if (-not $Silent) {
+        Internal-DisplaySecret `
+            -Secret $phrase `
+            -Entropy $entropy `
+            -AleaSource $alea `
+            -Type 'Passphrase' `
+            -NoClipboard:$NoClipboard `
+            -NoClear:$NoClear `
+            -Silent:$Silent
+    }
+    # --- 7) Clipboard (désactivé si Silent) ---
+    if (-not $Silent) {
+        Internal-HandleClipboardLifecycle `
+            -Secret $phrase `
+            -NoClipboard:$NoClipboard `
+            -NoClear:$NoClear `
+            -Silent:$Silent
+    }
 
-    # --- 8) Gestion du cycle du presse-papier ---
-    Internal-HandleClipboardLifecycle `
-        -Secret $phrase `
-        -NoClipboard:$NoClipboard `
-        -NoClear:$NoClear `
-        -Silent:$Silent
+    # --- 8) Retour pipeline ---
+    if ($Silent) {
+        return $phrase
+    }
 
-    if ($Silent) { return $phrase }
     return
 }

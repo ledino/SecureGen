@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<test-results xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="nunit_schema_2.5.xsd" name="Pester" total="12" errors="0" failures="1" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2026-02-20" time="11:03:39">
+  <environment machine-name="GT1_MEGA" os-version="10.0.26200" clr-version="9.0.10" user="issam" user-domain="GT1_MEGA" platform="Microsoft Windows 11 Professionnel|C:\WINDOWS|\Device\Harddisk0\Partition3" nunit-version="2.5.8.0" cwd="C:\Users\issam\Git\SecureGen" />
+  <culture-info current-culture="fr-FR" current-uiculture="fr-FR" />
+  <test-suite type="TestFixture" name="Pester" executed="True" result="Failure" success="False" time="0.8806" asserts="0" description="Pester">
+    <results>
+      <test-suite type="TestFixture" name="C:\Users\issam\Git\SecureGen\SecureGen\Tests\Clipboard.Tests.ps1" executed="True" result="Failure" success="False" time="0.8806" asserts="0" description="C:\Users\issam\Git\SecureGen\SecureGen\Tests\Clipboard.Tests.ps1">
+        <results>
+          <test-suite type="TestFixture" name="Clipboard functions" executed="True" result="Failure" success="False" time="0.4608" asserts="0" description="Clipboard functions">
+            <results>
+              <test-suite type="TestFixture" name="Clipboard functions.Set-ClipboardSafe" executed="True" result="Success" success="True" time="0.2495" asserts="0" description="Clipboard functions.Set-ClipboardSafe">
+                <results>
+                  <test-case description="Copie texte Windows avec Set-Clipboard" name="Clipboard functions.Set-ClipboardSafe.Copie texte Windows avec Set-Clipboard" time="0.1745" asserts="0" success="True" result="Success" executed="True" />
+                  <test-case description="Ignore erreur Set-Clipboard sans throw" name="Clipboard functions.Set-ClipboardSafe.Ignore erreur Set-Clipboard sans throw" time="0.0181" asserts="0" success="True" result="Success" executed="True" />
+                  <test-case description="Ne retourne rien (pipeline clean)" name="Clipboard functions.Set-ClipboardSafe.Ne retourne rien (pipeline clean)" time="0.0075" asserts="0" success="True" result="Success" executed="True" />
+                  <test-case description="Utilise pbcopy sur macOS" name="Clipboard functions.Set-ClipboardSafe.Utilise pbcopy sur macOS" time="0.0307" asserts="0" success="True" result="Success" executed="True" />
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Clipboard functions.Clear-ClipboardSafe" executed="True" result="Success" success="True" time="0.2764" asserts="0" description="Clipboard functions.Clear-ClipboardSafe">
+                <results>
+                  <test-case description="Vide clipboard Windows" name="Clipboard functions.Clear-ClipboardSafe.Vide clipboard Windows" time="0.0084" asserts="0" success="True" result="Success" executed="True" />
+                  <test-case description="Ignore erreur Clear-Clipboard" name="Clipboard functions.Clear-ClipboardSafe.Ignore erreur Clear-Clipboard" time="0.0072" asserts="0" success="True" result="Success" executed="True" />
+                  <test-case description="Ne pollue pas pipeline" name="Clipboard functions.Clear-ClipboardSafe.Ne pollue pas pipeline" time="0.0023" asserts="0" success="True" result="Success" executed="True" />
+                  <test-case description="Utilise xclip sur Linux" name="Clipboard functions.Clear-ClipboardSafe.Utilise xclip sur Linux" time="0.0052" asserts="0" success="True" result="Success" executed="True" />
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Clipboard functions.Cross-platform resilience" executed="True" result="Failure" success="False" time="0.4199" asserts="0" description="Clipboard functions.Cross-platform resilience">
+                <results>
+                  <test-case description="Résiste sans aucun clipboard tool" name="Clipboard functions.Cross-platform resilience.Résiste sans aucun clipboard tool" time="0.0122" asserts="0" success="True" result="Success" executed="True" />
+                  <test-case description="Verbose logging si pas de tools" name="Clipboard functions.Cross-platform resilience.Verbose logging si pas de tools" time="0.1284" asserts="0" success="False" result="Failure" executed="True">
+                    <failure>
+                      <message>Expected regular expression 'clipboard|tool' to match $null, but it did not match.</message>
+                      <stack-trace>at $output | Should -Match "clipboard|tool", C:\Users\issam\Git\SecureGen\SecureGen\Tests\Clipboard.Tests.ps1:101
+at &lt;ScriptBlock&gt;, C:\Users\issam\Git\SecureGen\SecureGen\Tests\Clipboard.Tests.ps1:101</stack-trace>
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="Clipboard functions.Edge cases" executed="True" result="Success" success="True" time="0.4516" asserts="0" description="Clipboard functions.Edge cases">
+                <results>
+                  <test-case description="Gère chaîne vide" name="Clipboard functions.Edge cases.Gère chaîne vide" time="0.0104" asserts="0" success="True" result="Success" executed="True" />
+                  <test-case description="Gère chaînes très longues (1MB)" name="Clipboard functions.Edge cases.Gère chaînes très longues (1MB)" time="0.0145" asserts="0" success="True" result="Success" executed="True" />
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

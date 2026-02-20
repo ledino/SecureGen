@@ -38,6 +38,13 @@ if (Test-Path $internalPath) {
 }
 
 # ---------------------------------------------------------------------------
+# Alias internes (compatibilité API interne + tests)
+# ---------------------------------------------------------------------------
+
+# Set-Alias -Name Set-ClipboardSafe   -Value Internal-SetClipboardSafe
+# Set-Alias -Name Clear-ClipboardSafe -Value Internal-ClearClipboardSafe
+
+# ---------------------------------------------------------------------------
 # Chargement des fonctions privées (Private)
 # ---------------------------------------------------------------------------
 
@@ -71,7 +78,6 @@ Set-Alias -Name sgpki -Value Get-PKIPass
 # Export automatique des fonctions publiques
 # ---------------------------------------------------------------------------
 
-# Export des fonctions publiques
 $publicFunctions = Get-ChildItem -Path $publicPath -Filter *.ps1 -File |
     ForEach-Object { $_.BaseName }
 

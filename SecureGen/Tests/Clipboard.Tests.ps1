@@ -1,64 +1,116 @@
-Describe "Clipboard functions" {
+# 1) Import du module AVANT la discovery
+BeforeAll {
+    $moduleRoot = Split-Path -Parent $PSScriptRoot
+    $modulePath = Join-Path $moduleRoot "SecureGen.psd1"
 
-    BeforeAll {
-        Import-Module "$PSScriptRoot/../SecureGen.psd1" -Force
-    }
+    Remove-Module SecureGen -ErrorAction SilentlyContinue
+    Import-Module $modulePath -Force -ErrorAction Stop
 
-    Context "Set-ClipboardSafe" {
+    (Get-Module SecureGen).Path | Should -Match 'SecureGen.psm1'
+}
 
-        It "Appelle Set-Clipboard avec la bonne valeur" {
-            Mock -CommandName Set-Clipboard -MockWith { param($v) $script:clip = $v }
+# Write-Host "DEBUG: Internal-SetClipboardSafe loaded from: $((Get-Command Internal-SetClipboardSafe).ScriptBlock.File)"
 
-            Set-ClipboardSafe "test123"
+# 2) InModuleScope englobe TOUT le Describe
+InModuleScope SecureGen {
 
-            $script:clip | Should -Be "test123"
+    Describe "Clipboard functions" -Tag "Unit", "Clipboard" {
+
+        BeforeAll {
+            $script:mockClipboard = $null
+            $script:verboseCalled = $false
         }
 
-        It "Ne jette pas d’erreur même si Set-Clipboard échoue" {
-            Mock -CommandName Set-Clipboard -MockWith { throw "Clipboard error" }
+        Context "Set-ClipboardSafe" {
+            It "Copie texte Windows avec Set-Clipboard" {
+                Mock Set-Clipboard -MockWith { param($Value) $script:mockClipboard = $Value }
+                Set-ClipboardSafe "test123"
+                $script:mockClipboard | Should -Be "test123"
+            }
 
-            { Set-ClipboardSafe "hello" } | Should -NotThrow
+            It "Ignore erreur Set-Clipboard sans throw" {
+                Mock Set-Clipboard -MockWith { throw "Clipboard chou" }
+                { Set-ClipboardSafe "hello" } | Should -Not -Throw
+            }
+
+            It "Ne retourne rien (pipeline clean)" {
+                $result = Set-ClipboardSafe "abc"
+                $result | Should -BeNullOrEmpty
+            }
+
+            It "Utilise pbcopy sur macOS" {
+                Mock Get-Command -MockWith {
+                    param($cmd)
+                    if ($cmd -eq 'pbcopy') { return [PSCustomObject]@{Name='pbcopy'} }
+                    return $null
+                }
+                { Set-ClipboardSafe "mac-test" } | Should -Not -Throw
+            }
         }
 
-        It "Ne pollue pas le pipeline" {
-            $result = Set-ClipboardSafe "abc"
-            $result | Should -BeNullOrEmpty
+        Context "Clear-ClipboardSafe" {
+            It "Vide clipboard Windows" {
+                $script:mockClipboard = "abc123"
+                Mock Set-Clipboard -MockWith { param($Value) $script:mockClipboard = $Value }
+                Clear-ClipboardSafe
+                $script:mockClipboard | Should -BeNullOrEmpty
+            }
+
+            It "Ignore erreur Clear-Clipboard" {
+                Mock Set-Clipboard -MockWith { throw "Clear chou" }
+                { Clear-ClipboardSafe } | Should -Not -Throw
+            }
+
+            It "Ne pollue pas pipeline" {
+                $result = Clear-ClipboardSafe
+                $result | Should -BeNullOrEmpty
+            }
+
+            It "Utilise xclip sur Linux" {
+                Mock Get-Command -MockWith {
+                    param($cmd)
+                    if ($cmd -eq 'xclip') { return [PSCustomObject]@{Name='xclip'} }
+                    return $null
+                }
+                { Clear-ClipboardSafe } | Should -Not -Throw
+            }
         }
-    }
 
-    Context "Clear-ClipboardSafe" {
+        Context "Cross-platform resilience" {
 
-        It "Appelle Clear-Clipboard correctement" {
-            Mock -CommandName Clear-Clipboard -MockWith { $script:clip = "" }
-            Mock -CommandName Set-Clipboard -MockWith { param($v) $script:clip = $v }
+            It "Résiste sans aucun clipboard tool" {
+                Mock Get-Command { return $null }
+                { Set-ClipboardSafe "no-tools" } | Should -Not -Throw
+                { Clear-ClipboardSafe } | Should -Not -Throw
+            }
 
-            Set-ClipboardSafe "abc"
-            Clear-ClipboardSafe
-
-            $script:clip | Should -BeNullOrEmpty
+            It 'Verbose logging si pas de tools' {
+                Mock Get-Command { return $null }
+                $VerbosePreference = 'Continue'
+                
+                # Sur Windows : mock Set-Clipboard pour forcer catch verbose
+                if ($IsWindows) {
+                    Mock Set-Clipboard { throw "Test clipboard fail" }
+                }
+                
+                $verboseOutput = Set-ClipboardSafe 'test' 4>&1
+                $verboseOutput | Should -Match 'clipboard|tool|failure'
+            }
         }
+      
+        Context "Edge cases" {
 
-        It "Ne jette pas d’erreur même si Clear-Clipboard échoue" {
-            Mock -CommandName Clear-Clipboard -MockWith { throw "Clipboard error" }
+            It "Gère chaîne vide" {
+                Mock Set-Clipboard -MockWith { param($Value) $script:mockClipboard = $Value }
+                { Set-ClipboardSafe "" } | Should -Not -Throw
+                $script:mockClipboard | Should -Be ""
+            }
 
-            { Clear-ClipboardSafe } | Should -NotThrow
-        }
-
-        It "Ne pollue pas le pipeline" {
-            $result = Clear-ClipboardSafe
-            $result | Should -BeNullOrEmpty
-        }
-    }
-
-    Context "Cross-platform behavior" {
-
-        It "Ne jette pas d’erreur sur plateformes sans clipboard" {
-            # Simulation d’un environnement sans clipboard
-            Mock -CommandName Set-Clipboard -MockWith { throw "Not supported" }
-            Mock -CommandName Clear-Clipboard -MockWith { throw "Not supported" }
-
-            { Set-ClipboardSafe "x" } | Should -NotThrow
-            { Clear-ClipboardSafe }   | Should -NotThrow
+            It "Gère chaînes très longues (1MB)" {
+                $longText = 'A' * 2000000
+                Mock Set-Clipboard { }
+                { Set-ClipboardSafe $longText } | Should -Not -Throw
+            }
         }
     }
 }

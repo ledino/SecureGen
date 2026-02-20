@@ -1,7 +1,7 @@
 Describe "Pipeline behavior for SecureGen" {
 
     BeforeAll {
-        Import-Module "$PSScriptRoot/../SecureGen.psd1" -Force
+        Import-Module "$PSScriptRoot/../SecureGen.psd1"
 
         # On neutralise le clipboard pour tous les tests pipeline
         Mock -CommandName Set-ClipboardSafe { }

@@ -1,7 +1,7 @@
 Describe "Internal-GeneratePassword" {
 
     BeforeAll {
-        Import-Module "$PSScriptRoot/../SecureGen.psd1" -Force
+        Import-Module "$PSScriptRoot/../SecureGen.psd1"
     }
 
     Context "Basic behavior" {

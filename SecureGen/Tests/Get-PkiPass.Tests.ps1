@@ -1,7 +1,7 @@
 Describe "Get-PKIPass" {
 
     BeforeAll {
-        Import-Module "$PSScriptRoot/../SecureGen.psd1" -Force
+        Import-Module "$PSScriptRoot/../SecureGen.psd1"
 
         # Mock clipboard to avoid platform issues
         Mock -CommandName Set-ClipboardSafe { }

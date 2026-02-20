@@ -1,98 +1,103 @@
-Describe "Get-PassPhrase" {
-
+Describe 'Get-PassPhrase' {
     BeforeAll {
-        Import-Module "$PSScriptRoot/../SecureGen.psd1" -Force
-
-        # Mock clipboard to avoid platform issues
-        Mock -CommandName Set-ClipboardSafe { }
-        Mock -CommandName Clear-ClipboardSafe { }
+        Remove-Module SecureGen -ErrorAction SilentlyContinue
+        Import-Module "$PSScriptRoot\..\SecureGen.psd1" -Force
     }
 
-    Context "Basic behavior" {
-
-        It "Génère une passphrase avec le bon nombre de mots" {
-            $pp = Get-PassPhrase -Words 5 -Letters 4 -Quiet
-            ($pp -split ' ').Count | Should -Be 5
+    Context 'Basic behavior' {
+        # Tests sans Mock d'abord
+        It 'Generates passphrase with correct word count' {
+            $pp = Get-PassPhrase -Words 6 -Letters 6 -Quiet
+            ($pp -split '-').Count | Should -Be 6
         }
 
-        It "Chaque mot a la bonne longueur" {
-            $pp = Get-PassPhrase -Words 4 -Letters 6 -Quiet
-            foreach ($mot in $pp -split ' ') {
-                $mot.Length | Should -Be 6
-            }
+        It 'Each word has correct length' {
+            $pp = Get-PassPhrase -Words 6 -Letters 6 -Quiet
+            foreach ($mot in $pp -split '-') { $mot.Length | Should -Be 6 }
         }
 
-        It "Retourne une string en mode normal" {
-            $pp = Get-PassPhrase -NoClipboard
-            $pp | Should -BeOfType 'System.String'
+        It 'Returns string in Quiet mode' {
+            $pp = Get-PassPhrase -Quiet
+            $pp | Should -BeOfType System.String
         }
 
-        It "N’explose pas avec -NoClipboard" {
-            { Get-PassPhrase -NoClipboard } | Should -NotThrow
-        }
-    }
-
-    Context "Validation & corrections automatiques" {
-
-        It "Corrige Words trop faible (1 → 2)" {
-            $pp = Get-PassPhrase -Words 1 -Letters 5 -Quiet
-            ($pp -split ' ').Count | Should -Be 2
+        It 'Does not throw with NoClipboard' {
+            { Get-PassPhrase -NoClipboard } | Should -Not -Throw
         }
 
-        It "Corrige Letters trop faible (1 → 2)" {
-            $pp = Get-PassPhrase -Words 4 -Letters 1 -Quiet
-            foreach ($mot in $pp -split ' ') {
-                $mot.Length | Should -Be 2
-            }
+        # Mocks apres
+        Mock Set-ClipboardSafe -MockWith { }
+        Mock Clear-ClipboardSafe -MockWith { }
+
+        It 'Does not throw with NoClipboard Quiet' {
+            { Get-PassPhrase -NoClipboard -Quiet } | Should -Not -Throw
         }
     }
 
-    Context "Charset & Separator" {
+    Context 'Validation auto-corrections' {
+        Mock Set-ClipboardSafe -MockWith { }
+        Mock Clear-ClipboardSafe -MockWith { }
 
-        It "Utilise le séparateur personnalisé" {
-            $pp = Get-PassPhrase -Words 3 -Letters 4 -Separator '-' -Quiet
-            $pp | Should -Match '^[a-zA-Z]{4}-[a-zA-Z]{4}-[a-zA-Z]{4}$'
+        It 'Corrects too few Words to default' {
+            $pp = Get-PassPhrase -Words 1 -Letters 6 -Quiet
+            ($pp -split '-').Count | Should -Be 7
         }
 
-        It "Utilise un charset personnalisé" {
-            $pp = Get-PassPhrase -Words 3 -Letters 4 -Charset 'abc' -Quiet
-            ($pp -replace ' ', '') -match '^[abc]+$' | Should -BeTrue
-        }
-    }
-
-    Context "Modes UX (Quiet / Raw / Silent)" {
-
-        It "Quiet retourne uniquement la passphrase" {
-            $pp = Get-PassPhrase -Words 4 -Letters 4 -Quiet
-            $pp | Should -BeOfType 'System.String'
+        It 'Corrects too few Letters to default' {
+            $pp = Get-PassPhrase -Words 6 -Letters 1 -Quiet
+            foreach ($mot in $pp -split '-') { $mot.Length | Should -Be 6 }
         }
 
-        It "Raw retourne uniquement la passphrase" {
-            $pp = Get-PassPhrase -Words 4 -Letters 4 -Raw
-            $pp | Should -BeOfType 'System.String'
-        }
-
-        It "Silent retourne uniquement la passphrase" {
-            $pp = Get-PassPhrase -Words 4 -Letters 4 -Silent
-            $pp | Should -BeOfType 'System.String'
+        It 'Corrects too short passphrase' {
+            $pp = Get-PassPhrase -Words 3 -Letters 4 -Quiet
+            ($pp -split '-').Count | Should -Be 7
         }
     }
 
-    Context "Pipeline behavior" {
+    Context 'Separators' {
+        Mock Set-ClipboardSafe -MockWith { }
+        Mock Clear-ClipboardSafe -MockWith { }
 
-        It "Ne pollue pas le pipeline en mode Quiet" {
-            $count = (Get-PassPhrase -Words 5 -Letters 4 -Quiet -NoClipboard -NoClear -Silent:$false) -split ' '
-            $count.Count | Should -Be 5
+        It 'Accepts valid separator' {
+            $pp = Get-PassPhrase -Words 6 -Letters 6 -Separator '.' -Quiet
+            $pp | Should -Match '^[a-z0-9]+(\.[a-z0-9]+){5}$'
         }
 
-        It "Ne pollue pas le pipeline en mode Raw" {
-            $count = (Get-PassPhrase -Words 6 -Letters 3 -Raw) -split ' '
-            $count.Count | Should -Be 6
+        It 'Corrects invalid separator' {
+            $pp = Get-PassPhrase -Words 6 -Letters 6 -Separator ';' -Quiet
+            $pp | Should -Match '^[a-z0-9-]+$'  # Default to '-'
+        }
+    }
+
+    Context 'Charset enrichment' {
+        Mock Set-ClipboardSafe -MockWith { }
+        Mock Clear-ClipboardSafe -MockWith { }
+
+        It 'Includes uppercase with Uppercase' {
+            $pp = Get-PassPhrase -Words 6 -Letters 6 -Uppercase -Quiet
+            ($pp -replace '-', '') -match '[A-Z]' | Should -BeTrue
         }
 
-        It "Ne pollue pas le pipeline en mode Silent" {
-            $count = (Get-PassPhrase -Words 7 -Letters 2 -Silent) -split ' '
-            $count.Count | Should -Be 7
+        It 'Includes digits with Digits' {
+            $pp = Get-PassPhrase -Words 6 -Letters 6 -Digits -Quiet
+            ($pp -replace '-', '') -match '[0-9]' | Should -BeTrue
+        }
+    }
+
+    Context 'Modes UX' {
+        Mock Set-ClipboardSafe -MockWith { }
+        Mock Clear-ClipboardSafe -MockWith { }
+
+        It 'Quiet returns only passphrase' { 
+            Get-PassPhrase -Quiet | Should -BeOfType System.String 
+        }
+
+        It 'Raw returns only passphrase' { 
+            Get-PassPhrase -Raw | Should -BeOfType System.String 
+        }
+
+        It 'Silent returns only passphrase' { 
+            Get-PassPhrase -Silent | Should -BeOfType System.String 
         }
     }
 }

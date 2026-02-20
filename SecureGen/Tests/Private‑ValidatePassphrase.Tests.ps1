@@ -1,7 +1,7 @@
 Describe "Private-ValidatePassphrase" {
 
     BeforeAll {
-        Import-Module "$PSScriptRoot/../SecureGen.psd1" -Force
+        Import-Module "$PSScriptRoot/../SecureGen.psd1"
     }
 
     Context "Valid values" {

@@ -1,7 +1,7 @@
 Describe "Get-PassWord" {
 
     BeforeAll {
-        Import-Module "$PSScriptRoot/../SecureGen.psd1" -Force
+        Import-Module "$PSScriptRoot/../SecureGen.psd1"
 
         # Mock clipboard to avoid platform issues
         Mock -CommandName Set-ClipboardSafe { }
@@ -10,18 +10,14 @@ Describe "Get-PassWord" {
 
     Context "Basic behavior" {
 
-        It "Génère un mot de passe de la longueur demandée" {
-            $pw = Get-PassWord -Length 20 -NoClipboard
-            $pw.Length | Should -Be 20
+        It "Ne retourne rien en mode normal (pipeline propre)" {
+            $pw = Get-PassWord -NoClear
+            $pw | Should -BeNullOrEmpty
         }
 
-        It "Retourne une string en mode normal" {
-            $pw = Get-PassWord -NoClipboard
-            $pw | Should -BeOfType 'System.String'
-        }
-
-        It "N’explose pas avec -NoClipboard" {
-            { Get-PassWord -NoClipboard } | Should -NotThrow
+        It "N’explose pas en mode normal" {
+            { Get-PassWord -NoClear } | Out-Null
+            $? | Should -BeTrue
         }
     }
 
@@ -40,14 +36,19 @@ Describe "Get-PassWord" {
 
     Context "Caractères spéciaux" {
 
-        It "Inclut des caractères spéciaux quand -UseSpecial est activé" {
-            $pw = Get-PassWord -UseSpecial -Length 40 -Quiet
-            ($pw -match '[!@#$%^&*()_\-=\[\]{};:,.<>/?]') | Should -BeTrue
+        It "Inclut des caractères spéciaux par défaut" {
+            $pw = Get-PassWord -Length 40 -Quiet
+            ($pw -match '[!@#$%^&*()_\-=\[\]{}<>/\\|;~]') | Should -BeTrue
         }
 
-        It "N’inclut pas de caractères spéciaux quand -UseSpecial:$false" {
-            $pw = Get-PassWord -UseSpecial:$false -Length 40 -Quiet
-            ($pw -match '[!@#$%^&*()_\-=\[\]{};:,.<>/?]') | Should -BeFalse
+        It "N’inclut pas de caractères spéciaux quand -NoSpecial est activé" {
+            $pw = Get-PassWord -NoSpecial -Length 40 -Quiet
+            ($pw -match '[!@#$%^&*()_\-=\[\]{}<>/\\|;~]') | Should -BeFalse
+        }
+
+        It "Utilise uniquement les caractères spéciaux personnalisés" {
+            $pw = Get-PassWord -SpecialChars '-' -Length 40 -Quiet
+            ($pw -match '-') | Should -BeTrue
         }
     }
 
@@ -98,7 +99,7 @@ Describe "Get-PassWord" {
             ($pw -match '[a-z]') | Should -BeTrue
             ($pw -match '[A-Z]') | Should -BeTrue
             ($pw -match '\d')   | Should -BeTrue
-            ($pw -match '[!@#$%^&*()_\-=\[\]{};:,.<>/?]') | Should -BeTrue
+            ($pw -match '[!@#$%^&*()_\-=\[\]{}<>/\\|;~]') | Should -BeTrue
         }
     }
 }

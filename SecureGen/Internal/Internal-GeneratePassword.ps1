@@ -25,7 +25,9 @@ function Internal-GeneratePassword {
 
     # --- 2) Validation des caractères spéciaux ---
     if ($UseSpecial) {
-        Private-ValidateCharset -Charset $SpecialChars -Separator '-'
+        if ($UseSpecial) {
+            Private-ValidateCharset -Charset $SpecialChars -Separator '§'
+        }
     }
 
     # --- 3) Construction du charset final ---
@@ -41,16 +43,37 @@ function Internal-GeneratePassword {
 
     # --- 4) Génération du mot de passe ---
     if (-not $RequireAllTypes) {
+        # Mode simple : aucune contrainte de type
         $password = Internal-RandomString -Length $Length -Charset $Charset
     }
     else {
+        # Mode strict : toutes les catégories doivent apparaître
+        $maxTries = 1000
+        $tries = 0
+
+        # Initialisation pour éviter les erreurs
+        $hasLower   = $false
+        $hasUpper   = $false
+        $hasDigit   = $false
+        $hasSpecial = $false
+
         do {
+            $tries++
+            if ($tries -gt $maxTries) {
+                throw "Unable to generate a password matching all requirements after $maxTries attempts."
+            }
+
             $password = Internal-RandomString -Length $Length -Charset $Charset
 
-            $hasLower   = $password -match '[a-z]'
-            $hasUpper   = $password -match '[A-Z]'
-            $hasDigit   = $password -match '\d'
-            $hasSpecial = $UseSpecial ? ($password -match "[$SpecialChars]") : $true
+            $hasLower = $password -match '[a-z]'
+            $hasUpper = $password -match '[A-Z]'
+            $hasDigit = $password -match '\d'
+
+            # Détection robuste des caractères spéciaux (par caractère, échappé)
+            $hasSpecial = $UseSpecial ? (
+                $SpecialChars -split '' |
+                    Where-Object { $_ -and $password -match [regex]::Escape($_) }
+            ) : $true
 
         } while (-not ($hasLower -and $hasUpper -and $hasDigit -and $hasSpecial))
     }
@@ -80,6 +103,13 @@ function Internal-GeneratePassword {
         -NoClear:$NoClear `
         -Silent:$Silent
 
-    if ($Silent) { return $password }
+    # --- 9) Retour de la valeur ---
+    # Seul le mode SILENT retourne la chaîne.
+    # Quiet/Raw sont gérés dans Get-PassWord, qui appelle Internal-GeneratePassword avec -Silent.
+    if ($Silent) {
+        return $password
+    }
+
+    # Mode NORMAL → ne retourne rien (pipeline propre)
     return
 }
