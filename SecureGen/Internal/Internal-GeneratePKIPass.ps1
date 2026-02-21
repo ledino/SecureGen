@@ -50,11 +50,5 @@ function Internal-GeneratePKIPass {
             -NoClear:$NoClear
     }
 
-    # --- 2) Conversion en SecureString si demandé ---
-    if (-not $AsPlainText) {
-    $secret = Internal-GeneratePKIPass @params -Silent -NoClipboard -NoClear
-    return ($secret | ConvertTo-SecureString -AsPlainText -Force)
-    }
-
     return $secret
 }

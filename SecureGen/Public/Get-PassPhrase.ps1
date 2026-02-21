@@ -1,4 +1,5 @@
 function Get-PassPhrase {
+
     [CmdletBinding()]
     param(
         [int]$Words = 7,
@@ -16,8 +17,9 @@ function Get-PassPhrase {
         [switch]$Silent
     )
 
-    # --- Modes prioritaires ---
+    # Modes pipeline (Raw / Quiet / Silent)
     if ($Raw -or $Quiet -or $Silent) {
+
         return Internal-GeneratePassPhrase `
             -Words $Words `
             -Letters $Letters `
@@ -25,18 +27,19 @@ function Get-PassPhrase {
             -Uppercase:$Uppercase `
             -Digits:$Digits `
             -Silent `
-            -NoClipboard:$NoClipboard `
-            -NoClear:$NoClear
+            -NoClipboard `
+            -NoClear
     }
 
-    # --- Mode normal ---
-    return Internal-GeneratePassPhrase `
+    # Mode NORMAL → UX complète
+    Internal-GeneratePassPhrase `
         -Words $Words `
         -Letters $Letters `
         -Separator $Separator `
         -Uppercase:$Uppercase `
         -Digits:$Digits `
         -NoClipboard:$NoClipboard `
-        -NoClear:$NoClear `
-        -Silent:$Silent
+        -NoClear:$NoClear | Out-Null
+
+    return
 }

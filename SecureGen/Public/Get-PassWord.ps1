@@ -1,4 +1,5 @@
 function Get-PassWord {
+
     [CmdletBinding()]
     param(
         [int]$Length = 20,
@@ -9,6 +10,7 @@ function Get-PassWord {
 
         [switch]$NoClipboard,
         [switch]$NoClear,
+
         [switch]$Quiet,
         [switch]$Raw,
         [switch]$Silent
@@ -17,21 +19,10 @@ function Get-PassWord {
     # Détermine si on utilise les caractères spéciaux
     $UseSpecial = -not $NoSpecial
 
-    # MODE RAW → retourne uniquement la chaîne
-    if ($Raw) {
-        return (Internal-GeneratePassword `
-            -Length $Length `
-            -SpecialChars $SpecialChars `
-            -UseSpecial:$UseSpecial `
-            -RequireAllTypes:$RequireAllTypes `
-            -Silent `
-            -NoClipboard `
-            -NoClear)
-    }
+    # --- Modes pipeline (Raw / Quiet / Silent) ---
+    if ($Raw -or $Quiet -or $Silent) {
 
-    # MODE QUIET → retourne uniquement la chaîne
-    if ($Quiet) {
-        $secret = Internal-GeneratePassword `
+        return Internal-GeneratePassword `
             -Length $Length `
             -SpecialChars $SpecialChars `
             -UseSpecial:$UseSpecial `
@@ -39,29 +30,18 @@ function Get-PassWord {
             -Silent `
             -NoClipboard `
             -NoClear
-
-        return $secret
     }
 
-    # MODE SILENT → retourne uniquement la chaîne
-    if ($Silent) {
-        return (Internal-GeneratePassword `
-            -Length $Length `
-            -SpecialChars $SpecialChars `
-            -UseSpecial:$UseSpecial `
-            -RequireAllTypes:$RequireAllTypes `
-            -Silent `
-            -NoClipboard `
-            -NoClear)
-    }
-
-    # MODE NORMAL → UX complète
-    return Internal-GeneratePassword `
+    # --- Mode NORMAL (UX complète) ---
+    # IMPORTANT : on laisse Internal-GeneratePassword gérer l’UX
+    # et on NE renvoie rien dans le pipeline
+    Internal-GeneratePassword `
         -Length $Length `
         -SpecialChars $SpecialChars `
         -UseSpecial:$UseSpecial `
         -RequireAllTypes:$RequireAllTypes `
         -NoClipboard:$NoClipboard `
-        -NoClear:$NoClear `
-        -Silent:$Silent
+        -NoClear:$NoClear | Out-Null
+
+    return
 }

@@ -19,14 +19,15 @@ function Internal-DisplaySecret {
         [switch]$Silent
     )
 
-    # Mode silencieux : aucun affichage
-    if ($Silent) { return }
+    # Mode silencieux → aucune UX, mais on renvoie la valeur
+    if ($Silent) {
+        return $Secret
+    }
 
-    # Titre dynamique
+    # UX complète
     if ($Type -eq 'Password') {
         Write-Host "🔐 Mot de passe généré :" -ForegroundColor Green
-    }
-    else {
+    } else {
         Write-Host "🔐 Passphrase générée :" -ForegroundColor Green
     }
 
@@ -47,4 +48,6 @@ function Internal-DisplaySecret {
 
     Write-Host "🎲 Source d'aléa : $AleaSource" -ForegroundColor Blue
     Write-Host "----------------------------"
+
+    return $Secret
 }

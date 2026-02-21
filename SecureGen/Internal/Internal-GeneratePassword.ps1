@@ -25,9 +25,7 @@ function Internal-GeneratePassword {
 
     # --- 2) Validation des caractères spéciaux ---
     if ($UseSpecial) {
-        if ($UseSpecial) {
-            Private-ValidateCharset -Charset $SpecialChars -Separator '§'
-        }
+        Private-ValidateCharset -Charset $SpecialChars -Separator '§'
     }
 
     # --- 3) Construction du charset final ---
@@ -43,19 +41,40 @@ function Internal-GeneratePassword {
 
     # --- 4) Génération du mot de passe ---
     if (-not $RequireAllTypes) {
+
         # Mode simple : aucune contrainte de type
         $password = Internal-RandomString -Length $Length -Charset $Charset
+
+        # --- PATCH MINIMAL ---
+        # Si l'utilisateur fournit des caractères spéciaux personnalisés,
+        # on garantit qu'au moins un d'entre eux apparaît dans le mot de passe.
+        if ($UseSpecial) {
+
+            $containsSpecial = $false
+            foreach ($c in $SpecialChars.ToCharArray()) {
+                if ($password.Contains($c)) {
+                    $containsSpecial = $true
+                    break
+                }
+            }
+
+            if (-not $containsSpecial) {
+                # Injecte un caractère spécial personnalisé
+                $randomSpecial = $SpecialChars[(Get-Random -Min 0 -Max $SpecialChars.Length)]
+                $insertPos = Get-Random -Min 0 -Max $password.Length
+                $password = $password.Insert($insertPos, $randomSpecial)
+
+                # Retire un caractère aléatoire pour conserver la longueur
+                $removePos = Get-Random -Min 0 -Max $password.Length
+                $password = $password.Remove($removePos, 1)
+            }
+        }
+        # --- FIN PATCH ---
     }
     else {
         # Mode strict : toutes les catégories doivent apparaître
         $maxTries = 1000
         $tries = 0
-
-        # Initialisation pour éviter les erreurs
-        $hasLower   = $false
-        $hasUpper   = $false
-        $hasDigit   = $false
-        $hasSpecial = $false
 
         do {
             $tries++
@@ -65,11 +84,10 @@ function Internal-GeneratePassword {
 
             $password = Internal-RandomString -Length $Length -Charset $Charset
 
-            $hasLower = $password -match '[a-z]'
-            $hasUpper = $password -match '[A-Z]'
-            $hasDigit = $password -match '\d'
+            $hasLower   = $password -match '[a-z]'
+            $hasUpper   = $password -match '[A-Z]'
+            $hasDigit   = $password -match '\d'
 
-            # Détection robuste des caractères spéciaux (par caractère, échappé)
             $hasSpecial = $UseSpecial ? (
                 $SpecialChars -split '' |
                     Where-Object { $_ -and $password -match [regex]::Escape($_) }
@@ -86,30 +104,29 @@ function Internal-GeneratePassword {
     # --- 6) Source d'aléa ---
     $alea = Internal-GetAleaSource
 
-    # --- 7) Affichage ---
-    Internal-DisplaySecret `
-        -Secret $password `
-        -Entropy $entropy `
-        -AleaSource $alea `
-        -Type 'Password' `
-        -NoClipboard:$NoClipboard `
-        -NoClear:$NoClear `
-        -Silent:$Silent
+    # --- 7) UX (désactivée si Silent) ---
+    if (-not $Silent) {
+        Internal-DisplaySecret `
+            -Secret $password `
+            -Entropy $entropy `
+            -AleaSource $alea `
+            -Type 'Password' `
+            -NoClipboard:$NoClipboard `
+            -NoClear:$NoClear
+    }
 
-    # --- 8) Clipboard ---
-    Internal-HandleClipboardLifecycle `
-        -Secret $password `
-        -NoClipboard:$NoClipboard `
-        -NoClear:$NoClear `
-        -Silent:$Silent
+    # --- 8) Clipboard (désactivé si Silent) ---
+    if (-not $Silent) {
+        Internal-HandleClipboardLifecycle `
+            -Secret $password `
+            -NoClipboard:$NoClipboard `
+            -NoClear:$NoClear
+    }
 
-    # --- 9) Retour de la valeur ---
-    # Seul le mode SILENT retourne la chaîne.
-    # Quiet/Raw sont gérés dans Get-PassWord, qui appelle Internal-GeneratePassword avec -Silent.
+    # --- 9) Retour pipeline ---
     if ($Silent) {
         return $password
     }
 
-    # Mode NORMAL → ne retourne rien (pipeline propre)
     return
 }
