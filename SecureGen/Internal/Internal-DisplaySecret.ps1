@@ -16,7 +16,9 @@ function Internal-DisplaySecret {
 
         [switch]$NoClipboard,
         [switch]$NoClear,
-        [switch]$Silent
+        [switch]$Silent,
+
+        [string[]]$Warnings
     )
 
     # Mode silencieux → aucune UX, mais on renvoie la valeur
@@ -24,30 +26,40 @@ function Internal-DisplaySecret {
         return $Secret
     }
 
-    # UX complète
+    # --- Affichage des warnings (options inconnues, incohérences, etc.) ---
+    if ($Warnings -and $Warnings.Count -gt 0) {
+        foreach ($w in $Warnings) {
+            if ([string]::IsNullOrWhiteSpace($w)) { continue }
+            Write-Host "ℹ️ $w" -ForegroundColor Yellow
+        }
+        Write-Host ""
+    }
+
+    # --- UX principale ---
     if ($Type -eq 'Password') {
-        Write-Host "🔐 Mot de passe généré :" -ForegroundColor Green
-    } else {
-        Write-Host "🔐 Passphrase générée :" -ForegroundColor Green
-    }
-
-    Write-Host $Secret
-    Write-Host "----------------------------"
-
-    Write-Host "🧠 Entropie estimée : $Entropy bits" -ForegroundColor Cyan
-
-    if (-not $NoClipboard -and -not $NoClear) {
-        Write-Host "📋 Presse-papier : copié, effacement automatique dans 35 secondes." -ForegroundColor Yellow
-    }
-    elseif (-not $NoClipboard -and $NoClear) {
-        Write-Host "📋 Presse-papier : copié, conservé (NoClear activé)." -ForegroundColor Yellow
+        Write-Host "`n[🔐] Mot de passe généré :" -ForegroundColor Green
     }
     else {
-        Write-Host "📋 Presse-papier : désactivé." -ForegroundColor Yellow
+        Write-Host "`n[🔐] Passphrase générée :" -ForegroundColor Green
     }
 
-    Write-Host "🎲 Source d'aléa : $AleaSource" -ForegroundColor Blue
-    Write-Host "----------------------------"
+    Write-Host " 👉   $Secret"
+    Write-Host "--------------------------------"
+
+    Write-Host "[🧠] Entropie estimée : $Entropy bits" -ForegroundColor Cyan
+
+    if (-not $NoClipboard -and -not $NoClear) {
+        Write-Host "[📋] Presse-papier : copié, effacement automatique dans 30 secondes ou Crtl+C." -ForegroundColor Yellow
+    }
+    elseif (-not $NoClipboard -and $NoClear) {
+        Write-Host "[📋] Presse-papier : copié, conservé (NoClear activé)." -ForegroundColor Yellow
+    }
+    else {
+        Write-Host "[📋] Presse-papier : désactivé." -ForegroundColor Yellow
+    }
+
+    Write-Host "[🎲] Source d'aléa : $AleaSource" -ForegroundColor Blue
+    Write-Host "--------------------------------"
 
     return $Secret
 }

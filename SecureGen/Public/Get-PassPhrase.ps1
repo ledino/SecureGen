@@ -6,7 +6,7 @@ function Get-PassPhrase {
         [int]$Letters = 6,
         [string]$Separator = '-',
 
-        [switch]$Uppercase,
+        [switch]$UpperCase,
         [switch]$Digits,
 
         [switch]$NoClipboard,
@@ -14,29 +14,37 @@ function Get-PassPhrase {
 
         [switch]$Quiet,
         [switch]$Raw,
-        [switch]$Silent
+        [switch]$Silent,
+
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]]$UnknownOptions
     )
 
-    # Modes pipeline (Raw / Quiet / Silent)
+    # --- Validation centralisée ---
+    if (-not (Internal-ValidateInput -Mode 'Passphrase' @PSBoundParameters)) {
+        return
+    }
+
+    # --- Pipeline mode ---
     if ($Raw -or $Quiet -or $Silent) {
 
         return Internal-GeneratePassPhrase `
             -Words $Words `
             -Letters $Letters `
             -Separator $Separator `
-            -Uppercase:$Uppercase `
+            -Uppercase:$UpperCase `
             -Digits:$Digits `
             -Silent `
             -NoClipboard `
             -NoClear
     }
 
-    # Mode NORMAL → UX complète
+    # --- Mode normal ---
     Internal-GeneratePassPhrase `
         -Words $Words `
         -Letters $Letters `
         -Separator $Separator `
-        -Uppercase:$Uppercase `
+        -Uppercase:$UpperCase `
         -Digits:$Digits `
         -NoClipboard:$NoClipboard `
         -NoClear:$NoClear | Out-Null

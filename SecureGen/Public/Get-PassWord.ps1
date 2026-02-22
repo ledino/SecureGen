@@ -13,13 +13,20 @@ function Get-PassWord {
 
         [switch]$Quiet,
         [switch]$Raw,
-        [switch]$Silent
+        [switch]$Silent,
+
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]]$UnknownOptions
     )
 
-    # Détermine si on utilise les caractères spéciaux
+    # --- Validation centralisée ---
+    if (-not (Internal-ValidateInput -Mode 'Password' @PSBoundParameters)) {
+        return
+    }
+
     $UseSpecial = -not $NoSpecial
 
-    # --- Modes pipeline (Raw / Quiet / Silent) ---
+    # --- Pipeline mode ---
     if ($Raw -or $Quiet -or $Silent) {
 
         return Internal-GeneratePassword `
@@ -32,9 +39,7 @@ function Get-PassWord {
             -NoClear
     }
 
-    # --- Mode NORMAL (UX complète) ---
-    # IMPORTANT : on laisse Internal-GeneratePassword gérer l’UX
-    # et on NE renvoie rien dans le pipeline
+    # --- Mode normal ---
     Internal-GeneratePassword `
         -Length $Length `
         -SpecialChars $SpecialChars `

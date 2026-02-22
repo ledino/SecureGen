@@ -5,12 +5,14 @@ function Internal-GeneratePassPhrase {
         [int]$Letters,
         [string]$Separator,
 
-        [switch]$Uppercase,
+        [switch]$UpperCase,
         [switch]$Digits,
 
         [switch]$NoClipboard,
         [switch]$NoClear,
-        [switch]$Silent
+        [switch]$Silent,
+
+        [string[]]$Warnings  # <-- ajouté, mais non utilisé
     )
 
     # --- 1) Validation ---
@@ -22,12 +24,12 @@ function Internal-GeneratePassPhrase {
     if (-not $valid) {
         $Words     = 7
         $Letters   = 6
-        $Separator = '-'
+        #$Separator = '-'
     }
 
     # --- 2) Charset ---
     $charset = 'abcdefghijklmnopqrstuvwxyz'
-    if ($Uppercase) { $charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' }
+    if ($UpperCase) { $charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' }
     if ($Digits)    { $charset += '0123456789' }
 
     # --- 3) Génération ---
@@ -46,7 +48,7 @@ function Internal-GeneratePassPhrase {
     # --- 5) Source d’aléa ---
     $alea = Internal-GetAleaSource
 
-    # --- 6) UX (désactivée si Silent) ---
+    # --- 6) UX ---
     if (-not $Silent) {
         Internal-DisplaySecret `
             -Secret $phrase `
@@ -55,9 +57,11 @@ function Internal-GeneratePassPhrase {
             -Type 'Passphrase' `
             -NoClipboard:$NoClipboard `
             -NoClear:$NoClear `
-            -Silent:$Silent
+            -Silent:$Silent `
+            -Warnings $Warnings
     }
-    # --- 7) Clipboard (désactivé si Silent) ---
+
+    # --- 7) Clipboard ---
     if (-not $Silent) {
         Internal-HandleClipboardLifecycle `
             -Secret $phrase `
@@ -66,7 +70,6 @@ function Internal-GeneratePassPhrase {
             -Silent:$Silent
     }
 
-    # --- 8) Retour pipeline ---
     if ($Silent) {
         return $phrase
     }

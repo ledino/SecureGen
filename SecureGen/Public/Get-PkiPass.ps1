@@ -2,10 +2,11 @@ function Get-PKIPass {
     [CmdletBinding(DefaultParameterSetName = 'Password')]
     param(
 
-        # --- Mode Password ---
-        [Parameter(ParameterSetName='Password')]
+        # Modes (sans ParameterSet pour éviter l’erreur PowerShell)
         [switch]$Password,
+        [switch]$Passphrase,
 
+        # Password
         [Parameter(ParameterSetName='Password')]
         [int]$Length = 32,
 
@@ -18,10 +19,7 @@ function Get-PKIPass {
         [Parameter(ParameterSetName='Password')]
         [switch]$RequireAllTypes,
 
-        # --- Mode Passphrase ---
-        [Parameter(ParameterSetName='Passphrase')]
-        [switch]$Passphrase,
-
+        # Passphrase
         [Parameter(ParameterSetName='Passphrase')]
         [int]$Words = 7,
 
@@ -37,19 +35,27 @@ function Get-PKIPass {
         [Parameter(ParameterSetName='Passphrase')]
         [switch]$DigitsPhrase,
 
-        # --- Options communes ---
+        # Commun
         [switch]$SecureString,
         [switch]$Silent,
         [switch]$Quiet,
         [switch]$Raw,
         [switch]$NoClipboard,
-        [switch]$NoClear
+        [switch]$NoClear,
+
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]]$UnknownOptions
     )
 
-    # --- Modes UX : Raw / Quiet / Silent => forcent le texte clair ---
+    # --- Validation centralisée ---
+    if (-not (Internal-ValidateInput -Mode 'PKIPass' @PSBoundParameters)) {
+        return
+    }
+
+    # --- Modes UX ---
     $forcePlainText = $Raw -or $Quiet -or $Silent -or $SecureString
 
-    # --- Paramètres communs transmis aux fonctions internes ---
+    # --- Paramètres communs ---
     $params = @{
         Silent      = $Silent
         Quiet       = $Quiet
@@ -58,7 +64,7 @@ function Get-PKIPass {
         NoClear     = $NoClear
     }
 
-    # --- Mode Passphrase ---
+    # --- Passphrase ---
     if ($Passphrase) {
 
         $params.Words   = $Words
@@ -68,13 +74,12 @@ function Get-PKIPass {
         if ($UppercasePhrase) { $params.Uppercase = $UppercasePhrase }
         if ($DigitsPhrase)    { $params.Digits    = $DigitsPhrase }
 
-        # Si SecureString est demandé → forcer Silent pour récupérer la valeur brute
         if ($SecureString) { $params.Silent = $true }
 
         $secret = Get-PassPhrase @params
     }
 
-    # --- Mode Password ---
+    # --- Password ---
     else {
 
         $params.Length = $Length
@@ -83,22 +88,17 @@ function Get-PKIPass {
         if ($NoSpecial)       { $params.NoSpecial       = $true }
         if ($RequireAllTypes) { $params.RequireAllTypes = $true }
 
-        # Si SecureString est demandé → forcer Silent pour récupérer la valeur brute
         if ($SecureString) { $params.Silent = $true }
 
         $secret = Get-PassWord @params
     }
 
-    # --- Conversion SecureString si demandé ---
+    # --- SecureString ---
     if ($SecureString) {
         return ($secret | ConvertTo-SecureString -AsPlainText -Force)
     }
 
-    # --- Si pas SecureString et pas Raw/Quiet/Silent → UX déjà affichée, pipeline vide ---
-    if (-not $forcePlainText) {
-        return
-    }
+    if (-not $forcePlainText) { return }
 
-    # --- Sinon → renvoyer la valeur brute ---
     return $secret
 }

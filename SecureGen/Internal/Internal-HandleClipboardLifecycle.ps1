@@ -20,18 +20,18 @@ function Internal-HandleClipboardLifecycle {
         Set-ClipboardSafe -Text $Secret
     }
 
-    # --- 2) Effacement automatique après 35 secondes ---
+    # --- 2) Effacement automatique après 30 secondes ---
     if (-not $NoClipboard -and -not $NoClear) {
 
         try {
-            Start-Sleep -Seconds 35
+            Start-Sleep -Seconds 30
         }
         finally {
             Clear-ClipboardSafe
 
             # --- 3) Notification (sans réafficher le secret) ---
             if (-not $Silent) {
-                Write-Host "[!] Clipboard cleared." -ForegroundColor Red
+                Write-Host " [!] Clipboard cleared.`n" -ForegroundColor Red
                 Internal-Beep -Frequency 1200 -Duration 500
             }
         }

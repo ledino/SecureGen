@@ -12,7 +12,9 @@ function Internal-GeneratePassword {
 
         [switch]$NoClipboard,
         [switch]$NoClear,
-        [switch]$Silent
+        [switch]$Silent,
+
+        [string[]]$Warnings  # <-- ajouté, mais non utilisé
     )
 
     # --- 1) Validation de la longueur ---
@@ -42,12 +44,9 @@ function Internal-GeneratePassword {
     # --- 4) Génération du mot de passe ---
     if (-not $RequireAllTypes) {
 
-        # Mode simple : aucune contrainte de type
         $password = Internal-RandomString -Length $Length -Charset $Charset
 
-        # --- PATCH MINIMAL ---
-        # Si l'utilisateur fournit des caractères spéciaux personnalisés,
-        # on garantit qu'au moins un d'entre eux apparaît dans le mot de passe.
+        # PATCH minimal
         if ($UseSpecial) {
 
             $containsSpecial = $false
@@ -59,20 +58,16 @@ function Internal-GeneratePassword {
             }
 
             if (-not $containsSpecial) {
-                # Injecte un caractère spécial personnalisé
                 $randomSpecial = $SpecialChars[(Get-Random -Min 0 -Max $SpecialChars.Length)]
                 $insertPos = Get-Random -Min 0 -Max $password.Length
                 $password = $password.Insert($insertPos, $randomSpecial)
 
-                # Retire un caractère aléatoire pour conserver la longueur
                 $removePos = Get-Random -Min 0 -Max $password.Length
                 $password = $password.Remove($removePos, 1)
             }
         }
-        # --- FIN PATCH ---
     }
     else {
-        # Mode strict : toutes les catégories doivent apparaître
         $maxTries = 1000
         $tries = 0
 
@@ -96,7 +91,7 @@ function Internal-GeneratePassword {
         } while (-not ($hasLower -and $hasUpper -and $hasDigit -and $hasSpecial))
     }
 
-    # --- 5) Calcul entropie ---
+    # --- 5) Entropie ---
     $entropy = Internal-ComputeEntropy `
         -SymbolCount $Length `
         -CharsetSize $Charset.Length
@@ -104,7 +99,7 @@ function Internal-GeneratePassword {
     # --- 6) Source d'aléa ---
     $alea = Internal-GetAleaSource
 
-    # --- 7) UX (désactivée si Silent) ---
+    # --- 7) UX ---
     if (-not $Silent) {
         Internal-DisplaySecret `
             -Secret $password `
@@ -112,10 +107,11 @@ function Internal-GeneratePassword {
             -AleaSource $alea `
             -Type 'Password' `
             -NoClipboard:$NoClipboard `
-            -NoClear:$NoClear
+            -NoClear:$NoClear `
+            -Warnings $Warnings
     }
 
-    # --- 8) Clipboard (désactivé si Silent) ---
+    # --- 8) Clipboard ---
     if (-not $Silent) {
         Internal-HandleClipboardLifecycle `
             -Secret $password `
@@ -123,7 +119,6 @@ function Internal-GeneratePassword {
             -NoClear:$NoClear
     }
 
-    # --- 9) Retour pipeline ---
     if ($Silent) {
         return $password
     }
